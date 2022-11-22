@@ -1,51 +1,81 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FamilyHubs.ServiceDirectoryUi.Ui</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FamilyHubs.ServiceDirectory.Web.styles.css" asp-append-version="true" />
+    @* we'll use the standard GDS title pattern for now, but the title often ends up too long and gets flagged during accessibility testing, so we might have to cut it down later. see https://design.tax.service.gov.uk/hmrc-design-patterns/page-title/ *@
+    <title>@ViewData["Title"] - Find local family support - GOV.UK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
+
+    <!-- Pending further research e.g. location. etc. -->
+    <!-- <link href="/public/css/accessible-autocomplete.min.css" rel="stylesheet" type="text/css">-->
+    <!--[if !IE 8]><!-->
+    <link href="~/css/govuk-frontend-4.4.0.min.css" rel="stylesheet">
+    <!--<![endif]-->
+    <!--[if IE 8]>
+      <link href="~/css/govuk-frontend-ie8-4.4.0.min.css" rel="stylesheet">
+    <![endif]-->
+    @*    todo html5shiv.js still required? see https://design-system.service.gov.uk/styles/page-template/*@
+    @*todo double check assets, do we need ~?*@
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">FamilyHubs.ServiceDirectory.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+<body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+    
+@*todo: cookie banner*@
+@*    <partial name="_CookieBanner.cshtml" model="@Html.GetCookieViewModel()" view-data="ViewData" />*@
+    <partial name="_Header.cshtml" />
+
+    <div class="govuk-width-container">
+        <div class="govuk-phase-banner">
+            <p class="govuk-phase-banner__content">
+                <strong class="govuk-tag govuk-phase-banner__content__tag">
+                    beta
+                </strong>
+                <span class="govuk-phase-banner__text">
+                    This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
+                </span>
+            </p>
+        </div>
+        @{
+            //todo: back button
+            //bool isLandingPage = ViewContext.RouteData.Values.Where(v => v.Value!.ToString() == "/Index").Any();
+            //if (!isLandingPage)
+            //{
+            //    List<string> pageHistory = ViewContext.HttpContext.Session.GetOrDefault<List<string>>(PageHistoryAttribute.PageHistorySessionKey) ?? new();
+            //    <a class="govuk-back-link-or" href="@(pageHistory.LastOrDefault() ?? "home")">Back</a>
+            //}
+        }
+        <main class="govuk-main-wrapper custom-main" id="main-content" role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - FamilyHubs.ServiceDirectory.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+    <partial name="_Footer.cshtml" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/js/govuk-frontend-4.4.0.min.js"></script>
+    <script>
+        window.GOVUKFrontend.initAll()
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
