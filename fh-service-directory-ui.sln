@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E34CDB3-8FBF-4054-BBB2-6D9A796B815A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1C76539E-7E4B-473F-B0F1-558C7623F3E0}"
 EndProject
@@ -14,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectory.Core", "src\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj", "{F79B7AAF-FEBD-4F2B-B2CD-2C7339456111}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectory.Infrastructure", "src\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj", "{CA263BDB-1BC1-433B-A763-B79DA87E3D9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectory.UnitTests", "tests\FamilyHubs.ServiceDirectory.UnitTests\FamilyHubs.ServiceDirectory.UnitTests.csproj", "{C77AFB52-EE09-4937-9850-A5B8D7A6359C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +38,10 @@ Global
 		{CA263BDB-1BC1-433B-A763-B79DA87E3D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA263BDB-1BC1-433B-A763-B79DA87E3D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA263BDB-1BC1-433B-A763-B79DA87E3D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +50,7 @@ Global
 		{25B883FB-40B1-4E65-863B-60DA2D1C81C5} = {1C76539E-7E4B-473F-B0F1-558C7623F3E0}
 		{F79B7AAF-FEBD-4F2B-B2CD-2C7339456111} = {1C76539E-7E4B-473F-B0F1-558C7623F3E0}
 		{CA263BDB-1BC1-433B-A763-B79DA87E3D9F} = {1C76539E-7E4B-473F-B0F1-558C7623F3E0}
+		{C77AFB52-EE09-4937-9850-A5B8D7A6359C} = {0C84D792-F7A4-469D-8C71-D2FA6D446581}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {966CDAA6-2F97-4532-A521-87C4F07561E9}
