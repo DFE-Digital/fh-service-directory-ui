@@ -12,7 +12,7 @@ install sass _globally_, using
 `npm install -g sass`
 
 run
-`npm run-script sass`
+`npm run-script scss`
 to generate the css from the sass (and watch for changes)
 
 better to use the version of sass installed to the project, using js, similar to...
@@ -31,3 +31,9 @@ or set up gulp or some other manager or built in vs management
 
 see https://www.npmjs.com/package/sass
 https://learn.microsoft.com/en-us/answers/questions/869707/converting-scss-to-css-and-using-in-aspnet-mvc-cor.html
+
+changes from fh-referral-ui
+
+swapped from node-sass (libsass) to sass (dart sass)
+see... https://frontend.design-system.service.gov.uk/installing-with-npm/#install-with-node-js-package-manager-npm
+`Do not use either LibSass or Ruby Sass, which are deprecated, for new projects.`

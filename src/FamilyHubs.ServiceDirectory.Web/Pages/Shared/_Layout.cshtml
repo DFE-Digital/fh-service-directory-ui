@@ -20,9 +20,11 @@
     <!-- Pending further research e.g. location. etc. -->
     <!-- <link href="/public/css/accessible-autocomplete.min.css" rel="stylesheet" type="text/css">-->
     <!--[if !IE 8]><!-->
-    <link href="~/css/govuk-frontend-4.4.0.min.css" rel="stylesheet">
+@*    <link href="~/css/govuk-frontend-4.4.0.min.css" rel="stylesheet">*@
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
     <!--<![endif]-->
     <!--[if IE 8]>
+@*        todo: do we generate this from the scss?*@
       <link href="~/css/govuk-frontend-ie8-4.4.0.min.css" rel="stylesheet">
     <![endif]-->
     @*    todo html5shiv.js still required? see https://design-system.service.gov.uk/styles/page-template/*@
@@ -48,7 +50,8 @@
                     beta
                 </strong>
                 <span class="govuk-phase-banner__text">
-                    This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
+                    @*todo: need feedback url*@
+                    This is a new service – your <a href="#">feedback</a> will help us to improve it.
                 </span>
             </p>
         </div>
