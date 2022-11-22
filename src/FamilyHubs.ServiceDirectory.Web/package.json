@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "devDependencies": {
+    "sass": "^1.56.1"
+  },
+  "dependencies": {
+    "govuk-frontend": "^4.4.0"
+  }
+}
