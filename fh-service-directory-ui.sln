@@ -14,11 +14,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0C84D792
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Web", "src\FamilyHubs.ServiceDirectory.Web\FamilyHubs.ServiceDirectory.Web.csproj", "{25B883FB-40B1-4E65-863B-60DA2D1C81C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectory.Core", "src\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj", "{F79B7AAF-FEBD-4F2B-B2CD-2C7339456111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Core", "src\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj", "{F79B7AAF-FEBD-4F2B-B2CD-2C7339456111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectory.Infrastructure", "src\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj", "{CA263BDB-1BC1-433B-A763-B79DA87E3D9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Infrastructure", "src\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj", "{CA263BDB-1BC1-433B-A763-B79DA87E3D9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectory.UnitTests", "tests\FamilyHubs.ServiceDirectory.UnitTests\FamilyHubs.ServiceDirectory.UnitTests.csproj", "{C77AFB52-EE09-4937-9850-A5B8D7A6359C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.UnitTests", "tests\FamilyHubs.ServiceDirectory.UnitTests\FamilyHubs.ServiceDirectory.UnitTests.csproj", "{C77AFB52-EE09-4937-9850-A5B8D7A6359C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{864FF09C-8273-4AF8-9DD4-7A290114CE6F}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Todo.md = docs\Todo.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
