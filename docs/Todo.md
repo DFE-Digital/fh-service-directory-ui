@@ -7,6 +7,8 @@ add manually (Martin may have done something in shared)
 
 * pick up jquery from one of the big cdn's (google/ms/jquery) with fallback to local copy (optimisation)
 
+* generate ie8 css using $govuk-is-ie8, and add back html5 shiv, see https://frontend.design-system.service.gov.uk/supporting-ie8/#support-internet-explorer-8
+
 * improve sass integration
 
 current instructions:
