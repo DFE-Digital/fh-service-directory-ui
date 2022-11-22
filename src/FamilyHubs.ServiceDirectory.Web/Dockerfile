@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["FamilyHubs.ServiceDirectoryUi.Ui/FamilyHubs.ServiceDirectoryUi.Ui.csproj", "FamilyHubs.ServiceDirectoryUi.Ui/"]
-RUN dotnet restore "FamilyHubs.ServiceDirectoryUi.Ui/FamilyHubs.ServiceDirectoryUi.Ui.csproj"
+COPY ["FamilyHubs.ServiceDirectory.Web/FamilyHubs.ServiceDirectory.Web.csproj", "FamilyHubs.ServiceDirectory.Web/"]
+RUN dotnet restore "FamilyHubs.ServiceDirectory.Web/FamilyHubs.ServiceDirectory.Web.csproj"
 COPY . .
-WORKDIR "/src/FamilyHubs.ServiceDirectoryUi.Ui"
-RUN dotnet build "FamilyHubs.ServiceDirectoryUi.Ui.csproj" -c Release -o /app/build
+WORKDIR "/src/FamilyHubs.ServiceDirectory.Web"
+RUN dotnet build "FamilyHubs.ServiceDirectory.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "FamilyHubs.ServiceDirectoryUi.Ui.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FamilyHubs.ServiceDirectory.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FamilyHubs.ServiceDirectoryUi.Ui.dll"]
+ENTRYPOINT ["dotnet", "FamilyHubs.ServiceDirectory.Web.dll"]
