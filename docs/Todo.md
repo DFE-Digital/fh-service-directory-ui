@@ -5,6 +5,8 @@ add manually (Martin may have done something in shared)
 
 * optimse css and js
 
+* pick up jquery from one of the big cdn's (google/ms/jquery) with fallback to local copy (optimisation)
+
 * improve sass integration
 
 current instructions:
