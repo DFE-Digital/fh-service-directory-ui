@@ -4,7 +4,33 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*todo: might be needed for front end tests?
+<input type="hidden" id="testId" name="testId" value="Test" />*@
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-4 govuk-!-margin-top-2cc">Find local family support and services</h1>
+
+        <p class="govuk-body">You can find help, services and activities in your local area, including:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>activities for babies, toddlers, young people, parents and carers</li>
+            <li>support for parents and carers, such as with children's health, care and development</li>
+            <li>support with special educational needs and disabilities (SEND)</li>
+            <li>help with mental health, relationships, money, housing or family life</li>
+        </ul>
+
+        <p class="govuk-body">You can find specific types of support and search for all kinds of family services and activities run by different organisations.</p>
+        <p class="govuk-body">
+            You will also be able to find your nearest family hub. They offer general
+            family services and activities in your local area, and are a great place to start looking.
+        </p>
+
+        <a asp-page="/Search" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+            Start now
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>
+        </a>
+
+    </div>
 </div>
