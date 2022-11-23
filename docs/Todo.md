@@ -1,5 +1,8 @@
 # Todo
 
+* gap between h1 and back seems large (although seems to match at least some other gov.uk sites).
+ prototype has a custom 1em padding-top, perhaps we should duplicate the prototype
+
 * cookie consent : which version to use?
 
 * app services doesn't support codeless app insights with .net 7
@@ -9,7 +12,9 @@ add manually (Martin may have done something in shared)
 
 * pick up jquery from one of the big cdn's (google/ms/jquery) with fallback to local copy (optimisation)
 
-* generate ie8 css using $govuk-is-ie8, and add back html5 shiv, see https://frontend.design-system.service.gov.uk/supporting-ie8/#support-internet-explorer-8
+* generate ie8 css using $govuk-is-ie8.
+ revert to non-js version of website for internet explorer (saves a lot of hassle), don't think html5shiv is required if we don't support js on ie.
+ see https://frontend.design-system.service.gov.uk/supporting-ie8/#support-internet-explorer-8
 
 * improve sass integration
 

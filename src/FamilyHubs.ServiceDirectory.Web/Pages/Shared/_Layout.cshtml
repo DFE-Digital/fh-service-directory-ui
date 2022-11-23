@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     @* we'll use the standard GDS title pattern for now, but the title often ends up too long and gets flagged during accessibility testing, so we might have to cut it down later. see https://design.tax.service.gov.uk/hmrc-design-patterns/page-title/ *@
     <title>@ViewData["Title"] - Find local family support - GOV.UK</title>
+    <meta name="description" content="Find local family support and services">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0c0c">
 
@@ -50,15 +51,9 @@
                 </span>
             </p>
         </div>
-        @{
-            //todo: back button
-            //bool isLandingPage = ViewContext.RouteData.Values.Where(v => v.Value!.ToString() == "/Index").Any();
-            //if (!isLandingPage)
-            //{
-            //    List<string> pageHistory = ViewContext.HttpContext.Session.GetOrDefault<List<string>>(PageHistoryAttribute.PageHistorySessionKey) ?? new();
-            //    <a class="govuk-back-link-or" href="@(pageHistory.LastOrDefault() ?? "home")">Back</a>
-            //}
-        }
+
+        @await RenderSectionAsync("Back", required: false)
+
         <main class="govuk-main-wrapper custom-main" id="main-content" role="main">
             @RenderBody()
         </main>
