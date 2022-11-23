@@ -1,0 +1,17 @@
+{
+  "name": "styles",
+  "version": "1.0.0",
+  "description": "GDS styles",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "sass -w --quiet-deps scss/application.scss ../wwwroot/css/application.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.56.1"
+  },
+  "dependencies": {
+    "govuk-frontend": "^4.4.0"
+  }
+}
