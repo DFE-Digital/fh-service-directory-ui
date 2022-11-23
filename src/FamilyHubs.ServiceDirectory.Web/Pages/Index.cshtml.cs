@@ -10,10 +10,5 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         {
             _logger = logger;
         }
-
-        public void OnGet()
-        {
-
-        }
     }
 }

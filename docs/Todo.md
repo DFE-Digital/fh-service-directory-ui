@@ -48,3 +48,5 @@ changes from fh-referral-ui
 swapped from node-sass (libsass) to sass (dart sass)
 see... https://frontend.design-system.service.gov.uk/installing-with-npm/#install-with-node-js-package-manager-npm
 `Do not use either LibSass or Ruby Sass, which are deprecated, for new projects.`
+
+* sonarscanner for .net vs SonarAnalyzer.CSharp? why 2? only latter supports .net 7 so stick with it for now
