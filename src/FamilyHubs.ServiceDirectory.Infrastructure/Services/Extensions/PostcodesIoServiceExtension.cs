@@ -35,8 +35,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
             services.AddHttpClient(PostcodesIoClient.HttpClientName, client =>
                 {
                     //todo: need to throw config exception if config is missing, rather than forgive null
-                    //client.BaseAddress = new Uri(configuration["PostcodesIoEndpoint"]!);
-                    client.BaseAddress = new Uri("https://api.postcodes.io/postcodes/");
+                    client.BaseAddress = new Uri(configuration["PostcodesIo:Endpoint"]!);
                 })
                 .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
                     .HandleTransientHttpError()
