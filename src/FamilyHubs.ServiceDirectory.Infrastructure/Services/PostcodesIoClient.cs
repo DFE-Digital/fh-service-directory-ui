@@ -20,19 +20,10 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 
             using var response = await httpClient.GetAsync(postcode, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
-            try
-            {
                 //todo: throw on 404 (postcode not found), or return null in that case?
-                //response.EnsureSuccessStatusCode();
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new PostcodeIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
-                }
-            }
-            catch (Exception e)
+            if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine(e);
-                throw;
+                throw new PostcodeIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
             }
 
             //todo: can't remember when this actually returns null. is it safe to forgive?

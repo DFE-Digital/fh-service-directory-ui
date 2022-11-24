@@ -1,11 +1,12 @@
 ﻿using System.Net;
-using System.Runtime.Serialization;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 {
     // at some point we might want a more generic HttpClientException / RestHttpClientException
-//#pragma warning disable S3925
-    [Serializable]
+
+    // ignore Sonar's "Update this implementation of 'ISerializable' to confirm to the recommended serialization pattern" (https://rules.sonarsource.com/csharp/RSPEC-3925)
+    // .Net Core itself doesn't implement serialization on most exceptions, see https://github.com/dotnet/runtime/issues/21433#issue-225189643
+    #pragma warning disable S3925
     public class PostcodeIoClientException : Exception
     {
         public HttpStatusCode? StatusCode { get; }
@@ -21,21 +22,6 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
             //todo: when is RequestMessage null?
             RequestUri = httpResponseMessage.RequestMessage!.RequestUri;
             ErrorResponse = errorResponse;
-        }
-
-        protected PostcodeIoClientException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            info.AddValue("Message", StatusCode, typeof(HttpStatusCode?)); // Do not rename (binary serialization)
-            info.AddValue("ReasonPhrase", ReasonPhrase, typeof(string)); // Do not rename (binary serialization)
-            info.AddValue("RequestUri", RequestUri, typeof(Uri)); // Do not rename (binary serialization)
-            info.AddValue("ErrorResponse", ErrorResponse, typeof(string)); // Do not rename (binary serialization)
         }
 
         private static string GenerateMessage(HttpResponseMessage httpResponseMessage, string errorResponse)
