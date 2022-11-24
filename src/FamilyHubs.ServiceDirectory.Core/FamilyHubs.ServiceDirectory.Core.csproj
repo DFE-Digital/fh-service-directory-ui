@@ -11,6 +11,14 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <NoWarn>1701;1702;S1135</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <NoWarn>1701;1702;S1135</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 	  <PackageReference Include="SonarAnalyzer.CSharp" Version="8.49.0.57237">
 	    <PrivateAssets>all</PrivateAssets>
