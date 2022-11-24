@@ -1,4 +1,6 @@
-﻿namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
+﻿using System.Text.Json.Serialization;
+
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
 
 //todo: belongs in core??
 public sealed record PostcodeInfo(int Status, Result Result);
@@ -12,4 +14,4 @@ public sealed record Result(float? Latitude, float? Longitude, string Outcode, C
 //todo: docs say codes.admin_district is nullable. when do we get a null?
 //todo: can we use an attribute to have a more normal name?
 /// <param name="Admin_district">The current district/unitary authority to which the postcode has been assigned. (ID version)</param>
-public sealed record Codes(string? Admin_district);
+public sealed record Codes([property: JsonPropertyName("admin_district")] string? AdminDistrict);
