@@ -20,15 +20,23 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 
             using var response = await httpClient.GetAsync(postcode, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
-            response.EnsureSuccessStatusCode();
-            //todo: see what the above throws these days. if not enough info, use the below
-            //if (!response.IsSuccessStatusCode)
-            //{
-            //    throw CreateClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
-            //}
+            try
+            {
+                //todo: throw on 404 (postcode not found), or return null in that case?
+                //response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new PostcodeIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             //todo: can't remember when this actually returns null. is it safe to forgive?
-            return (await JsonSerializer.DeserializeAsync<PostcodeInfo>(await response.Content.ReadAsStreamAsync(cancellationToken), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }))!;
+            return (await JsonSerializer.DeserializeAsync<PostcodeInfo>(await response.Content.ReadAsStreamAsync(cancellationToken), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }, cancellationToken: cancellationToken))!;
         }
     }
 }
