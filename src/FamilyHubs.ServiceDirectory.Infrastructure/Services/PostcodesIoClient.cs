@@ -7,6 +7,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
     public class PostcodesIoClient : IPostcodesIoClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        internal const string HttpClientName = "postcodesio";
 
         public PostcodesIoClient(IHttpClientFactory httpClientFactory)
         {
@@ -17,7 +18,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
         public async Task<PostcodeInfo?> Get(string postcode, CancellationToken cancellationToken = default)
         {
             //todo: const name
-            var httpClient = _httpClientFactory.CreateClient("postcodesio");
+            var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
             using var response = await httpClient.GetAsync(postcode, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 

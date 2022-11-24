@@ -11,7 +11,7 @@ using Polly.Extensions.Http;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
 {
-    public static class PostcodesIoServiceCollectionExtension //ServiceCollectionExtensions
+    public static class PostcodesIoServiceCollectionExtension
     {
         /// <summary>
         /// Adds the IPostcodesIoClient service to enable fetching postcode information from postcodes.io
@@ -32,7 +32,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
                 medianFirstRetryDelay: TimeSpan.FromSeconds(1),
                 retryCount: 2);
 
-            services.AddHttpClient("postcodesio", client =>
+            services.AddHttpClient(PostcodesIoClient.HttpClientName, client =>
                 {
                     //todo: need to throw config exception if config is missing, rather than forgive null
                     //client.BaseAddress = new Uri(configuration["PostcodesIoEndpoint"]!);
