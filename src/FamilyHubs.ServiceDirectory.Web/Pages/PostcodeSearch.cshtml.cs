@@ -20,7 +20,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         {
             //todo: this will live in post
 #pragma warning disable S1481
-            var postcodeInfo = await _postcodesIoClient.Get("xxxb77 4nu");
+            var postcodeInfo = await _postcodesIoClient.Get("b77 4nu");
         }
     }
 }

@@ -27,7 +27,9 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
             }
 
             //todo: can't remember when this actually returns null. is it safe to forgive?
-            return (await JsonSerializer.DeserializeAsync<PostcodeInfo>(await response.Content.ReadAsStreamAsync(cancellationToken), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }, cancellationToken: cancellationToken))!;
+            return (await JsonSerializer.DeserializeAsync<PostcodeInfo>(
+                await response.Content.ReadAsStreamAsync(cancellationToken), 
+                cancellationToken: cancellationToken))!;
         }
     }
 }
