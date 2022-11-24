@@ -16,9 +16,11 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             _postcodesIoClient = postcodesIoClient;
         }
 
-        public void OnGet()
+        public async Task OnGet()
         {
-            // functionality not implemented yet
+            //todo: this will live in post
+#pragma warning disable S1481
+            var postcodeInfo = await _postcodesIoClient.Get("b77 4nu");
         }
     }
 }
