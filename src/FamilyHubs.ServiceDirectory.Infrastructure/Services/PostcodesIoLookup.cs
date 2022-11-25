@@ -3,17 +3,16 @@ using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
 
-public class PostcodeLookup : IPostcodeLookup
+public class PostcodesIoLookup : IPostcodeLookup
 {
     private readonly IHttpClientFactory _httpClientFactory;
     internal const string HttpClientName = "postcodesio";
 
-    public PostcodeLookup(IHttpClientFactory httpClientFactory)
+    public PostcodesIoLookup(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
     }
 
-    //todo: important to unit test this
     public async Task<(PostcodeError, PostcodeInfo?)> Get(string? postcode, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(postcode))

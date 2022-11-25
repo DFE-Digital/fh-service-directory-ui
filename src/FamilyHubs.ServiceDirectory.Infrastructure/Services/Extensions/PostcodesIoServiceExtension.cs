@@ -29,7 +29,7 @@ public static class PostcodesIoServiceCollectionExtension
             medianFirstRetryDelay: TimeSpan.FromSeconds(1),
             retryCount: 2);
 
-        services.AddHttpClient(PostcodeLookup.HttpClientName, client =>
+        services.AddHttpClient(PostcodesIoLookup.HttpClientName, client =>
             {
                 //todo: need to throw config exception if config is missing, rather than forgive null
                 // we'll do this once we have a config that won't be hard-coded in the appsettings
@@ -39,12 +39,12 @@ public static class PostcodesIoServiceCollectionExtension
                 .HandleTransientHttpError()
                 .WaitAndRetryAsync(delay, (result, timespan, retryAttempt, context) =>
                 {
-                    callbackServices.GetService<ILogger<PostcodeLookup>>()?
+                    callbackServices.GetService<ILogger<PostcodesIoLookup>>()?
                         .LogWarning("Delaying for {Timespan}, then making retry {RetryAttempt}.",
                             timespan, retryAttempt);
                 }))
             .AddPolicyHandler(timeoutPolicy);
 
-        services.AddTransient<IPostcodeLookup, PostcodeLookup>();
+        services.AddTransient<IPostcodeLookup, PostcodesIoLookup>();
     }
 }
