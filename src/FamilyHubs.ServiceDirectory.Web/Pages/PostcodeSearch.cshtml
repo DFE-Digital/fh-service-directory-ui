@@ -14,7 +14,7 @@
         
         @*       todo: partial for this*@
         @*todo: list of errors?*@
-@*        todo: gds says top of main, but that would take it out of the 2/3rds column*@
+        @*        todo: gds says top of main, but that would take it out of the 2/3rds column*@
         @if (Model.PostcodeError != PostcodeError.None)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
@@ -26,7 +26,7 @@
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
                             <li>
-                                <a href="#postcode">You need to enter a postcode, like AA1 1AA</a>
+                                <a href="#postcode">@GetErrorMessage(Model.PostcodeError)</a>
                             </li>
                         </ul>
                     </div>
@@ -68,7 +68,7 @@
                         Enter postcode
                     </label>
                     <p id="postcode-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> You need to enter a postcode, like AA1 1AA
+                        <span class="govuk-visually-hidden">Error:</span> @GetErrorMessage(Model.PostcodeError)
                     </p>
                     <input class="govuk-input govuk-input--width-10 govuk-input--error" id="postcode" name="postcode" type="text" aria-describedby="postcode-error" autocomplete="postal-code">
                 </div>
@@ -79,3 +79,16 @@
         </form>
     </div>
 </div>
+
+@{
+    string GetErrorMessage(PostcodeError postcodeError)
+    {
+        return postcodeError switch
+        {
+            PostcodeError.NoPostcode => "You need to enter a postcode, like AA1 1AA",
+            PostcodeError.PostcodeNotFound => "Your postcode is not recognised - try another one",
+            PostcodeError.InvalidPostcode => "You need to enter a valid postcode, like AA1 1AA",
+            _ => throw new ArgumentOutOfRangeException(nameof(postcodeError), postcodeError, "Unexpected")
+        };
+    }
+}
