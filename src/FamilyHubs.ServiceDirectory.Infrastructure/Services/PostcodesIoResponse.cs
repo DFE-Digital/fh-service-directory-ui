@@ -6,7 +6,8 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
 //todo: belongs in core??
 public sealed record PostcodesIoResponse(
     //todo: do we need status from the body - should always match the http code?
-    [property: JsonPropertyName("status")] int Status,
+    //[property: JsonPropertyName("status")] int Status,
+    [property: JsonPropertyName("error")] string? Error,
     [property: JsonPropertyName("result")] PostcodeInfo PostcodeInfo);
 
 /// <param name="Latitude">The WGS84 latitude given the postcode's national grid reference. May be null if geolocation not available.</param>

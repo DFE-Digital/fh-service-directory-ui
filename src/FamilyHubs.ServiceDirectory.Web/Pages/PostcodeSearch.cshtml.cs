@@ -2,20 +2,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-//todo: temp
-#pragma warning disable
-
 namespace FamilyHubs.ServiceDirectory.Web.Pages
 {
     public class PostcodeSearchModel : PageModel
     {
-        public enum ErrorType
-        {
-            None,
-            Postcode
-        };
-
-        public ErrorType Error { get; set; }
+        public PostcodeError PostcodeError { get; set; }
         //todo: clean architecture says don't access infrastructure code in web (apart from program/startup)
         // so create a wrapper in core project
         private readonly IPostcodesIoClient _postcodesIoClient;
@@ -26,19 +17,18 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         }
 
         //todo: use post-redirect-get or not??
-        public void OnGet(ErrorType error)
+        public void OnGet(PostcodeError postcodeError)
         {
-            Error = error;
+            PostcodeError = postcodeError;
         }
 
         public async Task<IActionResult> OnPost(string? postcode)
         {
-            if (postcode == null)
+            var (postcodeError, _) = await _postcodesIoClient.Get(postcode);
+            if (postcodeError != PostcodeError.None)
             {
-                return RedirectToPage("/PostcodeSearch", new {error = ErrorType.Postcode});
+                return RedirectToPage("/PostcodeSearch", new { postcodeError });
             }
-
-            var postcodeInfo = await _postcodesIoClient.Get(postcode);
 
             return RedirectToPage("/ServiceFilter");
         }
