@@ -28,16 +28,17 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
             if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NotFound)
                 throw new PostcodeIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
 
-            //todo: can't remember when this actually returns null. is it safe to forgive?
-            // need to be careful, as returning null here will be interpreted as postcode not found
             var postcodesIoResponse = await JsonSerializer.DeserializeAsync<PostcodesIoResponse>(
                 await response.Content.ReadAsStreamAsync(cancellationToken), 
                 cancellationToken: cancellationToken);
 
             if (postcodesIoResponse is null)
             {
-                //todo:
-                throw new NotImplementedException();
+                // the only time it'll be null, is if the API returns "null"
+                // (see https://stackoverflow.com/questions/71162382/why-are-the-return-types-of-nets-system-text-json-jsonserializer-deserialize-m)
+                // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
+                // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
+                throw new PostcodeIoClientException(response, "null");
             }
 
             var postcodeError = PostcodeError.None;
