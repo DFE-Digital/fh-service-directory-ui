@@ -32,6 +32,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
             services.AddHttpClient(PostcodeLookup.HttpClientName, client =>
                 {
                     //todo: need to throw config exception if config is missing, rather than forgive null
+                    // we'll do this once we have a config that won't be hard-coded in the appsettings
                     client.BaseAddress = new Uri(configuration["PostcodesIo:Endpoint"]!);
                 })
                 .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
