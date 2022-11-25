@@ -32,9 +32,9 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 
             //todo: can't remember when this actually returns null. is it safe to forgive?
             // need to be careful, as returning null here will be interpreted as postcode not found
-            return (await JsonSerializer.DeserializeAsync<PostcodeInfo>(
+            return (await JsonSerializer.DeserializeAsync<PostcodesIoResponse>(
                 await response.Content.ReadAsStreamAsync(cancellationToken), 
-                cancellationToken: cancellationToken))!;
+                cancellationToken: cancellationToken))!.PostcodeInfo;
         }
     }
 }
