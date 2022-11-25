@@ -12,9 +12,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         
-        @*       todo: partial for this*@
-        @*todo: list of errors?*@
-        @*        todo: gds says top of main, but that would take it out of the 2/3rds column*@
+        @*todo: we might want a partial for this at some point (that supports a list of errors)*@
+        @*todo: gds says top of main, but that would take it out of the 2/3rds column*@
         @if (Model.PostcodeError != PostcodeError.None)
         {
             <div class="govuk-error-summary" data-module="govuk-error-summary">
