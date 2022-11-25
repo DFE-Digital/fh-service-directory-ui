@@ -1,15 +1,16 @@
 ﻿using System.Net;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.Interfaces;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
+using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 {
-    public class PostcodesIoClient : IPostcodesIoClient
+    public class PostcodeLookup : IPostcodeLookup
     {
         private readonly IHttpClientFactory _httpClientFactory;
         internal const string HttpClientName = "postcodesio";
 
-        public PostcodesIoClient(IHttpClientFactory httpClientFactory)
+        public PostcodeLookup(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }

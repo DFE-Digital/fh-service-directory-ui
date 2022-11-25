@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,15 +6,12 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
 
-//todo: only temporary
-#pragma warning disable S1075
-
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
 {
     public static class PostcodesIoServiceCollectionExtension
     {
         /// <summary>
-        /// Adds the IPostcodesIoClient service to enable fetching postcode information from postcodes.io
+        /// Adds the IPostcodeLookup service to enable fetching postcode information from postcodes.io
         /// </summary>
         /// <remarks>
         /// Policy notes:
@@ -32,7 +29,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
                 medianFirstRetryDelay: TimeSpan.FromSeconds(1),
                 retryCount: 2);
 
-            services.AddHttpClient(PostcodesIoClient.HttpClientName, client =>
+            services.AddHttpClient(PostcodeLookup.HttpClientName, client =>
                 {
                     //todo: need to throw config exception if config is missing, rather than forgive null
                     client.BaseAddress = new Uri(configuration["PostcodesIo:Endpoint"]!);
@@ -41,13 +38,13 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions
                     .HandleTransientHttpError()
                     .WaitAndRetryAsync(delay, (result, timespan, retryAttempt, context) =>
                     {
-                        callbackServices.GetService<ILogger<PostcodesIoClient>>()?
+                        callbackServices.GetService<ILogger<PostcodeLookup>>()?
                             .LogWarning("Delaying for {Timespan}, then making retry {RetryAttempt}.",
                                 timespan, retryAttempt);
                     }))
                 .AddPolicyHandler(timeoutPolicy);
 
-            services.AddTransient<IPostcodesIoClient, PostcodesIoClient>();
+            services.AddTransient<IPostcodeLookup, PostcodeLookup>();
         }
     }
 }

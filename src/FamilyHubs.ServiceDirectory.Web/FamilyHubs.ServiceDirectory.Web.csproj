@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj" />
     <ProjectReference Include="..\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj" />
   </ItemGroup>
 
