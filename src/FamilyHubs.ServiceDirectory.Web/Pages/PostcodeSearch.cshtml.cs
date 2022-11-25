@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.Interfaces;
 
+//todo: temp
+#pragma warning disable
+
 namespace FamilyHubs.ServiceDirectory.Web.Pages
 {
     public class PostcodeSearchModel : PageModel
@@ -14,11 +17,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             _postcodesIoClient = postcodesIoClient;
         }
 
-        public async Task OnGet()
+        public async Task OnPost(string postcode)
         {
-            //todo: this will live in post
-#pragma warning disable S1481
-            var postcodeInfo = await _postcodesIoClient.Get("b77 4nu");
+            var postcodeInfo = await _postcodesIoClient.Get(postcode);
         }
     }
 }
