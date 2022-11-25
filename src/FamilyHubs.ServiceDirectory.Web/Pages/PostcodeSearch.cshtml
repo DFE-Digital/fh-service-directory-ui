@@ -10,6 +10,29 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        
+        @*       todo: partial for this*@
+        @*todo: list of errors?*@
+@*        todo: gds says top of main, but that would take it out of the 2/3rds column*@
+        @if (Model.Error != PostcodeSearchModel.ErrorType.None)
+        {
+            <div class="govuk-error-summary" data-module="govuk-error-summary">
+
+                <div role="alert">
+                    <h2 class="govuk-error-summary__title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#postcode">You need to enter a postcode, like AA1 1AA</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Search for local family support and services</h1>
 
         <p>Use your postcode to find support, activities and services for:</p>
@@ -21,33 +44,37 @@
             <li>parents and carers</li>
         </ul>
 
-        <p>As this service is new, not all local area services will be listed. 
+        <p>As this service is new, not all local area services will be listed.
             If there are no listings in your area yet, you will be signposted to your council website.</p>
 
         <p>Some services are only available to local residents.</p>
 
-@*        <form action="results" method="post" class="search__form_2" novalidate data-validate='my-form-validation'>  *@
-            <form method="post">
+        <form method="post">
 
+            @if (Model.Error == PostcodeSearchModel.ErrorType.None)
+            {
                 <div class="govuk-form-group">
-                <label class="govuk-label govuk-label--s" for="postcode">
+                    <label class="govuk-label govuk-label--s" for="postcode">
                         Enter postcode
                     </label>
                     <input class="govuk-input govuk-input--width-10" id="postcode" name="postcode" type="text" autocomplete="postal-code">
                 </div>
-
-                <button class="govuk-button" data-module="govuk-button">Search</button>
-                
-@*                <div class="govuk-form-group govuk-form-group--error">
-                    <label class="govuk-label" for="address-postcode">
-                        Postcode
+            }
+            else
+            {
+                <div class="govuk-form-group govuk-form-group--error">
+                    <label class="govuk-label govuk-label--s" for="postcode">
+                        Enter postcode
                     </label>
-                    <p id="address-postcode-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> Enter a real postcode
+                    <p id="postcode-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> You need to enter a postcode, like AA1 1AA
                     </p>
-                    <input class="govuk-input govuk-input--width-10 govuk-input--error" id="address-postcode" name="address-postcode" type="text" value="Not a postcode" aria-describedby="address-postcode-error" autocomplete="postal-code">
-                </div>*@
+                    <input class="govuk-input govuk-input--width-10 govuk-input--error" id="postcode" name="postcode" type="text" aria-describedby="postcode-error" autocomplete="postal-code">
+                </div>
+            }
 
-            </form>
+            <button class="govuk-button" data-module="govuk-button">Search</button>
+
+        </form>
     </div>
 </div>
