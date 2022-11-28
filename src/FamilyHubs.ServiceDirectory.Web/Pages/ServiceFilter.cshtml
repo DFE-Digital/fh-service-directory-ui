@@ -19,3 +19,122 @@
 </div>
 
 @*todo: do we need open / close filter buttons? (in prototype source, but not displayed)*@
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <div class="moj-filter">
+            <div class="moj-filter__header">
+                
+                @*moj standard vs prototype*@
+                @*<div class="moj-filter__header-title">
+                    <h2 class="govuk-heading-m">Filter</h2>
+                </div>*@
+
+                <div class="moj-filter__header-action">
+                </div>
+
+            </div>
+
+            <div class="moj-filter__content">
+
+                <div class="moj-filter__selected">
+
+                    <div class="moj-filter__selected-heading">
+
+                        <div class="moj-filter__heading-title">
+                            @*moj standard vs prototype*@
+                            @*<h2 class="govuk-heading-m">Selected filters</h2>*@
+                            <h2 class="govuk-heading-m">Filter results</h2>
+                        </div>
+
+                        <div class="moj-filter__heading-action">
+                            @*moj standard vs prototype : prototype has font-size: 16px*@
+                            @*todo: class for custom styling*@
+                            <p><a class="govuk-link--no-visited-state" href="">Clear filters</a></p>
+                        </div>
+
+                    </div>
+                    
+                    @*moj standard vs prototype : applied filters diverges quite a lot*@
+                    @*todo: check intentional, or go with moj standard*@
+                    @*todo: these need to be driven from the applied filters in the model. hardcoding just for now*@
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Search within</h3>
+
+                    <ul class="moj-filter-tags">
+                        <li><a class="moj-filter__tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span>20 miles</a></li>
+                    </ul>
+
+                </div>
+                
+                <form method="post">
+                    <div class="moj-filter__options">
+
+                        <button class="govuk-button" data-module="govuk-button">
+                            Apply filters
+                        </button>
+
+                        <div class="govuk-form-group">
+                            
+                            @*todo: category with sub category. standard grouping from moj, or elsewhere?*@
+                            @*                        <fieldset class="govuk-fieldset resul-filters">
+
+                        <div class="filters-component__groups">
+                        <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
+                        <div>
+                        <div class="searchable-collection-component" style="margin-bottom: 20px;">
+                            <div class="searchable-collection-component--only-scrollable">
+*@
+
+                            @*                                <label class="govuk-label govuk-label--m" for="keywords">
+                                Keywords
+                            </label>
+
+                            <input class="govuk-input" id="keywords" name="keywords" type="text">
+                            *@
+                        </div>
+
+                        <div class="govuk-form-group">
+
+                            <fieldset class="govuk-fieldset">
+
+                                @*moj standard vs prototype : govuk-fieldset__legend--m vs govuk-fieldset__legend--s*@
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+
+                                    Cost
+
+                                </legend>
+
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                    
+                                    @*todo: partial for section (and checkbox?) from model*@
+                                    @*todo: filters from config? cms? or just hard-code?*@
+                                    <div class="govuk-checkboxes__item">
+                                        @*todo: checked from model*@
+                                        <input class="govuk-checkboxes__input" id="cost-free" name="cost" type="checkbox" value="free">
+                                        <label class="govuk-label govuk-checkboxes__label" for="cost-free">
+                                            Free
+                                        </label>
+
+                                    </div>
+
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="cost-pay-to-use" name="cost" type="checkbox" value="pay-to-use">
+                                        <label class="govuk-label govuk-checkboxes__label" for="cost-pay-to-use">
+                                            Pay to use
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+    </div>
+</div>
