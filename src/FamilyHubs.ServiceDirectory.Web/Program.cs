@@ -1,7 +1,11 @@
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddPostcodesIoClient(builder.Configuration);
 
 var app = builder.Build();
 
