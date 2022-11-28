@@ -12,7 +12,7 @@ add manually (Martin may have done something in shared)
 
 * pick up jquery from one of the big cdn's (google/ms/jquery) with fallback to local copy (optimisation)
 
-* generate ie8 css using $govuk-is-ie8.
+* generate ie8 css using $govuk-is-ie8. & ie8 version of moj too (same https://design-patterns.service.justice.gov.uk/get-started/supporting-internet-explorer-8/)
  revert to non-js version of website for internet explorer (saves a lot of hassle), don't think html5shiv is required if we don't support js on ie.
  see https://frontend.design-system.service.gov.uk/supporting-ie8/#support-internet-explorer-8
 
