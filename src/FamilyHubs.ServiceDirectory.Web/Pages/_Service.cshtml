@@ -1,0 +1,117 @@
+﻿@model Service
+
+<div class="govuk-summary-list__row">
+    <div class="govuk-summary-list__key">
+        @*todo: description on view enum?*@
+        <span class="govuk-caption-m govuk-!-margin-top-3">@(Model.Type == ServiceType.FamilyHub ? "Family hub" : "Service")</span>
+        @*todo: gds class for font-weight?*@
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.Name <span style="font-weight: 400;"> (@Model.Distance miles)</span></h3>
+    </div>
+</div>
+
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+    @if (Model.RunBy != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Run by
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.RunBy
+            </dd>
+        </div>
+    }
+    @if (Model.AgeRange != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Age range
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.AgeRange
+            </dd>
+        </div>
+    }
+    @if (Model.When != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                When
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.When
+            </dd>
+        </div>
+    }
+    @if (Model.Where != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Where
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @foreach (string addressLine in Model.Where)
+                {
+                    @addressLine <br/>
+                }
+            </dd>
+        </div>
+    }
+    @if (Model.Phone != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Phone
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @*todo: 2 separate fields? should be global number (+), but do we have that, should we construct it. is 'remove spaces' enough?*@
+                @*see https://www.rfc-editor.org/rfc/rfc3966#page-6*@
+                <a href="tel:@Model.Phone.Replace(" ", "")">@Model.Phone</a>
+            </dd>
+        </div>
+    }
+    @if (Model.Email != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Email
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <a href="mailto:@(Model.Email)">@Model.Email</a>
+            </dd>
+        </div>
+    }
+    @if (Model.WebsiteName != null && Model.WebsiteUrl != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Website
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <a href="@(Model.WebsiteUrl)">@Model.WebsiteName</a>
+            </dd>
+        </div>
+    }
+    @if (Model.Availability != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Availability
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Availability
+            </dd>
+        </div>
+    }
+    @if (Model.Cost != null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Cost
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Cost
+            </dd>
+        </div>
+    }
+</dl>
