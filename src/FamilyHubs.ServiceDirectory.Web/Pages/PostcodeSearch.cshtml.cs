@@ -15,7 +15,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             _postcodeLookup = postcodeLookup;
         }
 
-        //todo: use post-redirect-get or not??
         public void OnGet(PostcodeError postcodeError)
         {
             PostcodeError = postcodeError;
@@ -23,13 +22,13 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
 
         public async Task<IActionResult> OnPost(string? postcode)
         {
-            var (postcodeError, _) = await _postcodeLookup.Get(postcode);
+            var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postcode);
             if (postcodeError != PostcodeError.None)
             {
                 return RedirectToPage("/PostcodeSearch", new { postcodeError });
             }
 
-            return RedirectToPage("/ServiceFilter");
+            return RedirectToPage("/ServiceFilter", new { postcode = postcodeInfo!.Postcode});
         }
     }
 }
