@@ -93,43 +93,11 @@
                             <input class="govuk-input" id="keywords" name="keywords" type="text">
                             *@
                         </div>
-
-                        <div class="govuk-form-group">
-
-                            <fieldset class="govuk-fieldset">
-
-                                @*moj standard vs prototype : govuk-fieldset__legend--m vs govuk-fieldset__legend--s*@
-                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-
-                                    Cost
-
-                                </legend>
-
-                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                    
-                                    @*todo: partial for section (and checkbox?) from model*@
-                                    @*todo: filters from config? cms? or just hard-code?*@
-                                    <div class="govuk-checkboxes__item">
-                                        @*todo: checked from model*@
-                                        <input class="govuk-checkboxes__input" id="cost-free" name="cost" type="checkbox" value="free">
-                                        <label class="govuk-label govuk-checkboxes__label" for="cost-free">
-                                            Free
-                                        </label>
-
-                                    </div>
-
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="cost-pay-to-use" name="cost" type="checkbox" value="pay-to-use">
-                                        <label class="govuk-label govuk-checkboxes__label" for="cost-pay-to-use">
-                                            Pay to use
-                                        </label>
-
-                                    </div>
-
-                                </div>
-
-                            </fieldset>
-                        </div>
+                        
+                        @foreach (var filter in ServiceFilterModel.Filters)
+                        {
+                            <partial name="_FilterGroup" model="filter" />
+                        }
                     </div>
                 </form>
             </div>
