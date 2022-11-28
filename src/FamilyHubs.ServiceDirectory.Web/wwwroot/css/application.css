@@ -7441,4 +7441,9 @@ p + .govuk-heading-s,
   margin-bottom: 0;
 }
 
+/*todo: don't want border on last one - switch to class on container level and use appropriate css selector*/
+.app-filter-group {
+  border-bottom: 1px solid #b1b4b6;
+}
+
 /*# sourceMappingURL=application.css.map */
