@@ -7454,4 +7454,12 @@ p + .govuk-heading-s,
   padding: 10px 20px 20px 20px;
 }
 
+/*todo ensure have media responsive*/
+.app-scrollable {
+  margin-left: -10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-left: 10px;
+}
+
 /*# sourceMappingURL=application.css.map */
