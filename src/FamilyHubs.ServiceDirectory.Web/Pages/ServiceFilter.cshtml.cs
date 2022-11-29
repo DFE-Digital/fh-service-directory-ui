@@ -7,6 +7,72 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
     public class ServiceFilterModel : PageModel
     {
         //todo: partial?
+        public static readonly FilterSubGroups CategoryFilter = new ("category", "Category", new Filter[]
+        {
+            //todo: can we get these from the db?
+            new ("activities", "Activities, clubs and groups", FilterType.Checkboxes, new IFilterAspect[]
+            {
+                new FilterAspect("activities--activities", "Activities"),
+                new FilterAspect("activities--school-clubs", "Before and after school clubs"),
+                new FilterAspect("activities--holiday-clubs", "Holiday clubs and schemes"),
+                new FilterAspect("activities--music-arts-dance", "Music, arts and dance"),
+                new FilterAspect("activities--parent-group", "Parent, baby and toddler groups"),
+                new FilterAspect("activities--preschool-playgroup", "Pre-school playgroup"),
+                new FilterAspect("activities--sports", "Sports and recreation")
+            }),
+            new ("family-support", "Family support", FilterType.Checkboxes, new IFilterAspect[]
+            {
+                new FilterAspect("family-support--bullying", "Bullying and cyber bullying"),
+                new FilterAspect("family-support--debt-advice", "Debt and welfare advice"),
+                new FilterAspect("family-support--domestic-abuse", "Domestic abuse"),
+                new FilterAspect("family-support--intensive", "Intensive targeted family support"),
+                new FilterAspect("family-support--money-benefits-housing", "Money, benefits and housing"),
+                new FilterAspect("family-support--parenting", "Parenting support"),
+                new FilterAspect("family-support--reducing-parental-conflict", "Reducing parental conflict"),
+                new FilterAspect("family-support--separation-support", "Separating and separated parent support"),
+                new FilterAspect("family-support--stopping-smoking", "Stopping smoking"),
+                new FilterAspect("family-support--substance-misuse", "Substance misuse (including alcohol and drug)"),
+                new FilterAspect("family-support--targeted-youth", "Targeted youth support"),
+                new FilterAspect("family-support--youth-justice", "Youth justice services")
+            }),
+            new ("health", "Health", FilterType.Checkboxes, new IFilterAspect[]
+            {
+                new FilterAspect("health--hearing-sight", "Hearing and sight"),
+                new FilterAspect("health--nutrition", "Nutrition and weight management"),
+                new FilterAspect("health--oral", "Oral health"),
+                new FilterAspect("health--public", "Public health services"),
+                new FilterAspect("health--mental", "Mental health, social and emotional support")
+            }),
+            new ("pregnancy", "Pregnancy, birth and early years", FilterType.Checkboxes, new IFilterAspect[]
+            {
+                new FilterAspect("pregnancy--early-years", "Early years language and learning"),
+                new FilterAspect("pregnancy--birth-registration", "Birth registration"),
+                new FilterAspect("pregnancy--infant-feeding", "Infant feeding support (including breastfeeding)"),
+                new FilterAspect("pregnancy--midwife", "Midwife and maternity"),
+                new FilterAspect("pregnancy--perinatal_mental", "Perinatal mental health support (pregnancy to one year post birth)"),
+                new FilterAspect("pregnancy--health-visiting", "Health visiting")
+            }),
+            new ("send", "Special educational needs and disabilities (SEND) support", FilterType.Checkboxes, new IFilterAspect[]
+            {
+                new FilterAspect("send--early-years", "Early years support"),
+                new FilterAspect("send--asd", "Autistic Spectrum Disorder (ASD)"),
+                new FilterAspect("send--breaks", "Breaks and respite"),
+                new FilterAspect("send--parents-carers", "Groups for parents and carers of children with SEND"),
+                new FilterAspect("send--hearing-impairment", "Hearing impairment"),
+                new FilterAspect("send--multi-sensory-impairment", "Multi-sensory impairment"),
+                new FilterAspect("send--physical-disabilities", "Physical disabilities"),
+                new FilterAspect("send--learning-difficulties", "Learning difficulties and disabilities"),
+                new FilterAspect("send--social-support", "Social, emotional and mental health support"),
+                new FilterAspect("send--speech", "Speech, language and communication needs"),
+                new FilterAspect("send--visual-impairment", "Visual impairment"),
+                new FilterAspect("send--other-difficulties", "Other difficulties or disabilities")
+            }),
+            new ("transport", "Transport", FilterType.Checkboxes, new IFilterAspect[]
+            {
+                new FilterAspect("transport--community", "Community transport")
+            })
+        });
+
         public static readonly IEnumerable<Filter> Filters = new[]
         {
             new Filter("cost", "Cost", FilterType.Checkboxes, new IFilterAspect[]

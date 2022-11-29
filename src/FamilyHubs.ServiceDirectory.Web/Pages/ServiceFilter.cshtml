@@ -86,7 +86,10 @@
                             <input class="govuk-input" id="keywords" name="keywords" type="text">
                             *@
                         </div>
-                        
+
+@*                        <partial name="_FilterGroupSubGroups" model="ServiceFilterModel.CategoryFilter" />*@
+
+
                         @foreach (var filter in ServiceFilterModel.Filters)
                         {
                             <partial name="_FilterGroup" model="filter" />
