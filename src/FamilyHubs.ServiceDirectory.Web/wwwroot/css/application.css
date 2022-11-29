@@ -7448,4 +7448,10 @@ p + .govuk-heading-s,
   border-bottom: none;
 }
 
+.app-family-hub {
+  background-color: rgba(29, 112, 184, 0.1);
+  /*todo: keep as pixels?*/
+  padding: 10px 20px 20px 20px;
+}
+
 /*# sourceMappingURL=application.css.map */

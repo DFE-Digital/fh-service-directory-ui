@@ -104,13 +104,17 @@
         </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
+        <div class="app-family-hub">
+            <partial name="_Service" model='new Service(ServiceType.FamilyHub, "Be Open On Breastfeeding in Salford", "0.3", "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "Drop in", "£2 every session")'/>
+        </div>
+
         @*todo: optional (depending on show filters)*@
         @*todo: class for styling*@
-        <p style="margin-top: 20px; margin-bottom: 0px;">
+        <p style="margin-top: 20px; margin-bottom: 0;">
             Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
         </p>
         <hr class="govuk-!-margin-bottom-4 govuk-!-margin-top-4">
 
-        <partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", "0.3", "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "Drop in", "£2 every session")' />
+        <partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", "0.3", "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "Drop in", "£2 every session")'/>
     </div>
 </div>
