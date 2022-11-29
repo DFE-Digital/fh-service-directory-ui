@@ -7455,7 +7455,12 @@ p + .govuk-heading-s,
 }
 
 /*todo ensure have media responsive*/
-.app-scrollable {
+/*todo: important not nice*/
+.app-sub-filters {
+  margin-bottom: 20px !important;
+}
+
+.app-sub-filters-scrollable {
   margin-left: -10px;
   max-height: 400px;
   overflow-y: auto;

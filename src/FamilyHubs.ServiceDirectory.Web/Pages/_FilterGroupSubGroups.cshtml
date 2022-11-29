@@ -6,42 +6,44 @@
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             @Model.Description
         </legend>
-        <div class="app-scrollable">
-        @foreach (var subFilter in Model.SubFilters)
-        {
-            <div class="govuk-form-group app-filter-group">
-                <fieldset class="govuk-fieldset">
-                    @*moj standard vs prototype : govuk-fieldset__legend--m vs govuk-fieldset__legend--s*@
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+        <div class="app-sub-filters">
+            <div class="app-sub-filters-scrollable">
+            @foreach (var subFilter in Model.SubFilters)
+            {
+                <div class="govuk-form-group app-filter-group">
+                    <fieldset class="govuk-fieldset">
+                        @*moj standard vs prototype : govuk-fieldset__legend--m vs govuk-fieldset__legend--s*@
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                             @subFilter.Description
-                    </legend>
+                        </legend>
 
-                    @*todo: partials, as shared with normal filters?*@
-                    @switch (subFilter.FilterType)
-                    {
-                        case FilterType.Checkboxes:
-                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                        @*todo: partials, as shared with normal filters?*@
+                        @switch (subFilter.FilterType)
+                        {
+                            case FilterType.Checkboxes:
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                     @foreach (var aspect in subFilter.Aspects)
-                                {
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="@aspect.Id" name="@Model.Name" type="checkbox" value="@aspect.Id"
-                                               @if (aspect.Selected)
-                                               {
-                                                   @:checked
-                                               }>
-                                        <label class="govuk-label govuk-checkboxes__label" for="@aspect.Id">
-                                            @aspect.Description
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                            break;
-                        case FilterType.Radios:
-                            throw new NotImplementedException();
-                    }
-                </fieldset>
-            </div>
-        }
+                                    {
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="@aspect.Id" name="@Model.Name" type="checkbox" value="@aspect.Id"
+                                                   @if (aspect.Selected)
+                                                   {
+                                                       @:checked
+                                                   }>
+                                            <label class="govuk-label govuk-checkboxes__label" for="@aspect.Id">
+                                                @aspect.Description
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                                break;
+                            case FilterType.Radios:
+                                throw new NotImplementedException();
+                        }
+                    </fieldset>
+                </div>
+            }
+        </div>
         </div>
     </fieldset>
 </div>

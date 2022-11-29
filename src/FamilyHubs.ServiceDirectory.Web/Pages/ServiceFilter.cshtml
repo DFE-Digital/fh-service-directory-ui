@@ -66,27 +66,6 @@
                             Apply filters
                         </button>
 
-                        <div class="govuk-form-group">
-                            
-                            @*todo: category with sub category. standard grouping from moj, or elsewhere?*@
-                            @*                        <fieldset class="govuk-fieldset resul-filters">
-
-                        <div class="filters-component__groups">
-                        <div class="filters-component__groups__group" data-filters-target="group" data-group="subjects">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><h3 class="govuk-fieldset__heading">Category</h3></legend>
-                        <div>
-                        <div class="searchable-collection-component" style="margin-bottom: 20px;">
-                            <div class="searchable-collection-component--only-scrollable">
-*@
-
-                            @*                                <label class="govuk-label govuk-label--m" for="keywords">
-                                Keywords
-                            </label>
-
-                            <input class="govuk-input" id="keywords" name="keywords" type="text">
-                            *@
-                        </div>
-
                         <partial name="_FilterGroupSubGroups" model="ServiceFilterModel.CategoryFilter" />
 
                         @foreach (var filter in ServiceFilterModel.Filters)
