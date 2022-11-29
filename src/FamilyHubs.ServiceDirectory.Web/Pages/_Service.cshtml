@@ -32,7 +32,7 @@
             </dd>
         </div>
     }
-    @if (Model.When != null)
+    @if (Model.Type == ServiceType.Service && Model.When != null)
     {
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
@@ -94,7 +94,7 @@
     }
     @*not in build prototype (not mvp)*@
     @*Open Referral: attending_access on service*@
-@*  @if (Model.Availability != null)
+    @*  @if (Model.Availability != null)
     {
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
@@ -105,6 +105,18 @@
             </dd>
         </div>
     }*@
+    @if (Model.Type == ServiceType.FamilyHub && Model.When != null)
+    {
+        //todo: partial for field
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Opening hours
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.When
+            </dd>
+        </div>
+    }
     @if (Model.Cost != null)
     {
         <div class="govuk-summary-list__row">

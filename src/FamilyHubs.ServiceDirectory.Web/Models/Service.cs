@@ -9,20 +9,24 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
     }
 
     //todo: type hierarchy, rather than type? or just null what we don't have?
-
+    //todo: we don't get supplied a WebsiteName, so we'll have to use Name for now
+    // Availability has been taken out of MVP
+    // 'When/opening hours' may be the same thing, in which case, we can use type to determine the title
+    //todo: when / opening hours => how to display normal/holiday hours
     public record Service(
         ServiceType Type,
         string Name,
         //todo: number instead?
-        string? Distance,
-        string? RunBy,
-        string? AgeRange,
-        string? When,
-        IEnumerable<string>? Where,
-        string? Phone,
-        string? Email,
-        string? WebsiteName,
-        string? WebsiteUrl,
-        string? Availability,
-        string? Cost);
+        //todo: what's actually mandatory?
+        string? Distance = null,
+        string? RunBy = null,
+        string? AgeRange = null,
+        string? When = null,
+        IEnumerable<string>? Where = null,
+        string? Phone = null,
+        string? Email = null,
+        string? WebsiteName = null,
+        string? WebsiteUrl = null,
+        string? Availability = null,
+        string? Cost = null);
 }
