@@ -107,15 +107,7 @@
     }*@
     @if (Model.Type == ServiceType.FamilyHub && Model.When != null)
     {
-        //todo: partial for field
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Opening hours
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.When
-            </dd>
-        </div>
+        <partial name="_SummaryListRow" model='("Opening hours", Model.When)' />
     }
     @if (Model.Cost != null)
     {

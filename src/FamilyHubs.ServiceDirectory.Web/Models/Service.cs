@@ -13,7 +13,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
     // Availability has been taken out of MVP
     // 'When/opening hours' may be the same thing, in which case, we can use type to determine the title
     //todo: when / opening hours => how to display normal/holiday hours
-    public record Service(
+    public sealed record Service(
         ServiceType Type,
         string Name,
         //todo: number instead?
