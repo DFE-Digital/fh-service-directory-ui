@@ -10,11 +10,8 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
-      
         <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch">@Model.Postcode?.ToUpperInvariant()</a></span>
-
     </div>
 </div>
 
@@ -36,11 +33,8 @@
             </div>
 
             <div class="moj-filter__content">
-
                 <div class="moj-filter__selected">
-
                     <div class="moj-filter__selected-heading">
-
                         <div class="moj-filter__heading-title">
                             @*moj standard vs prototype*@
                             @*<h2 class="govuk-heading-m">Selected filters</h2>*@
@@ -52,7 +46,6 @@
                             @*todo: class for custom styling*@
                             <p><a class="govuk-link--no-visited-state" href="">Clear filters</a></p>
                         </div>
-
                     </div>
                     
                     @*moj standard vs prototype : applied filters diverges quite a lot*@
@@ -106,13 +99,16 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="app-family-hub">
             <partial name="_Service" model='new Service(ServiceType.FamilyHub, "Central Family Hub, Salford", "0.2", When:"Monday to Friday, 9am to 5pm", Where:new[] {"Broughton Hub", "50 Rigby Street", "Salford M7 4BQ"}, Phone:"0161 778 0601", Email:"broughtonhub@salford.gov.uk", WebsiteName:"Central Family Hub, Salford", WebsiteUrl:"https://www.salford.gov.uk/children-and-families/early-help-for-families/family-hubs-childrens-centres/", Cost:"Free")' />
+            @*todo: css id selector for this*@
+            <p style="margin-bottom: 10px;">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
         </div>
 
         @*todo: optional (depending on show filters)*@
-        @*todo: class for styling*@
+        @*todo: class for styling (including replacing hr below?)*@
         <p style="margin-top: 20px; margin-bottom: 0;">
             Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
         </p>
+        @*todo: use css border rather than hr??*@
         <hr class="govuk-!-margin-bottom-4 govuk-!-margin-top-4">
 
         <partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", "0.3", "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "Drop in", "£2 every session")'/>
