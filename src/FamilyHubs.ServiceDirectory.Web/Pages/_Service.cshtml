@@ -2,7 +2,7 @@
 
 <div class="govuk-summary-list__row">
     <div class="govuk-summary-list__key">
-        @*todo: description on view enum?*@
+        @*todo: description on view enum? - think it will come from db*@
         <span class="govuk-caption-m govuk-!-margin-top-3">@(Model.Type == ServiceType.FamilyHub ? "Family hub" : "Service")</span>
         @*todo: gds class for font-weight?*@
         <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.Name <span style="font-weight: 400;"> (@Model.Distance miles)</span></h3>
@@ -92,7 +92,9 @@
             </dd>
         </div>
     }
-    @if (Model.Availability != null)
+    @*not in build prototype (not mvp)*@
+    @*Open Referral: attending_access on service*@
+@*  @if (Model.Availability != null)
     {
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
@@ -102,7 +104,7 @@
                 @Model.Availability
             </dd>
         </div>
-    }
+    }*@
     @if (Model.Cost != null)
     {
         <div class="govuk-summary-list__row">

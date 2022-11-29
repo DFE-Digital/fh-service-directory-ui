@@ -2,4 +2,10 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
-public record Filter(string Name, string Description, IEnumerable<IFilterAspect> Aspects);
+public enum FilterType
+{
+    Checkboxes,
+    Radios
+}
+
+public record Filter(string Name, string Description, FilterType FilterType, IEnumerable<IFilterAspect> Aspects);
