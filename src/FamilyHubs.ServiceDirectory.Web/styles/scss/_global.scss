@@ -1,4 +1,8 @@
-﻿/*todo: don't want border on last one - switch to class on container level and use appropriate css selector*/
+﻿
 .app-filter-group {
     border-bottom: 1px solid $govuk-border-colour;
+
+    &:last-child {
+        border-bottom: none;
+    }
 }
