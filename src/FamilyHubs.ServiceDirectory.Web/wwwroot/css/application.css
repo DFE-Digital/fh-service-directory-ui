@@ -7445,15 +7445,13 @@ p + .govuk-heading-s,
 .app-open-close-filters {
   display: none;
 }
-
-/*todo::after incorporate this (converts to em & better syntax) ... https: //github.com/DEFRA/defra-ruby-template/blob/904bf2d27e564f2948264c488a022d78ae792ad9/vendor/assets/stylesheets/helpers/_media-queries.scss*/
-/*todo: if switch to em, need to make sure breaks at same time filters disappear*/
-@media (max-width: 641px) {
+@media (max-width: 40.0525em) {
   .app-open-close-filters {
     display: block;
     margin-bottom: 15px;
   }
 }
+
 .app-filter-group {
   border-bottom: 1px solid #b1b4b6;
 }
