@@ -7461,21 +7461,44 @@ p + .govuk-heading-s,
 
 .app-family-hub {
   background-color: rgba(29, 112, 184, 0.1);
-  /*todo: keep as pixels?*/
-  padding: 10px 20px 20px 20px;
+  /*note: we can't use "all" and "top", as that doesn't produce the correct css*/
+  /*the generated css is a bit verbose (multiple unnecessary media queries). perhaps minification is smart enough to sort that out??*/
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  padding-left: 15px;
+}
+@media (min-width: 40.0625em) {
+  .app-family-hub {
+    padding-right: 20px;
+  }
+}
+@media (min-width: 40.0625em) {
+  .app-family-hub {
+    padding-bottom: 20px;
+  }
+}
+@media (min-width: 40.0625em) {
+  .app-family-hub {
+    padding-left: 20px;
+  }
 }
 
-/*todo ensure have media responsive*/
 /*todo: important not nice*/
 .app-sub-filters {
-  margin-bottom: 20px !important;
+  margin-bottom: 15px !important;
+}
+@media (min-width: 40.0625em) {
+  .app-sub-filters {
+    margin-bottom: 20px !important;
+  }
 }
 
 .app-sub-filters-scrollable {
   margin-left: -10px;
+  padding-left: 10px;
   max-height: 400px;
   overflow-y: auto;
-  padding-left: 10px;
 }
 
 /*# sourceMappingURL=application.css.map */
