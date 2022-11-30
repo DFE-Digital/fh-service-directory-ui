@@ -64,14 +64,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/govuk-frontend-4.4.0.min.js"></script>
     <script src="~/js/moj-8.1.0.js"></script>
-<script>
+    <script>
         //todo: initialize just the components we use
         window.GOVUKFrontend.initAll()
         //todo: initialize just the components we use https://design-patterns.service.justice.gov.uk/get-started/setting-up-javascript/
         window.MOJFrontend.initAll()
-    
-</script>
+    </script>
 
+    <script src="~/js/app.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

@@ -15,8 +15,7 @@
     </div>
 </div>
 
-@*todo: open / close filter buttons (appears on narrow displays)*@
-<button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="myOpenClose()">
+<button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
     Open / close filters
 </button>
 
@@ -63,7 +62,7 @@
                 </div>
                 
                 <form method="post">
-                    <div class="moj-filter__options">
+                    <div id="filters" class="moj-filter__options">
 
                         <button class="govuk-button" data-module="govuk-button">
                             Apply filters
