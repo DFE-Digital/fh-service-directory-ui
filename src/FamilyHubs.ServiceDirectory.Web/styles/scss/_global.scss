@@ -1,4 +1,20 @@
 ﻿
+/*filter page*/
+
+.app-open-close-filters {
+    display: none;
+}
+
+/*todo::after incorporate this (converts to em & better syntax) ... https: //github.com/DEFRA/defra-ruby-template/blob/904bf2d27e564f2948264c488a022d78ae792ad9/vendor/assets/stylesheets/helpers/_media-queries.scss*/
+/*todo: if switch to em, need to make sure breaks at same time filters disappear*/
+//@media (max-width: 40.0525em) {
+@media (max-width: map.get($govuk-breakpoints, "tablet")) {
+    .app-open-close-filters {
+        display: block;
+        margin-bottom: 15px;
+    }
+}
+
 .app-filter-group {
     border-bottom: 1px solid $govuk-border-colour;
 
@@ -12,7 +28,6 @@
     /*todo: keep as pixels?*/
     padding: 10px 20px 20px 20px;
 }
-
 /*todo ensure have media responsive*/
 /*todo: important not nice*/
 .app-sub-filters {
