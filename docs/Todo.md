@@ -1,5 +1,9 @@
 # Todo
 
+* folders for pages + partials? e.g. ServiceFilter
+
+* use razor page css isolation?
+
 * does moj js do anything with filter?
  if not, don't include
 if so, initialize individual component, https://design-patterns.service.justice.gov.uk/get-started/setting-up-javascript/

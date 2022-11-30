@@ -8,6 +8,12 @@
     <a asp-page="/PostcodeSearch" class="govuk-back-link">Back</a>
 }
 
+@*todo: if no services*@
+@*@if (no services) {
+    <partial name="_ServiceFilterNoResults" />
+}
+else {*@
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
@@ -88,11 +94,10 @@
         </div>
 
         @*todo: optional (depending on show filters)*@
-        @*todo: class for styling (including replacing hr below?)*@
         <p id="services-description">
             Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
         </p>
-        @*todo: use css border rather than hr??*@
+        @*todo: use css border on p above, rather than hr??*@
         <hr class="govuk-!-margin-bottom-4 govuk-!-margin-top-4">
 
         <partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", "0.3", "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "Drop in", "£2 every session")'/>
