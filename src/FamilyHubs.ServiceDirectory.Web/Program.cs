@@ -1,4 +1,4 @@
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

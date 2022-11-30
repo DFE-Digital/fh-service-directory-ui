@@ -6,7 +6,7 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
 
-namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
 
 public static class PostcodesIoServiceCollectionExtension
 {

@@ -1,7 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 
-namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
 public class PostcodesIoLookup : IPostcodeLookup
 {
@@ -23,10 +23,10 @@ public class PostcodesIoLookup : IPostcodeLookup
         using var response = await httpClient.GetAsync(postcode, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
         if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NotFound)
-            throw new PostcodeIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+            throw new PostcodesIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
 
         var postcodesIoResponse = await JsonSerializer.DeserializeAsync<PostcodesIoResponse>(
-            await response.Content.ReadAsStreamAsync(cancellationToken), 
+            await response.Content.ReadAsStreamAsync(cancellationToken),
             cancellationToken: cancellationToken);
 
         if (postcodesIoResponse is null)
@@ -35,7 +35,7 @@ public class PostcodesIoLookup : IPostcodeLookup
             // (see https://stackoverflow.com/questions/71162382/why-are-the-return-types-of-nets-system-text-json-jsonserializer-deserialize-m)
             // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
             // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
-            throw new PostcodeIoClientException(response, "null");
+            throw new PostcodesIoClientException(response, "null");
         }
 
         var postcodeError = PostcodeError.None;
