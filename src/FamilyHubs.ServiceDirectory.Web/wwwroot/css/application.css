@@ -7520,4 +7520,25 @@ p + .govuk-heading-s,
   }
 }
 
+.app-icon-cross {
+  background-image: url("../images/icon-cross.svg");
+  background-repeat: no-repeat;
+}
+
+.app-remove-filter-tag {
+  -webkit-font-smoothing: antialiased;
+  background-color: #fff;
+  border: 1px solid #0b0c0c;
+  cursor: pointer;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  padding-left: 25px;
+  text-align: left;
+  background-position: 5px center;
+}
+
 /*# sourceMappingURL=application.css.map */
