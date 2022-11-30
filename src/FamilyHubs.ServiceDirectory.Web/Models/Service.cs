@@ -9,10 +9,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
     }
 
     //todo: type hierarchy, rather than type? or just null what we don't have?
-    //todo: we don't get supplied a WebsiteName, so we'll have to use Name for now
-    // Availability has been taken out of MVP
-    // 'When/opening hours' may be the same thing, in which case, we can use type to determine the title
-    //todo: when / opening hours => how to display normal/holiday hours
+    //todo: we don't get supplied a WebsiteName, so we'll have to use Name (or the url itself) for now
+    // 'When/opening hours' will be the same thing, in which case, we can use type to determine the title
+    // when / opening hours will show regular schedule only. holiday schedule will be ignored for mvp (probably just show the description field)
     public sealed record Service(
         ServiceType Type,
         string Name,
@@ -27,6 +26,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
         string? Email = null,
         string? WebsiteName = null,
         string? WebsiteUrl = null,
-        string? Availability = null,
+        // Availability has been taken out of MVP
+        //string? Availability = null,
         string? Cost = null);
 }
