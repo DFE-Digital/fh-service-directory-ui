@@ -37,3 +37,18 @@
     max-height: 400px;
     overflow-y: auto;
 }
+
+#filters {
+    @include govuk-media-query($from: tablet) {
+        display: block !important;
+    }
+}
+
+#family-hubs-description {
+    @include govuk-responsive-margin(2, "bottom");
+}
+
+#services-description {
+    @include govuk-responsive-margin(4, "top");
+    @include govuk-responsive-margin(0, "bottom");
+}

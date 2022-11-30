@@ -7500,4 +7500,24 @@ p + .govuk-heading-s,
   overflow-y: auto;
 }
 
+@media (min-width: 40.0625em) {
+  #filters {
+    display: block !important;
+  }
+}
+
+#family-hubs-description {
+  margin-bottom: 10px;
+}
+
+#services-description {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+@media (min-width: 40.0625em) {
+  #services-description {
+    margin-top: 20px;
+  }
+}
+
 /*# sourceMappingURL=application.css.map */

@@ -15,6 +15,8 @@
     </div>
 </div>
 
+@*todo: prototype always leaves the filter results box displayed - should we remove that too?*@
+@*todo: if close filter on prototype, then expand page, there's no way of showing the filters again*@
 <button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
     Open / close filters
 </button>
@@ -82,13 +84,12 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="app-family-hub">
             <partial name="_Service" model='new Service(ServiceType.FamilyHub, "Central Family Hub, Salford", "0.2", When:"Monday to Friday, 9am to 5pm", Where:new[] {"Broughton Hub", "50 Rigby Street", "Salford M7 4BQ"}, Phone:"0161 778 0601", Email:"broughtonhub@salford.gov.uk", WebsiteName:"Central Family Hub, Salford", WebsiteUrl:"https://www.salford.gov.uk/children-and-families/early-help-for-families/family-hubs-childrens-centres/", Cost:"Free")' />
-            @*todo: css id selector for this*@
-            <p style="margin-bottom: 10px;">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
+            <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
         </div>
 
         @*todo: optional (depending on show filters)*@
         @*todo: class for styling (including replacing hr below?)*@
-        <p style="margin-top: 20px; margin-bottom: 0;">
+        <p id="services-description">
             Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
         </p>
         @*todo: use css border rather than hr??*@
