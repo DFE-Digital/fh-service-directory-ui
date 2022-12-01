@@ -17,7 +17,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
         string Name,
         //todo: number instead?
         //todo: what's actually mandatory?
-        string? Distance = null,
+        double? Distance,
         string? RunBy = null,
         string? AgeRange = null,
         string? When = null,

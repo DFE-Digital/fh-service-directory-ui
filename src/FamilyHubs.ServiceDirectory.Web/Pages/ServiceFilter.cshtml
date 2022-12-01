@@ -1,5 +1,5 @@
 ﻿@page
-@model FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilterModel
+@model ServiceFilterModel
 @{
     ViewData["Title"] = "Your local family hubs, services and activities";
 }
@@ -8,96 +8,113 @@
     <a asp-page="/PostcodeSearch" class="govuk-back-link">Back</a>
 }
 
-@*todo: if no services*@
-@*@if (no services) {
+@if (!Model.Services.Any()) {
     <partial name="_ServiceFilterNoResults" />
 }
-else {*@
+else
+{
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
-        <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch">@Model.Postcode?.ToUpperInvariant()</a></span>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
+            <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch">@Model.Postcode?.ToUpperInvariant()</a></span>
+        </div>
     </div>
-</div>
 
-<button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
-    Open / close filters
-</button>
+    <button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
+        Open / close filters
+    </button>
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <div class="moj-filter">
-            <div class="moj-filter__header">
-                
-                @*moj standard vs prototype*@
-                @*<div class="moj-filter__header-title">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+            <div class="moj-filter">
+                <div class="moj-filter__header">
+
+                    @*moj standard vs prototype*@
+                    @*<div class="moj-filter__header-title">
                     <h2 class="govuk-heading-m">Filter</h2>
                 </div>*@
 
-                <div class="moj-filter__header-action">
+                    <div class="moj-filter__header-action">
+                    </div>
+
                 </div>
 
-            </div>
+                <div class="moj-filter__content">
+                    <div class="moj-filter__selected">
+                        <div class="moj-filter__selected-heading">
+                            <div class="moj-filter__heading-title">
+                                @*moj standard vs prototype*@
+                                @*<h2 class="govuk-heading-m">Selected filters</h2>*@
+                                <h2 class="govuk-heading-m">Filter results</h2>
+                            </div>
 
-            <div class="moj-filter__content">
-                <div class="moj-filter__selected">
-                    <div class="moj-filter__selected-heading">
-                        <div class="moj-filter__heading-title">
-                            @*moj standard vs prototype*@
-                            @*<h2 class="govuk-heading-m">Selected filters</h2>*@
-                            <h2 class="govuk-heading-m">Filter results</h2>
+                            <div class="moj-filter__heading-action">
+                                @*moj standard vs prototype : prototype has font-size: 16px*@
+                                @*todo: class for custom styling*@
+                                <p><a class="govuk-link--no-visited-state" href="">Clear filters</a></p>
+                            </div>
                         </div>
 
-                        <div class="moj-filter__heading-action">
-                            @*moj standard vs prototype : prototype has font-size: 16px*@
-                            @*todo: class for custom styling*@
-                            <p><a class="govuk-link--no-visited-state" href="">Clear filters</a></p>
-                        </div>
+                        @*moj standard vs prototype : applied filters diverges quite a lot*@
+                        @*todo: check intentional, or go with moj standard*@
+                        @*todo: these need to be driven from the applied filters in the model. hardcoding just for now*@
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Search within</h3>
+
+                        <ul class="moj-filter-tags">
+                            <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span>20 miles</a></li>
+                        </ul>
+
                     </div>
-                    
-                    @*moj standard vs prototype : applied filters diverges quite a lot*@
-                    @*todo: check intentional, or go with moj standard*@
-                    @*todo: these need to be driven from the applied filters in the model. hardcoding just for now*@
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Search within</h3>
 
-                    <ul class="moj-filter-tags">
-                        <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span>20 miles</a></li>
-                    </ul>
+                    <form method="post">
+                        <div id="filters" class="moj-filter__options">
 
+                            <button class="govuk-button" data-module="govuk-button">
+                                Apply filters
+                            </button>
+
+                            <partial name="_FilterGroupSubGroups" model="ServiceFilterModel.CategoryFilter"/>
+
+                            @foreach (var filter in ServiceFilterModel.Filters)
+                            {
+                                <partial name="_FilterGroup" model="filter"/>
+                            }
+                        </div>
+                    </form>
                 </div>
-                
-                <form method="post">
-                    <div id="filters" class="moj-filter__options">
-
-                        <button class="govuk-button" data-module="govuk-button">
-                            Apply filters
-                        </button>
-
-                        <partial name="_FilterGroupSubGroups" model="ServiceFilterModel.CategoryFilter" />
-
-                        @foreach (var filter in ServiceFilterModel.Filters)
-                        {
-                            <partial name="_FilterGroup" model="filter" />
-                        }
-                    </div>
-                </form>
             </div>
         </div>
-    </div>
-    <div class="govuk-grid-column-two-thirds">
-        <div class="app-family-hub">
-            <partial name="_Service" model='new Service(ServiceType.FamilyHub, "Central Family Hub, Salford", "0.2", When:"Monday to Friday, 9am to 5pm", Where:new[] {"Broughton Hub", "50 Rigby Street", "Salford M7 4BQ"}, Phone:"0161 778 0601", Email:"broughtonhub@salford.gov.uk", WebsiteName:"Central Family Hub, Salford", WebsiteUrl:"https://www.salford.gov.uk/children-and-families/early-help-for-families/family-hubs-childrens-centres/", Cost:"Free")' />
-            <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
+        <div class="govuk-grid-column-two-thirds">
+            @*todo: only highlight first family hub if neither show filter is selected*@
+            @if (Model.OnlyShowOneFamilyHubAndHighlightIt && Model.Services.Any(s => s.Type == ServiceType.FamilyHub))
+            {
+                <div class="app-family-hub">
+                    @*                <partial name="_Service" model='new Service(ServiceType.FamilyHub, "Central Family Hub, Salford", 0.2, When: "Monday to Friday, 9am to 5pm", Where: new[] {"Broughton Hub", "50 Rigby Street", "Salford M7 4BQ"}, Phone: "0161 778 0601", Email: "broughtonhub@salford.gov.uk", WebsiteName: "Central Family Hub, Salford", WebsiteUrl: "https://www.salford.gov.uk/children-and-families/early-help-for-families/family-hubs-childrens-centres/", Cost: "Free")'/>*@
+                    <partial name="_Service" , model="Model.Services.First()"/>
+                    <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
+                </div>
+
+                <p id="services-description">
+                    Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
+                </p>
+
+            @*todo: use css border on p above, rather than hr??*@
+                <hr class="govuk-!-margin-bottom-4 govuk-!-margin-top-4">
+
+                @foreach (var service in Model.Services.Where(s => s.Type == ServiceType.Service))
+                {
+                    <partial name="_Service" model='service'/>
+                }
+            }
+            else
+            {
+                @foreach (var service in Model.Services)
+                {
+                    <partial name="_Service" model='service'/>
+                }
+            }
+            @*<partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", 0.3, "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "£2 every session")'/>*@
         </div>
-
-        @*todo: optional (depending on show filters)*@
-        <p id="services-description">
-            Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
-        </p>
-        @*todo: use css border on p above, rather than hr??*@
-        <hr class="govuk-!-margin-bottom-4 govuk-!-margin-top-4">
-
-        <partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", "0.3", "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "£2 every session")'/>
     </div>
-</div>
+}

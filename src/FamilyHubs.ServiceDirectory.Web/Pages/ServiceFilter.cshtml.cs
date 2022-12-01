@@ -1,7 +1,9 @@
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Web.Models;
 using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages
 {
@@ -109,10 +111,15 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         };
 
         public string? Postcode { get; set; }
+        public IEnumerable<Service> Services { get; set; }
+        public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
 
         public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
         {
             _serviceDirectoryClient = serviceDirectoryClient;
+            Services = Enumerable.Empty<Service>();
+            // we set this to true when neither show filter is selected
+            OnlyShowOneFamilyHubAndHighlightIt = true;
         }
 
         public async Task OnGet(string? postcode, string? adminDistrict)
@@ -125,7 +132,49 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 throw new NotImplementedException();
             }
 
-            await _serviceDirectoryClient.GetServices(adminDistrict, 0f, 0f, 1500, 0, 5, false);
+            var services = await _serviceDirectoryClient.GetServices(adminDistrict, 0f, 0f, 1500, 0, 5, false);
+            ToServiceViewModel(services.Items);
+        }
+
+        //todo: where live?
+        public IEnumerable<Service> ToServiceViewModel(IEnumerable<OpenReferralServiceDto> serviceDto)
+        {
+            return serviceDto.Select(dto =>
+            {
+                Debug.Assert(dto.ServiceType.Description == "Family Experience");
+
+                //todo: check got one. always the first??
+                var serviceAtLocation = dto.Service_at_locations?.FirstOrDefault();
+                var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
+                var eligibility = dto.Eligibilities?.FirstOrDefault();
+
+                return new Service(
+                    //todo: check taxonomy to be safer
+                    dto.Description == "Family Hub" ? ServiceType.FamilyHub : ServiceType.Service,
+                    dto.Name,
+                    //todo: tidy
+                    (dto.Distance / 1609.34),
+                    //todo: do we capture this? where?
+                    "todo: e.g. Manchester University NHS Foundation Trust/NHS Salford Clinical Commissioning Group",
+                    //todo: tidy up. what about SEND??
+                    $"{eligibility?.Minimum_age} to {eligibility?.Maximum_age}",
+                    //todo: Regular_schedule off service or serviceatlocation?
+                    serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description,
+                    //todo: handle missing lines better
+                    new[]
+                    {
+                        address?.Address_1!,
+                        address?.City!,
+                        address?.State_province!,
+                        address?.Postal_code!
+                    },
+                    dto.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
+                    dto.Email,
+                    dto.Name,
+                    dto.Url,
+                    "todo: from cost options?");
+
+            });
         }
     }
 }

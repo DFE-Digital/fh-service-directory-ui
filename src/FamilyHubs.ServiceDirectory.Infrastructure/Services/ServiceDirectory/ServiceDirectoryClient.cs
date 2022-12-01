@@ -24,6 +24,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
     //todo:
     //given_age??
 
+    //todo: categories are passed as comma separated taxonmyIds
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
         string districtCode,
         float latitude,
