@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,8 @@ public static class PostcodesIoServiceCollectionExtension
     /// </remarks>
     public static void AddPostcodesIoClient(this IServiceCollection services, IConfiguration configuration)
     {
+        const string endpointConfigKey = "PostcodesIo:Endpoint";
+
         var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(10);
 
         //todo: do we really want to retry talking to postcodes.io???
@@ -31,9 +34,8 @@ public static class PostcodesIoServiceCollectionExtension
 
         services.AddHttpClient(PostcodesIoLookup.HttpClientName, client =>
             {
-                //todo: need to throw config exception if config is missing, rather than forgive null
-                // we'll do this once we have a config that won't be hard-coded in the appsettings
-                client.BaseAddress = new Uri(configuration["PostcodesIo:Endpoint"]!);
+                string endpoint = ConfigurationException.ThrowIfNotUrl(endpointConfigKey, configuration[endpointConfigKey], "The postcodesio URL", "https://api.postcodes.io/postcodes/");
+                client.BaseAddress = new Uri(endpoint);
             })
             .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
                 .HandleTransientHttpError()

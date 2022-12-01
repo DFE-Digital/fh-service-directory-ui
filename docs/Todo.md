@@ -1,5 +1,7 @@
 # Todo
 
+* this looks useful for exception testing: https://github.com/dotnet/aspnetcore/blob/ed1ac4285213158a85f69449dba448ef0c65fbf4/src/Testing/src/ExceptionAssertions.cs
+
 * folders for pages + partials? e.g. ServiceFilter
 
 * use razor page css isolation?
