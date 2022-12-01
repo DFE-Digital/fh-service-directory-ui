@@ -33,7 +33,7 @@ Example  : "{example}"
         string? example = "http://example.com",
         UriKind uriKind = UriKind.RelativeOrAbsolute)
     {
-        if (url == null || Uri.IsWellFormedUriString(url, uriKind))
+        if (url == null || !Uri.IsWellFormedUriString(url, uriKind))
         {
             throw new ConfigurationException(key, url, expected, example);
         }
