@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Globalization;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory
 {
@@ -9,20 +10,41 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory
         private readonly IHttpClientFactory _httpClientFactory;
         internal const string HttpClientName = "servicedirectory";
         //private static readonly Uri GetServicesUri = new("services", UriKind.Relative);
-        private static readonly string GetServicesBaseUri = "services";
+        //todo: is status for soft delete??
+        private static readonly string GetServicesBaseUri = "services?serviceType=Family Experience&status=active";
 
         public ServiceDirectoryClient(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(CancellationToken cancellationToken = default)
+        //app.MapGet("api/services", async (string? serviceType, string? status, string ? districtCode, int ? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string ? languages, bool? canFamilyChooseLocation, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
+
+        //todo:
+        //given_age??
+
+        public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
+            string districtCode,
+            float latitude,
+            float longitude,
+            int maximumProximityMeters,
+            int minimumAge,
+            int maximumAge,
+            bool isPaidFor,
+            CancellationToken cancellationToken = default)
         {
             var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
             var queryParams = new Dictionary<string, string?>
             {
-                {"serviceType", "Family Experience"}
+                {"districtCode", districtCode},
+                //todo: map from the front end (where's best?) ranges for these
+                {"minimum_age", minimumAge.ToString()},
+                {"maximum_age", maximumAge.ToString()},
+                {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
+                {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)},
+                {"proximity", maximumProximityMeters.ToString()},
+                {"isPaidFor", isPaidFor.ToString()}
             };
 
             string getServicesUri = QueryHelpers.AddQueryString(GetServicesBaseUri, queryParams);

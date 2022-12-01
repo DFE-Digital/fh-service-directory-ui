@@ -28,7 +28,13 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 return RedirectToPage("/PostcodeSearch", new { postcodeError });
             }
 
-            return RedirectToPage("/ServiceFilter", new { postcode = postcodeInfo!.Postcode});
+            return RedirectToPage("/ServiceFilter", new
+            {
+                postcode = postcodeInfo!.Postcode,
+                adminDistrict = postcodeInfo.Codes.AdminDistrict,
+                latitude = postcodeInfo.Latitude.ToString(),
+                longitude = postcodeInfo.Longitude.ToString()
+            });
         }
     }
 }
