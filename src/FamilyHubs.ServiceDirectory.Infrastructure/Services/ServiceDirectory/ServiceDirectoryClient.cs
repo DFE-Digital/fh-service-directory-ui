@@ -18,11 +18,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         _httpClientFactory = httpClientFactory;
     }
 
-    //app.MapGet("api/services", async (string? serviceType, string? status, string ? districtCode, int ? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string ? languages, bool? canFamilyChooseLocation, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
-
-    //todo:
-    //given_age??
-
     //todo: categories are passed as comma separated taxonmyIds
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
         string districtCode,

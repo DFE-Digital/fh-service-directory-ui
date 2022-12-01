@@ -139,8 +139,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 adminDistrict,
                 latitude!.Value,
                 longitude!.Value,
-                //todo: update seed data with a sensible lat/long
-                int.MaxValue);
+                1609*20);
             Services = ToServiceViewModel(services.Items);
         }
 
@@ -156,9 +155,12 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
                 var eligibility = dto.Eligibilities?.FirstOrDefault();
 
+                // or check id == d242700a-b2ad-42fe-8848-61534002156c instead??
+                //todo: just double check null Taxonomy
+                bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
+
                 return new Service(
-                    //todo: check taxonomy to be safer
-                    dto.Description == "Family Hub" ? ServiceType.FamilyHub : ServiceType.Service,
+                    isFamilyHub?ServiceType.FamilyHub:ServiceType.Service,
                     dto.Name,
                     //todo: tidy
                     (dto.Distance / 1609.34),
