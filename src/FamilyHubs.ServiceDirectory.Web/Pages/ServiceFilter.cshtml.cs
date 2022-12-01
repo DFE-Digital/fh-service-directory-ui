@@ -122,7 +122,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             OnlyShowOneFamilyHubAndHighlightIt = true;
         }
 
-        public async Task OnGet(string? postcode, string? adminDistrict)
+        public async Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
         {
             Postcode = postcode;
 
@@ -132,7 +132,10 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 throw new NotImplementedException();
             }
 
-            var services = await _serviceDirectoryClient.GetServices(adminDistrict, 0f, 0f, 1500, 0, 5, false);
+            // example postcode for salford la : m27 8ss
+
+            //todo: missing params
+            var services = await _serviceDirectoryClient.GetServices(adminDistrict, latitude!.Value, longitude!.Value, 1500*20, 0, 5, false);
             ToServiceViewModel(services.Items);
         }
 
