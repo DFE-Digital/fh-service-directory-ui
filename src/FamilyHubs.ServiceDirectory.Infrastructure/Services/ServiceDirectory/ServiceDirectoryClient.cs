@@ -1,11 +1,12 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory
 {
-    public class ServiceDirectoryClient
+    public class ServiceDirectoryClient : IServiceDirectoryClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
         internal const string HttpClientName = "servicedirectory";
@@ -46,6 +47,11 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory
                 {"proximity", maximumProximityMeters.ToString()},
                 {"isPaidFor", isPaidFor.ToString()}
             };
+
+            //todo: category to be added as a filter option in the api
+            //todo: show family hubs/services and groups to be added as a filter option in the api
+            //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
+            //todo: SEND as a param in api? needs investigation
 
             string getServicesUri = QueryHelpers.AddQueryString(GetServicesBaseUri, queryParams);
 

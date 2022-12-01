@@ -1,4 +1,5 @@
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddPostcodesIoClient(builder.Configuration);
+builder.Services.AddServiceDirectoryClient(builder.Configuration);
 
 var app = builder.Build();
 
