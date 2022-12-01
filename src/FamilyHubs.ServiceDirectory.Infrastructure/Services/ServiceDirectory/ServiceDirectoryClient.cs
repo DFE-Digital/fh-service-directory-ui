@@ -10,9 +10,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
     internal const string HttpClientName = "servicedirectory";
-    //private static readonly Uri GetServicesUri = new("services", UriKind.Relative);
     //todo: is status for soft delete??
-    private static readonly string GetServicesBaseUri = "services?serviceType=Family Experience&status=active";
+    private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience&status=active";
 
     public ServiceDirectoryClient(IHttpClientFactory httpClientFactory)
     {
@@ -57,11 +56,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         string getServicesUri = QueryHelpers.AddQueryString(GetServicesBaseUri, queryParams);
 
         var response = await httpClient.GetAsync(getServicesUri, cancellationToken);
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return new PaginatedList<OpenReferralServiceDto>();
-        }
 
         if (!response.IsSuccessStatusCode)
         {
