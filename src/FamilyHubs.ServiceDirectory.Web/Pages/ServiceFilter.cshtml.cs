@@ -1,3 +1,4 @@
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Models;
 using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,6 +7,8 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
 {
     public class ServiceFilterModel : PageModel
     {
+        private readonly IServiceDirectoryClient _serviceDirectoryClient;
+
         //todo: partial?
         public static readonly FilterSubGroups CategoryFilter = new ("category", "Category", new Filter[]
         {
@@ -107,9 +110,22 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
 
         public string? Postcode { get; set; }
 
-        public void OnGet(string? postcode)
+        public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
+        {
+            _serviceDirectoryClient = serviceDirectoryClient;
+        }
+
+        public async Task OnGet(string? postcode, string? adminDistrict)
         {
             Postcode = postcode;
+
+            if (adminDistrict == null)
+            {
+                //todo:
+                throw new NotImplementedException();
+            }
+
+            await _serviceDirectoryClient.GetServices(adminDistrict, 0f, 0f, 1500, 0, 5, false);
         }
     }
 }

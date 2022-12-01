@@ -26,6 +26,8 @@ Example  : "{example}"
     }
 
     //todo: configuration helper somewhere that gets from config and throws if issue
+    /// <returns>null safe url</returns>
+    /// <exception cref="ConfigurationException"></exception>
     public static string ThrowIfNotUrl(
         string key,
         string? url,
@@ -33,7 +35,7 @@ Example  : "{example}"
         string? example = "http://example.com",
         UriKind uriKind = UriKind.RelativeOrAbsolute)
     {
-        if (url == null || !Uri.IsWellFormedUriString(url, uriKind))
+        if (string.IsNullOrWhiteSpace(url) || !Uri.IsWellFormedUriString(url, uriKind))
         {
             throw new ConfigurationException(key, url, expected, example);
         }
