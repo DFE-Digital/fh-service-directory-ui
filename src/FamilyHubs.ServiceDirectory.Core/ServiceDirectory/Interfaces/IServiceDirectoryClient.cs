@@ -11,10 +11,10 @@ namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces
             float latitude,
             float longitude,
             int maximumProximityMeters,
-            int minimumAge,
-            int maximumAge,
+            int? minimumAge = null,
+            int? maximumAge = null,
             //todo: enum
-            bool isPaidFor,
+            bool? isPaidFor = null,
             CancellationToken cancellationToken = default);
     }
 }

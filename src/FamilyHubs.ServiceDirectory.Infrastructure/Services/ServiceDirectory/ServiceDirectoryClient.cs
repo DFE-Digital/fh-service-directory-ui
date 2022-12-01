@@ -11,7 +11,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
     private readonly IHttpClientFactory _httpClientFactory;
     internal const string HttpClientName = "servicedirectory";
     //todo: is status for soft delete??
-    private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience&status=active";
+    private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience";
 
     public ServiceDirectoryClient(IHttpClientFactory httpClientFactory)
     {
@@ -29,9 +29,9 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         float latitude,
         float longitude,
         int maximumProximityMeters,
-        int minimumAge,
-        int maximumAge,
-        bool isPaidFor,
+        int? minimumAge = null,
+        int? maximumAge = null,
+        bool? isPaidFor = null,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -39,17 +39,29 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         var queryParams = new Dictionary<string, string?>
         {
             {"districtCode", districtCode},
-            //todo: map from the front end (where's best?) ranges for these
-            {"minimum_age", minimumAge.ToString()},
-            {"maximum_age", maximumAge.ToString()},
             {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
             {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)},
-            {"proximity", maximumProximityMeters.ToString()},
-            {"isPaidFor", isPaidFor.ToString()}
+            {"proximity", maximumProximityMeters.ToString()}
         };
 
-        //todo: category to be added as a filter option in the api
-        //todo: show family hubs/services and groups to be added as a filter option in the api
+        //todo: map from the front end (where's best?) ranges for these
+        if (minimumAge != null)
+        {
+            queryParams.Add("minimum_age", minimumAge.ToString());
+        }
+
+        if (maximumAge != null)
+        {
+            queryParams.Add("maximum_age", minimumAge.ToString());
+        }
+
+        if (isPaidFor != null)
+        {
+            queryParams.Add("isPaidFor", isPaidFor.ToString());
+        }
+
+        //todo: search category by taxonomy
+        //todo: search show family hubs/services and groups by taxonomy
         //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
         //todo: SEND as a param in api? needs investigation
 

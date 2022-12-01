@@ -135,8 +135,13 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             // example postcode for salford la : m27 8ss
 
             //todo: missing params
-            var services = await _serviceDirectoryClient.GetServices(adminDistrict, latitude!.Value, longitude!.Value, 1500*20, 0, 5, false);
-            ToServiceViewModel(services.Items);
+            var services = await _serviceDirectoryClient.GetServices(
+                adminDistrict,
+                latitude!.Value,
+                longitude!.Value,
+                //todo: update seed data with a sensible lat/long
+                int.MaxValue);
+            Services = ToServiceViewModel(services.Items);
         }
 
         //todo: where live?
@@ -144,7 +149,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         {
             return serviceDto.Select(dto =>
             {
-                Debug.Assert(dto.ServiceType.Description == "Family Experience");
+                Debug.Assert(dto.ServiceType.Name == "Family Experience");
 
                 //todo: check got one. always the first??
                 var serviceAtLocation = dto.Service_at_locations?.FirstOrDefault();
