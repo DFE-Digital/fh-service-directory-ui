@@ -23,7 +23,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         string districtCode,
         float latitude,
         float longitude,
-        int maximumProximityMeters,
+        int? maximumProximityMeters = null,
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
@@ -35,9 +35,13 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         {
             {"districtCode", districtCode},
             {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
-            {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)},
-            {"proximity", maximumProximityMeters.ToString()}
+            {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)}
         };
+
+        if (maximumProximityMeters != null)
+        {
+            queryParams.Add("proximity", maximumProximityMeters.ToString());
+        }
 
         //todo: map from the front end (where's best?) ranges for these
         if (minimumAge != null)

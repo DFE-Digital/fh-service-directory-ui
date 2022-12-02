@@ -10,7 +10,7 @@ namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces
             string districtCode,
             float latitude,
             float longitude,
-            int maximumProximityMeters,
+            int? maximumProximityMeters = null,
             int? minimumAge = null,
             int? maximumAge = null,
             //todo: enum

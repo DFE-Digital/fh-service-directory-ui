@@ -138,8 +138,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             var services = await _serviceDirectoryClient.GetServices(
                 adminDistrict,
                 latitude!.Value,
-                longitude!.Value,
-                1609*20);
+                longitude!.Value);
             Services = ToServiceViewModel(services.Items);
         }
 
