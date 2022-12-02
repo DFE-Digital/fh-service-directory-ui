@@ -106,8 +106,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 new FilterAspect("age-range--6-to-11", "6 to 11"),
                 new FilterAspect("age-range--12-to-15", "12 to 15"),
                 new FilterAspect("age-range--16-to-18", "16 to 18"),
-                new FilterAspect("age-range--19-to-25-with-send", "19 to 25 with SEND"),
-                new FilterAspect("age-range--parents-and-carers", "Parents and carers")
+                new FilterAspect("age-range--19-to-25-with-send", "19 to 25 with SEND")
             })
         };
 
