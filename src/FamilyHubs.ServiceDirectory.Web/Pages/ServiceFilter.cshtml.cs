@@ -134,8 +134,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 throw new NotImplementedException();
             }
 
-            // example postcode for salford la : m27 8ss
-
             //todo: missing params
             var services = await _serviceDirectoryClient.GetServices(
                 adminDistrict,
@@ -147,14 +145,22 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         //todo: where live?
         private IEnumerable<Service> ToServiceViewModel(IEnumerable<OpenReferralServiceDto> serviceDto)
         {
-            // open questions
+            // service / family hub display open questions
             // --------------
-            // do we display 'run by'? if so, where do we get it from? (line in description?)
-            // is valid from/valid to going to be populated? should we filter by it?
+            // general: is valid from/valid to going to be populated? should we filter by it?
+            // Run by: do we display it? if so, where do we get it from? (line in description?)
+            // opening hours / when: how to build up description from multiple rows with data and/or descriptions
+            // age range: how to handle SEND, e.g. from prototype "0 to 19 (0 to 25 with SEND)"
             // assumptions
             // -----------
             // General:
             // if data missing for a field, we don't show the row at all (as opposed to displaying the key with a blank value)
+            // Age range:
+            // show "{Minimum_age} to {Maximum_age}" from first eligibility (ignore others)
+            // Opening Hours (family hub) / When (service):
+            // show description of first regular schedule off service at location
+            // (regular schedule in open referral doc is off service at location and location, but not seeing it come from api off service)
+            // we ignore holiday schedule
             // Address:
             // show first location's first address only
             // omit empty address lines
@@ -173,7 +179,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
 
         private Service ToServiceViewModel(OpenReferralServiceDto dto)
         {
-            //todo: move into helper
             Debug.Assert(dto.ServiceType.Name == "Family Experience");
 
             //todo: check got one. always the first??
@@ -198,14 +203,10 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
             return new Service(
                 isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
                 dto.Name,
-                //todo: tidy
-                (dto.Distance / 1609.34),
+                dto.Distance != null ? MetersToMiles(dto.Distance.Value / 1609.34) : null,
                 cost,
-                //todo: do we capture this? where?
                 null,
-                //todo: tidy up. what about SEND??
                 $"{eligibility?.Minimum_age} to {eligibility?.Maximum_age}",
-                //todo: Regular_schedule off service or serviceatlocation?
                 serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description,
                 RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
                 dto.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
@@ -217,6 +218,11 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         private static IEnumerable<string> RemoveEmpty(params string?[] list)
         {
             return list.Where(x => !string.IsNullOrWhiteSpace(x))!;
+        }
+
+        private static double MetersToMiles(double meters)
+        {
+            return meters / 1609.34;
         }
     }
 }
