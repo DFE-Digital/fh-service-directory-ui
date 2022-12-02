@@ -145,8 +145,21 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
         //todo: where live?
         public IEnumerable<Service> ToServiceViewModel(IEnumerable<OpenReferralServiceDto> serviceDto)
         {
+            // open questions
+            // --------------
+            // do we display 'run by'? if so, where do we get it from? (line in description?)
+            // is valid from/valid to going to be populated? should we filter by it?
+            // assumptions
+            // -----------
+            // Cost:
+            // if no cost options present, we assume is 'Free'
+            // if more than one cost, we display them all on separate lines (only single cost shown on the prototype)
+            // construct as £{amount} every {amount_description} - assumes format will always work, amount in pounds
+            // we ignore valid from/valid to
+
             return serviceDto.Select(dto =>
             {
+                //todo: move into helper
                 Debug.Assert(dto.ServiceType.Name == "Family Experience");
 
                 //todo: check got one. always the first??
@@ -158,13 +171,24 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 //todo: just double check null Taxonomy
                 bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
 
+                IEnumerable<string> cost;
+                if (dto.Cost_options?.Any() == false)
+                {
+                    cost = new[] {"Free"};
+                }
+                else
+                {
+                    cost = dto.Cost_options!.Select(co => $"£{co.Amount} every {co.Amount_description}");
+                }
+
                 return new Service(
                     isFamilyHub?ServiceType.FamilyHub:ServiceType.Service,
                     dto.Name,
                     //todo: tidy
                     (dto.Distance / 1609.34),
+                    cost,
                     //todo: do we capture this? where?
-                    "todo: e.g. Manchester University NHS Foundation Trust/NHS Salford Clinical Commissioning Group",
+                    null,
                     //todo: tidy up. what about SEND??
                     $"{eligibility?.Minimum_age} to {eligibility?.Maximum_age}",
                     //todo: Regular_schedule off service or serviceatlocation?
@@ -180,8 +204,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                     dto.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
                     dto.Email,
                     dto.Name,
-                    dto.Url,
-                    "todo: from cost options?");
+                    dto.Url);
 
             });
         }

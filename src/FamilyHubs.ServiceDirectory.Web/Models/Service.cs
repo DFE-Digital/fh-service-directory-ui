@@ -15,9 +15,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
     public sealed record Service(
         ServiceType Type,
         string Name,
-        //todo: number instead?
         //todo: what's actually mandatory?
         double? Distance,
+        IEnumerable<string> Cost,
         string? RunBy = null,
         string? AgeRange = null,
         string? When = null,
@@ -25,8 +25,8 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
         string? Phone = null,
         string? Email = null,
         string? WebsiteName = null,
-        string? WebsiteUrl = null,
+        string? WebsiteUrl = null
         // Availability has been taken out of MVP
         //string? Availability = null,
-        string? Cost = null);
+        );
 }

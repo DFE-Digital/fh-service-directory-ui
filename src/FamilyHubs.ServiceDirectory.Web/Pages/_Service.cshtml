@@ -17,21 +17,10 @@
     {
         <partial name="_SummaryListRow" model='("When", Model.When)' />
     }
-    @*todo: partials for <a> and [] too*@
-    @if (Model.Where != null)
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Where
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @foreach (string addressLine in Model.Where)
-                {
-                    @addressLine <br/>
-                }
-            </dd>
-        </div>
-    }
+    @*todo: partials for <a> too*@
+@*    todo: make where non-nullable*@
+    <partial name="_SummaryListRows" model='("Where", Model.Where)' />
+
     @if (Model.Phone != null)
     {
         <div class="govuk-summary-list__row">
@@ -75,5 +64,5 @@
     {
         <partial name="_SummaryListRow" model='("Opening hours", Model.When)' />
     }
-    <partial name="_SummaryListRow" model='("Cost", Model.Cost)' />
+    <partial name="_SummaryListRows" model='("Cost", Model.Cost)' />
 </dl>
