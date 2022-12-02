@@ -8,6 +8,14 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
         Service
     }
 
+    //todo: where should this live?
+    public enum LinkType
+    {
+        Normal,
+        Phone,
+        Email
+    }
+
     //todo: type hierarchy, rather than type? or just null what we don't have?
     //todo: we don't get supplied a WebsiteName, so we'll have to use Name (or the url itself) for now
     // 'When/opening hours' will be the same thing, in which case, we can use type to determine the title

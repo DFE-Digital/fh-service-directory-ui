@@ -1,0 +1,29 @@
+﻿@model (string Key, string? Value, LinkType LinkType, string? Description)
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+        @Model.Key
+    </dt>
+    <dd class="govuk-summary-list__value">
+        @if (Model.Value != null)
+        {
+            @switch (Model.LinkType)
+            {
+                case LinkType.Normal:
+                    @if (Model.Description != null)
+                    {
+                        <a href="@(Model.Value)">@Model.Description</a>
+                    }
+                    break;
+                case LinkType.Email:
+                    <a href="mailto:@(Model.Value)">@Model.Value</a>
+                    break;
+                case LinkType.Phone:
+                    @*todo: 2 separate fields? should be global number (+), but do we have that, should we construct it. is 'remove spaces' enough?*@
+                    @*see https://www.rfc-editor.org/rfc/rfc3966#page-6*@
+                    <a href="tel:@Model.Value.Replace(" ", "")">@Model.Value</a>
+                    break;
+            }
+        }
+    </dd>
+</div>

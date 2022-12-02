@@ -17,45 +17,14 @@
     {
         <partial name="_SummaryListRow" model='("When", Model.When)' />
     }
-    @*todo: partials for <a> too*@
-@*    todo: make where non-nullable*@
+@*    todo: make where non-nullable?*@
     <partial name="_SummaryListRows" model='("Where", Model.Where)' />
+    
+    @*todo: default not nice*@
+    <partial name="_SummaryListLink" model='("Phone", Model.Phone, LinkType.Phone, default(string?))' />
+    <partial name="_SummaryListLink" model='("Email", Model.Email, LinkType.Email, default(string?))' />
+    <partial name="_SummaryListLink" model='("Website", Model.WebsiteUrl, LinkType.Normal, Model.WebsiteName)' />
 
-    @if (Model.Phone != null)
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Phone
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @*todo: 2 separate fields? should be global number (+), but do we have that, should we construct it. is 'remove spaces' enough?*@
-                @*see https://www.rfc-editor.org/rfc/rfc3966#page-6*@
-                <a href="tel:@Model.Phone.Replace(" ", "")">@Model.Phone</a>
-            </dd>
-        </div>
-    }
-    @if (Model.Email != null)
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Email
-            </dt>
-            <dd class="govuk-summary-list__value">
-                <a href="mailto:@(Model.Email)">@Model.Email</a>
-            </dd>
-        </div>
-    }
-    @if (Model.WebsiteName != null && Model.WebsiteUrl != null)
-    {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Website
-            </dt>
-            <dd class="govuk-summary-list__value">
-                <a href="@(Model.WebsiteUrl)">@Model.WebsiteName</a>
-            </dd>
-        </div>
-    }
     @*not in build prototype (not mvp)*@
     @*Open Referral: attending_access on service*@
 @*    <partial name="_SummaryListRow" model='("Availability", Model.Availability)' />*@
