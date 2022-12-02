@@ -65,8 +65,11 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             }
             else
             {
-                //todo: don't show decimal places if whole pounds
-                cost = dto.Cost_options!.Select(co => $"{co.Amount:C} every {co.Amount_description.ToLowerInvariant()}");
+                cost = dto.Cost_options!.Select(co =>
+                {
+                    string amount = co.Amount.ToString(co.Amount == (int) co.Amount ? "C0" : "C", UkNumberFormat);
+                    return $"{amount} every {co.Amount_description.ToLowerInvariant()}";
+                });
             }
 
             return new Service(
