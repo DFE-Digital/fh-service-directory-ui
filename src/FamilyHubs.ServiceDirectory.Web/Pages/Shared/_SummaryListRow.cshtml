@@ -1,14 +1,11 @@
 ﻿@*we don't use a record here, as we don't want to be continually newing and garbage collecting a record*@
 @model (string Key, string? Value)
 
-@if (Model.Value != null)
-{
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            @Model.Key
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @Model.Value
-        </dd>
-    </div>
-}
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+        @Model.Key
+    </dt>
+    <dd class="govuk-summary-list__value">
+        @Model.Value
+    </dd>
+</div>

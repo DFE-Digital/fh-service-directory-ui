@@ -14,15 +14,14 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
         {
             // service / family hub display open questions
             // --------------
-            // general: is valid from/valid to going to be populated? should we filter by it? => NO
             // Run by: do we display it? if so, where do we get it from? (line in description?)
             // opening hours / when: how to build up description from multiple rows with data and/or descriptions
             // age range: how to handle SEND, e.g. from prototype "0 to 19 (0 to 25 with SEND)"
             // assumptions
             // -----------
             // General:
-            // if data missing for a field, we don't show the row at all (as opposed to displaying the key with a blank value)
-            // show it blank
+            // if data missing for a field, we show the key with a blank space for the value (as opposed to removing the row)
+            // valid from/valid is not populated, so we ignore it (and don't filter by it)
             // Age range:
             // show "{Minimum_age} to {Maximum_age}" from first eligibility (ignore others) - there will be only one
             // Opening Hours (family hub) / When (service):
