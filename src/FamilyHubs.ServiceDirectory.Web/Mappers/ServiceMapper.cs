@@ -55,7 +55,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             var eligibility = dto.Eligibilities?.FirstOrDefault();
 
             // or check id == d242700a-b2ad-42fe-8848-61534002156c instead??
-            //todo: just double check null Taxonomy
             bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
 
             IEnumerable<string> cost;
@@ -80,10 +79,10 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
                 dto.Name,
                 dto.Distance != null ? MetersToMiles(dto.Distance.Value) : null,
                 cost,
+                RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
                 null,
                 $"{eligibility?.Minimum_age} to {eligibility?.Maximum_age}",
                 serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description,
-                RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
                 dto.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
                 dto.Email,
                 dto.Name,

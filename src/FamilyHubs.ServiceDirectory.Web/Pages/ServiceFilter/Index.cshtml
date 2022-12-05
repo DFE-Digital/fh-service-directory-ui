@@ -49,21 +49,16 @@ else {
                         </div>
 
                         <div class="moj-filter__heading-action">
-                            @*moj standard vs prototype : prototype has font-size: 16px*@
-                            @*todo: class for custom styling*@
                             <p><a class="govuk-link--no-visited-state" href="">Clear filters</a></p>
                         </div>
                     </div>
                     
-                    @*moj standard vs prototype : applied filters diverges quite a lot*@
-                    @*todo: check intentional, or go with moj standard*@
                     @*todo: these need to be driven from the applied filters in the model. hardcoding just for now*@
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Search within</h3>
 
                     <ul class="moj-filter-tags">
                         <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span>20 miles</a></li>
                     </ul>
-
                 </div>
                 
                 <form method="post">
@@ -85,14 +80,12 @@ else {
         </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
-        @*todo: only highlight first family hub if neither show filter is selected*@
     @{
         Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
         if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
         {
             <div class="app-family-hub">
-                @*                <partial name="_Service" model='new Service(ServiceType.FamilyHub, "Central Family Hub, Salford", 0.2, When: "Monday to Friday, 9am to 5pm", Where: new[] {"Broughton Hub", "50 Rigby Street", "Salford M7 4BQ"}, Phone: "0161 778 0601", Email: "broughtonhub@salford.gov.uk", WebsiteName: "Central Family Hub, Salford", WebsiteUrl: "https://www.salford.gov.uk/children-and-families/early-help-for-families/family-hubs-childrens-centres/", Cost: "Free")'/>*@
-                        <partial name="_Service" , model="firstFamilyHub" />
+                <partial name="_Service" , model="firstFamilyHub" />
                 <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
             </div>
 
@@ -112,8 +105,7 @@ else {
                 <partial name="_Service" model='service'/>
             }
         }
-        @*<partial name="_Service" model='new Service(ServiceType.Service, "Be Open On Breastfeeding in Salford", 0.3, "Breastfeeding in Salford", "0 to 5", "Monday and Friday, 10am to 2pm", new string[] {"The Bury Centre", "10 Hope Street", "Bury", "M10 4PD"}, "0161 365 4987", "	rachel@breastfeedinginsalford.org.uk", "	Be Open On Breastfeeding in Salford", "https://www.breastfeedinginsalford.org.uk/", "£2 every session")'/>*@
-        }
+    }
     </div>
 </div>
 }
