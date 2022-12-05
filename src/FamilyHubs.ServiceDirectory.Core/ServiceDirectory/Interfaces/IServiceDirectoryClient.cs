@@ -13,7 +13,7 @@ namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces
             int? maximumProximityMeters = null,
             int? minimumAge = null,
             int? maximumAge = null,
-            //todo: enum
+            //todo: enum?
             bool? isPaidFor = null,
             CancellationToken cancellationToken = default);
     }

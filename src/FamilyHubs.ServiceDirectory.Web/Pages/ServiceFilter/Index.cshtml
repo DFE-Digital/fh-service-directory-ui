@@ -5,7 +5,7 @@
 }
 
 @section Back {
-    <a asp-page="/PostcodeSearch" class="govuk-back-link">Back</a>
+    <a asp-page="/PostcodeSearch/Index" class="govuk-back-link">Back</a>
 }
 
 @if (!Model.Services.Any()) {
@@ -16,7 +16,7 @@ else {
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
-        <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch">@Model.Postcode?.ToUpperInvariant()</a></span>
+        <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch/Index">@Model.Postcode?.ToUpperInvariant()</a></span>
     </div>
 </div>
 

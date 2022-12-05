@@ -10,7 +10,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
     internal const string HttpClientName = "servicedirectory";
-    //todo: is status for soft delete??
     private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience";
 
     public ServiceDirectoryClient(IHttpClientFactory httpClientFactory)
@@ -77,7 +76,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
 
         var services = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(
             await response.Content.ReadAsStreamAsync(cancellationToken),
-            //todo: needed?
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
             cancellationToken);
 
