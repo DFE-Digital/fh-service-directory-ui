@@ -2,7 +2,7 @@
 using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHubs.ServiceDirectory.Web.Pages;
+namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public partial class ServiceFilterModel : PageModel
 {

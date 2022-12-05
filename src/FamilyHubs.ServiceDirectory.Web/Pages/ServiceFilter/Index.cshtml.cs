@@ -1,10 +1,9 @@
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
+using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using FamilyHubs.ServiceDirectory.Web.Mappers;
 
-namespace FamilyHubs.ServiceDirectory.Web.Pages;
-
+namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 public partial class ServiceFilterModel : PageModel
 {
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
