@@ -59,7 +59,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
 
             IEnumerable<string> cost;
-            if (dto.Cost_options?.Any() == false)
+            if (dto.Cost_options?.Any() == false || dto.Cost_options!.First().Amount == decimal.Zero)
             {
                 cost = new[] { "Free" };
             }

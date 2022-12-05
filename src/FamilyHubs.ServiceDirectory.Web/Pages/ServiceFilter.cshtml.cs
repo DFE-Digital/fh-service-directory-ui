@@ -10,7 +10,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
     {
         private readonly IServiceDirectoryClient _serviceDirectoryClient;
 
-        //todo: partial?
+        //todo: partial? or instantiate filter class
         public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
         {
             //todo: can we get these from the db?
