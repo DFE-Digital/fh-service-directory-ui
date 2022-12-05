@@ -1,17 +1,17 @@
-﻿namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
-// at some point we might want a more generic HttpClientException / RestHttpClientException
+﻿
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
 // ignore Sonar's "Update this implementation of 'ISerializable' to confirm to the recommended serialization pattern" (https://rules.sonarsource.com/csharp/RSPEC-3925)
 // .Net Core itself doesn't implement serialization on most exceptions, see https://github.com/dotnet/runtime/issues/21433#issue-225189643
 #pragma warning disable S3925
-public class PostcodeIoClientException : Exception
+public class ServiceDirectoryClientException : Exception
 {
     public HttpStatusCode? StatusCode { get; }
     public string? ReasonPhrase { get; }
     public Uri? RequestUri { get; }
     public string? ErrorResponse { get; }
 
-    public PostcodeIoClientException(HttpResponseMessage httpResponseMessage, string errorResponse)
+    public ServiceDirectoryClientException(HttpResponseMessage httpResponseMessage, string errorResponse)
         : base(GenerateMessage(httpResponseMessage, errorResponse))
     {
         StatusCode = httpResponseMessage.StatusCode;

@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,12 +7,12 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
 
-namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.Extensions;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 
-public static class PostcodesIoServiceCollectionExtension
+public static class ServiceDirectoryClientServiceCollectionExtension
 {
     /// <summary>
-    /// Adds the IPostcodeLookup service to enable fetching postcode information from postcodes.io
+    /// Adds the IServiceDirectoryClient service to enable fetching service related data
     /// </summary>
     /// <remarks>
     /// Policy notes:
@@ -20,8 +21,10 @@ public static class PostcodesIoServiceCollectionExtension
     /// .SetHandlerLifetime(TimeSpan.FromMinutes(3));
     /// it's a balance between keeping sockets open and latency in handling dns updates.
     /// </remarks>
-    public static void AddPostcodesIoClient(this IServiceCollection services, IConfiguration configuration)
+    public static void AddServiceDirectoryClient(this IServiceCollection services, IConfiguration configuration)
     {
+        const string endpointConfigKey = "ServiceDirectoryAPI:Endpoint";
+
         var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(10);
 
         //todo: do we really want to retry talking to postcodes.io???
@@ -29,22 +32,21 @@ public static class PostcodesIoServiceCollectionExtension
             medianFirstRetryDelay: TimeSpan.FromSeconds(1),
             retryCount: 2);
 
-        services.AddHttpClient(PostcodesIoLookup.HttpClientName, client =>
-            {
-                //todo: need to throw config exception if config is missing, rather than forgive null
-                // we'll do this once we have a config that won't be hard-coded in the appsettings
-                client.BaseAddress = new Uri(configuration["PostcodesIo:Endpoint"]!);
-            })
+        services.AddHttpClient(ServiceDirectoryClient.HttpClientName, client =>
+        {
+            string endpoint = ConfigurationException.ThrowIfNotUrl(endpointConfigKey, configuration[endpointConfigKey], "The service directory URL");
+            client.BaseAddress = new Uri(endpoint);
+        })
             .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .WaitAndRetryAsync(delay, (result, timespan, retryAttempt, context) =>
                 {
-                    callbackServices.GetService<ILogger<PostcodesIoLookup>>()?
+                    callbackServices.GetService<ILogger<ServiceDirectoryClient>>()?
                         .LogWarning("Delaying for {Timespan}, then making retry {RetryAttempt}.",
                             timespan, retryAttempt);
                 }))
             .AddPolicyHandler(timeoutPolicy);
 
-        services.AddTransient<IPostcodeLookup, PostcodesIoLookup>();
+        services.AddTransient<IServiceDirectoryClient, ServiceDirectoryClient>();
     }
 }

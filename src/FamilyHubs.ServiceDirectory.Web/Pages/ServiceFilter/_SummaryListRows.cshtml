@@ -1,0 +1,15 @@
+﻿@*todo: better name for summarylistrow and summarylistrows*@
+
+@model (string Key, IEnumerable<string> Values)
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+        @Model.Key
+    </dt>
+    <dd class="govuk-summary-list__value">
+    @if (Model.Values.Any())
+    {
+        @Html.Raw(string.Join("<br/>", Model.Values))
+    }
+    </dd>
+</div>
