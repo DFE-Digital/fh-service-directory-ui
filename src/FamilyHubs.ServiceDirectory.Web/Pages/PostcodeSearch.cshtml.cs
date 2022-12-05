@@ -28,7 +28,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages
                 return RedirectToPage("/PostcodeSearch", new { postcodeError });
             }
 
-            return RedirectToPage("/ServiceFilter", new
+            return RedirectToPage("/ServiceFilter/Index", new
             {
                 postcode = postcodeInfo!.Postcode,
                 adminDistrict = postcodeInfo.Codes.AdminDistrict,
