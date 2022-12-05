@@ -1,8 +1,8 @@
 ﻿using Moq;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using Moq.Protected;
 using System.Net;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
 namespace FamilyHubs.ServiceDirectory.UnitTests.Infrastructure.Services
 {
