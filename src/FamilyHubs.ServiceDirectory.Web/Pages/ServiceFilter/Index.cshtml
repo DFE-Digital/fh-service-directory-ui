@@ -97,11 +97,8 @@ else {
             </div>
 
             <p id="services-description">
-                Listings below show the nearest services or activities you have searched for. These may take place at different locations, like family hubs, children’s centres or community centres.
+                Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
             </p>
-
-            @*todo: use css border on p above, rather than hr??*@
-            <hr class="govuk-!-margin-bottom-4 govuk-!-margin-top-4">
 
             @foreach (var service in Model.Services.Where(s => s.Type == ServiceType.Service))
             {

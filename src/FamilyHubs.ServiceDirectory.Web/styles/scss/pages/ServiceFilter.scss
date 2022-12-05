@@ -24,6 +24,10 @@
     @include govuk-responsive-padding(4, "right");
     @include govuk-responsive-padding(4, "bottom");
     @include govuk-responsive-padding(4, "left");
+
+    @include govuk-media-query($until: tablet) {
+        @include govuk-responsive-margin(2, "top");
+    }
 }
 
 /*todo: important not nice*/

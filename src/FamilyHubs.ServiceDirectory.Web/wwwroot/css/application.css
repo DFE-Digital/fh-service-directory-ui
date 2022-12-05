@@ -7482,6 +7482,11 @@ p + .govuk-heading-s,
     padding-left: 20px;
   }
 }
+@media (max-width: 40.0525em) {
+  .app-family-hub {
+    margin-top: 10px;
+  }
+}
 
 /*todo: important not nice*/
 .app-sub-filters {
