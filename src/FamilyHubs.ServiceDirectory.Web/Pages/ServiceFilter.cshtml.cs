@@ -45,5 +45,4 @@ public partial class ServiceFilterModel : PageModel
         Services = ServiceMapper.ToViewModel(services.Items);
     }
 }
-//todo: website url
 //todo: long distances

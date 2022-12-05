@@ -33,14 +33,14 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             // omit empty address lines
             // Phone:
             // show first phone number of first contact, if there is one (ignore >1 contact or contact with >1 number)
-            // Filter out textphone -> use telephone
+            // we might have to filter out textphone, but data has id and number (and id seems different every time??) https://github.com/DFE-Digital/fh-service-directory-admin-ui/blob/11c4d11ccf1341e998af02b875b2674bdc61517b/src/FamilyHubs.ServiceDirectoryAdminUi.Ui/Services/ViewModelToApiModelHelper.cs
             // Website:
             // there is no description field for the link, so have used the name of the service (prototype shows unique website names, e.g. CAMHS for Child and Adolescent Mental Health Services (CAMHS)
             // Cost:
             // if no cost options present, we assume is 'Free'
             // if more than one cost, we display them all on separate lines (only single cost shown on the prototype)
             // construct as £{amount} every {amount_description} - assumes format will always work, amount in pounds
-            // we ignore valid from/valid to
+            // unless amount is 0, in which case we show 'Free'
 
             return serviceDto.Select(ToViewModel);
         }
@@ -59,7 +59,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
 
             IEnumerable<string> cost;
-            if (dto.Cost_options?.Any() == false || dto.Cost_options!.First().Amount == decimal.Zero)
+            if (dto.Cost_options?.Any() == false)
             {
                 cost = new[] { "Free" };
             }
@@ -67,6 +67,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             {
                 cost = dto.Cost_options!.Select(co =>
                 {
+                    if (co.Amount == decimal.Zero)
+                        return "Free";
+
                     string amount = co.Amount.ToString(co.Amount == (int) co.Amount ? "C0" : "C", UkNumberFormat);
                     return $"{amount} every {co.Amount_description.ToLowerInvariant()}";
                 });
