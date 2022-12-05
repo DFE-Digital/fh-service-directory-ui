@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
+//todo: 0.00 miles
+//todo: remove example filter
+//todo: search within 20 miles by default now
+
 public partial class ServiceFilterModel : PageModel
 {
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
