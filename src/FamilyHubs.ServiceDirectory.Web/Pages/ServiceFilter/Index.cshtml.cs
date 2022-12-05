@@ -1,6 +1,7 @@
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
@@ -11,6 +12,9 @@ public partial class ServiceFilterModel : PageModel
     public string? Postcode { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
+
+    [BindProperty]
+    public string? search_within { get; set; }
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
@@ -41,6 +45,35 @@ public partial class ServiceFilterModel : PageModel
             adminDistrict,
             latitude,
             longitude);
+        Services = ServiceMapper.ToViewModel(services.Items);
+    }
+
+    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    {
+        //todo: checks
+        return HandlePost(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+    }
+
+    //todo: bind, or pick out using data filter model??
+
+#pragma warning disable
+    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude)
+    {
+        Postcode = postcode;
+
+        //const int xx = "search_within--".Length();
+        //todo: case?
+        if (!int.TryParse(search_within.Substring(15), out var searchWithinMiles))
+        {
+            throw new NotImplementedException();
+        }
+
+        var services = await _serviceDirectoryClient.GetServices(
+            adminDistrict,
+            latitude,
+            longitude,
+            //todo: helper. combine with other way round
+            (int)(searchWithinMiles * 1609.34));
         Services = ServiceMapper.ToViewModel(services.Items);
     }
 }

@@ -90,13 +90,13 @@ public partial class ServiceFilterModel : PageModel
             new FilterAspect("show--family-hubs", "Family hubs"),
             new FilterAspect("show--services-and-groups", "Services and groups")
         }),
-        new Filter("search-within", "Search within", FilterType.Radios, new IFilterAspect[]
+        new Filter("search_within", "Search within", FilterType.Radios, new IFilterAspect[]
         {
-            new FilterAspect("search-within--1-mile", "1 mile"),
-            new FilterAspect("search-within--2-miles", "2 miles"),
-            new FilterAspect("search-within--5-miles", "5 miles"),
-            new FilterAspect("search-within--10-miles", "10 miles"),
-            new FilterAspect("search-within--20-miles", "20 miles")
+            new FilterAspect("search_within--1", "1 mile"),
+            new FilterAspect("search_within--2", "2 miles"),
+            new FilterAspect("search_within--5", "5 miles"),
+            new FilterAspect("search_within--10", "10 miles"),
+            new FilterAspect("search_within--20", "20 miles")
         }),
         new Filter("age-range", "Age range", FilterType.Checkboxes, new IFilterAspect[]
         {
