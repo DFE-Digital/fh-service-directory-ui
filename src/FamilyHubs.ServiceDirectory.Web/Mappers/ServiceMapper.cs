@@ -53,6 +53,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
             var serviceAtLocation = dto.Service_at_locations?.FirstOrDefault();
             var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
             var eligibility = dto.Eligibilities?.FirstOrDefault();
+            string? ageRange = eligibility == null ? null : $"{eligibility.Minimum_age} to {eligibility.Maximum_age}";
 
             // or check id == d242700a-b2ad-42fe-8848-61534002156c instead??
             bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
@@ -81,7 +82,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers
                 cost,
                 RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
                 null,
-                $"{eligibility?.Minimum_age} to {eligibility?.Maximum_age}",
+                ageRange,
                 serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description,
                 dto.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
                 dto.Email,
