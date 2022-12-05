@@ -8,8 +8,8 @@ namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces
         // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
         public Task<PaginatedList<OpenReferralServiceDto>> GetServices(
             string districtCode,
-            float latitude,
-            float longitude,
+            float? latitude = null,
+            float? longitude = null,
             int? maximumProximityMeters = null,
             int? minimumAge = null,
             int? maximumAge = null,

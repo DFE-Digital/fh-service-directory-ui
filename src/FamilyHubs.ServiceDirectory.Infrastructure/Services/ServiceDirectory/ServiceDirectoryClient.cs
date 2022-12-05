@@ -21,8 +21,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
     //todo: categories are passed as comma separated taxonmyIds
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
         string districtCode,
-        float latitude,
-        float longitude,
+        float? latitude = null,
+        float? longitude = null,
         int? maximumProximityMeters = null,
         int? minimumAge = null,
         int? maximumAge = null,
@@ -31,12 +31,21 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
+        // mandatory params
         var queryParams = new Dictionary<string, string?>
         {
-            {"districtCode", districtCode},
-            {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
-            {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)}
-        };
+            {"districtCode", districtCode}        };
+
+        // optional params
+        if (latitude != null)
+        {
+            queryParams.Add("latitude", latitude.Value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        if (longitude != null)
+        {
+            queryParams.Add("longtitude", longitude.Value.ToString(CultureInfo.InvariantCulture));
+        }
 
         if (maximumProximityMeters != null)
         {

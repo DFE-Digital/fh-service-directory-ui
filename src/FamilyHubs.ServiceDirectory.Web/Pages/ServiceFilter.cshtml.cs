@@ -23,19 +23,17 @@ public partial class ServiceFilterModel : PageModel
 
     public async Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
+        // we degrade gracefully if postcode or lat/long is missing, as we can handle that
         Postcode = postcode;
 
-        if (adminDistrict == null)
-        {
-            //todo:
-            throw new NotImplementedException();
-        }
+        ArgumentException.ThrowIfNullOrEmpty(adminDistrict);
 
-        //todo: missing params
         var services = await _serviceDirectoryClient.GetServices(
             adminDistrict,
-            latitude!.Value,
-            longitude!.Value);
+            latitude,
+            longitude);
         Services = ServiceMapper.ToViewModel(services.Items);
     }
 }
+//todo: website url
+//todo: long distances
