@@ -18,10 +18,6 @@ public class ServiceFilterModel : PageModel
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
 
-#pragma warning disable
-    //[BindProperty]
-    //public string? search_within { get; set; }
-
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
         _serviceDirectoryClient = serviceDirectoryClient;
@@ -69,15 +65,10 @@ public class ServiceFilterModel : PageModel
         return HandlePost(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, remove);
     }
 
-    //todo: bind, or pick out using data filter model??
-
-#pragma warning disable
     private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
     {
         Postcode = postcode;
-        //todo: apply initial selected filter to first service get. apply clear filters for initial selected
-        //base class for filter with functionality?
-        //var filter = Filters.First(f => f.Name == "search_within");
+        //todo: apply clear filters for initial selected
 
         var postFilters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
 
@@ -86,11 +77,6 @@ public class ServiceFilterModel : PageModel
 
         var filter = postFilters.First(f => f.Name == "search_within");
 
-        //todo: work off form and pass back value to set in model, or work with model directly using lambdas/reflection?
-        //filter.ProcessModel(Request.Form, remove);
-        //var (fullValue, value) = ProcessModel(filter, Request.Form, remove);
-
-        //const int xx = "search_within--".Length();
         //todo: case?
         if (!int.TryParse(filter.Value, out var searchWithinMiles))
         {
@@ -104,37 +90,5 @@ public class ServiceFilterModel : PageModel
             DistanceConverter.MilesToMeters(searchWithinMiles));
         Services = ServiceMapper.ToViewModel(services.Items);
     }
-
-    //todo: move to filter
-    //this is radio
-    //private (string?, string?) ProcessModel(Filter filter, IFormCollection form, string? remove)
-    //{
-    //    string? fullValue = form[filter.Name];
-    //    if (fullValue == null)
-    //        return (null, null);
-
-    //    //todo: const on filter? 2 is for "--"
-    //    string value = fullValue.Substring(filter.Name.Length + 2);
-
-    //    return (fullValue, value);
-    //}
-
-
-    // FilterContent.Select(f.GetPostFilter)
-
-    //public class RadioFilter
-    //{
-    //    public readonly Filter Filter;
-
-    //    public RadioFilter(Filter filter, IFormCollection form, string? remove)
-    //    {
-    //        Filter = filter;
-    //    }
-
-    //    public bool IsSelected(IFilterAspect aspect)
-    //    {
-
-    //    }
-    //}
 }
 //todo: long distances
