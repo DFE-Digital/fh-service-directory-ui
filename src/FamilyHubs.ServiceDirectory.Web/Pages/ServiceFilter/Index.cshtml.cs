@@ -1,3 +1,4 @@
+using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -26,6 +27,14 @@ public partial class ServiceFilterModel : PageModel
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
+        CheckParameters(postcode, adminDistrict, latitude, longitude);
+
+        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+    }
+
+    //todo: attribute to say null safe?
+    private static void CheckParameters(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    {
         // we _could_ degrade gracefully if postcode or lat/long is missing,
         // as we can handle that by not showing the postcode or distances
         // but instead let's fail fast if someone is monkeying with the url (or there's a bug)
@@ -33,8 +42,6 @@ public partial class ServiceFilterModel : PageModel
         ArgumentException.ThrowIfNullOrEmpty(adminDistrict);
         ArgumentNullException.ThrowIfNull(latitude);
         ArgumentNullException.ThrowIfNull(longitude);
-
-        return HandleGet(postcode, adminDistrict, latitude.Value, longitude.Value);
     }
 
     private async Task HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
@@ -50,7 +57,8 @@ public partial class ServiceFilterModel : PageModel
 
     public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
-        //todo: checks
+        CheckParameters(postcode, adminDistrict, latitude, longitude);
+
         return HandlePost(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
     }
 
@@ -72,8 +80,7 @@ public partial class ServiceFilterModel : PageModel
             adminDistrict,
             latitude,
             longitude,
-            //todo: helper. combine with other way round
-            (int)(searchWithinMiles * 1609.34));
+            DistanceConverter.MilesToMeters(searchWithinMiles));
         Services = ServiceMapper.ToViewModel(services.Items);
     }
 }
