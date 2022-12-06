@@ -53,12 +53,28 @@ else {
                         </div>
                     </div>
                     
-                    @*todo: these need to be driven from the applied filters in the model. hardcoding just for now*@
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Search within</h3>
+                    @*//todo: do generically from filters*@
+                    @*                    @foreach (var filter in ServiceFilterModel.Filters)
+                    {
+                        filter.
+                    }*@
+                    @{
+                        var filter = ServiceFilterModel.Filters.First(f => f.Name == "search_within");
+                        string? selectedValue = Model.search_within;
+                        if (selectedValue != null)
+                        {
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
 
-                    <ul class="moj-filter-tags">
-                        <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span>20 miles</a></li>
-                    </ul>
+                            if (filter.FilterType == FilterType.Radios)
+                            {
+                                //todo: could always put value in [], and do same for radios and checks
+                                var aspectDescription = filter.Aspects.First(a => a.Id == selectedValue).Description;
+                                <ul class="moj-filter-tags">
+                                    <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href=""><span class="govuk-visually-hidden">Remove this filter</span>@aspectDescription</a></li>
+                                </ul>
+                            }
+                        }
+                    }
                 </div>
                 
                 <form method="post">
