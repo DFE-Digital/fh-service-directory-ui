@@ -54,35 +54,21 @@ else {
                         </div>
                     </div>
                     
-                    @*//todo: do generically from filters*@
-                    @*                    @foreach (var filter in ServiceFilterModel.Filters)
+                    @foreach (var filter in Model.Filters)
                     {
-                        filter.
-                    }*@
-                    @{
-                        var filter = Model.Filters.First(f => f.Name == "search_within");
-                        //string? selectedValue = Model.search_within;
-                        //if (filter is PostFilter postFilter && postFilter.Value != null)
-                        //{
-                        //}
-                        //if (selectedValue != null)
-                        //{
+                        //var filter = Model.Filters.First(f => f.Name == "search_within");
+
+                        if (filter.SelectedAspects().Any())
+                        {
                             <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
 
-                            //if (filter.FilterType == FilterType.Radios)
-                            //{
-                                //todo: could always put value in [], and do same for radios and checks
-
-                                @foreach (var selectedAspect in filter.SelectedAspects())
-                                {
-                                    //var aspectDescription = filter.Aspects.First(a => a.Id == postFilter.Value).Description;
-                                    <ul class="moj-filter-tags">
-                                        @*<li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href=""><span class="govuk-visually-hidden">Remove this filter</span>@aspectDescription</a></li>*@
-                                        <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
-                                    </ul>
-                                }
-                        //}
-                        //}
+                            @foreach (var selectedAspect in filter.SelectedAspects())
+                            {
+                                <ul class="moj-filter-tags">
+                                    <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                </ul>
+                            }
+                        }
                     }
                 </div>
                 

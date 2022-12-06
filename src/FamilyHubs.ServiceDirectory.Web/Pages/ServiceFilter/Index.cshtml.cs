@@ -77,17 +77,23 @@ public class ServiceFilterModel : PageModel
 
         var filter = postFilters.First(f => f.Name == "search_within");
 
-        //todo: case?
-        if (!int.TryParse(filter.Value, out var searchWithinMiles))
+        int? searchWithinMeters = null;
+        if (filter.Value != null)
         {
-            throw new NotImplementedException();
+            if (!int.TryParse(filter.Value, out var searchWithinMiles))
+            {
+                //todo:
+                throw new NotImplementedException();
+            }
+
+            searchWithinMeters = DistanceConverter.MilesToMeters(searchWithinMiles);
         }
 
         var services = await _serviceDirectoryClient.GetServices(
             adminDistrict,
             latitude,
             longitude,
-            DistanceConverter.MilesToMeters(searchWithinMiles));
+            searchWithinMeters);
         Services = ServiceMapper.ToViewModel(services.Items);
     }
 }
