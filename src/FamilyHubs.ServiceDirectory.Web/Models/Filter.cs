@@ -106,7 +106,7 @@ public class Filter : IFilter
     //todo: can we use this instead of PostFilter aspect implementation?
     public IEnumerable<IFilterAspect> SelectedAspects()
     {
-        return Aspects.Where(a => a.Selected);
+        return Aspects.Where(a => a.SelectedByDefault);
     }
 
     public bool IsSelected(IFilterAspect aspect)
@@ -114,6 +114,6 @@ public class Filter : IFilter
         //todo: or exception?
         Debug.Assert(aspect.Id.StartsWith(Name));
 
-        return aspect.Selected;
+        return aspect.SelectedByDefault;
     }
 }

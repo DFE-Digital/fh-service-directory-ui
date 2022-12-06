@@ -26,7 +26,7 @@
                                     {
                                         <div class="govuk-checkboxes__item">
                                             <input class="govuk-checkboxes__input" id="@aspect.Id" name="@Model.Name" type="checkbox" value="@aspect.Id"
-                                                   @if (aspect.Selected)
+                                                   @if (subFilter.IsSelected(aspect))
                                                    {
                                                        @:checked
                                                    }>
