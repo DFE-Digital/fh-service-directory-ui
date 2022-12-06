@@ -1,14 +1,12 @@
 ﻿using FamilyHubs.ServiceDirectory.Web.Models;
 using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
+namespace FamilyHubs.ServiceDirectory.Web.Content;
 
 //todo: 0.00 miles
-//todo: remove example filter
 //todo: search within 20 miles by default now
 
-public partial class ServiceFilterModel : PageModel
+public static class FilterDefinitions
 {
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
     {
@@ -96,7 +94,7 @@ public partial class ServiceFilterModel : PageModel
             new FilterAspect("search_within--2", "2 miles"),
             new FilterAspect("search_within--5", "5 miles"),
             new FilterAspect("search_within--10", "10 miles"),
-            new FilterAspect("search_within--20", "20 miles")
+            new FilterAspect("search_within--20", "20 miles", true)
         }),
         new Filter("age-range", "Age range", FilterType.Checkboxes, new IFilterAspect[]
         {
