@@ -1,4 +1,5 @@
-﻿
+﻿using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
 //todo: this should probably be a subclass of filter

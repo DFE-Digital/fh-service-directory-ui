@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
+using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
