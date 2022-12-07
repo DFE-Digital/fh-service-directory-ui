@@ -52,7 +52,10 @@ public class ServiceFilterModel : PageModel
     {
         Postcode = postcode;
 
-        var services = await _serviceDirectoryClient.GetServices(
+        // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
+        // we could assume that they all share the same organisation
+        // leave it as-is for now though (as we handle the more generic case)
+        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
             adminDistrict,
             latitude,
             longitude);
@@ -80,7 +83,7 @@ public class ServiceFilterModel : PageModel
             searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(filter.Value));
         }
 
-        var services = await _serviceDirectoryClient.GetServices(
+        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
             adminDistrict,
             latitude,
             longitude,

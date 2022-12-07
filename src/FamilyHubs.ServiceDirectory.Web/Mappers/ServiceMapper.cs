@@ -1,8 +1,8 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
-using FamilyHubs.ServiceDirectory.Web.Models;
+﻿using FamilyHubs.ServiceDirectory.Web.Models;
 using System.Diagnostics;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Distance;
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -11,7 +11,7 @@ public static class ServiceMapper
 {
     private static readonly NumberFormatInfo UkNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
 
-    public static IEnumerable<Service> ToViewModel(IEnumerable<OpenReferralServiceDto> serviceDto)
+    public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceWithOrganisation> servicesWithOrganisation)
     {
         // service / family hub display open questions
         // --------------
@@ -43,32 +43,34 @@ public static class ServiceMapper
         // construct as £{amount} every {amount_description} - assumes format will always work, amount in pounds
         // unless amount is 0, in which case we show 'Free'
 
-        return serviceDto.Select(ToViewModel);
+        return servicesWithOrganisation.Select(ToViewModel);
     }
 
-    private static Service ToViewModel(OpenReferralServiceDto dto)
+    private static Service ToViewModel(ServiceWithOrganisation serviceWithOrganisation)
     {
-        Debug.Assert(dto.ServiceType.Name == "Family Experience");
+        var service = serviceWithOrganisation.Service;
+
+        Debug.Assert(service.ServiceType.Name == "Family Experience");
 
         //todo: check got one. always the first??
-        var serviceAtLocation = dto.Service_at_locations?.FirstOrDefault();
+        var serviceAtLocation = service.Service_at_locations?.FirstOrDefault();
         var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
-        var eligibility = dto.Eligibilities?.FirstOrDefault();
+        var eligibility = service.Eligibilities?.FirstOrDefault();
         string? ageRange = eligibility == null ? null : $"{eligibility.Minimum_age} to {eligibility.Maximum_age}";
 
         //todo: how we check for family hubs is going to change
         // instead we'll check the type of the organisation
         // or check id == d242700a-b2ad-42fe-8848-61534002156c instead??
-        bool isFamilyHub = dto.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
+        bool isFamilyHub = service.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
 
         IEnumerable<string> cost;
-        if (dto.Cost_options?.Any() == false)
+        if (service.Cost_options?.Any() == false)
         {
             cost = new[] { "Free" };
         }
         else
         {
-            cost = dto.Cost_options!.Select(co =>
+            cost = service.Cost_options!.Select(co =>
             {
                 if (co.Amount == decimal.Zero)
                     return "Free";
@@ -80,17 +82,17 @@ public static class ServiceMapper
 
         return new Service(
             isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
-            dto.Name,
-            dto.Distance != null ? DistanceConverter.MetersToMiles(dto.Distance.Value) : null,
+            service.Name,
+            service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             cost,
             RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
-            null,
+            serviceWithOrganisation.Organisation.Name,
             ageRange,
             serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description,
-            dto.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
-            dto.Email,
-            dto.Name,
-            dto.Url);
+            service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
+            service.Email,
+            service.Name,
+            service.Url);
     }
 
     private static IEnumerable<string> RemoveEmpty(params string?[] list)

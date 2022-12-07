@@ -132,15 +132,30 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         return GetOrganisationTryCache(id, cancellationToken);
     }
 
+    //todo: priority for a (multi-threaded) unit test
+    // based on code from https://sahansera.dev/in-memory-caching-aspcore-dotnet/
     private async Task<OpenReferralOrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
     {
+        var semaphore = new SemaphoreSlim(1, 1);
+
         if (_memoryCache.TryGetValue(id, out OpenReferralOrganisationDto? organisation))
             return organisation!;
 
-        // doesn't really matter if multiple threads fetch organisations at the same time
-        // not optimal, but they should all get and set the same result, so let's KISS
-        organisation = await GetOrganisationFromApi(id, cancellationToken);
-        _memoryCache.Set(id, organisation, TimeSpan.FromHours(1));
+        try
+        {
+            await semaphore.WaitAsync(cancellationToken);
+
+            // recheck to make sure it didn't populate before entering semaphore
+            if (_memoryCache.TryGetValue(id, out organisation))
+                return organisation!;
+
+            organisation = await GetOrganisationFromApi(id, cancellationToken);
+            _memoryCache.Set(id, organisation, TimeSpan.FromHours(1));
+        }
+        finally
+        {
+            semaphore.Release();
+        }
         return organisation;
     }
 
