@@ -11,7 +11,6 @@ public static class FilterDefinitions
 
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
     {
-        //todo: can we get these from the db?
         new("activities", "Activities, clubs and groups", FilterType.Checkboxes, new IFilterAspect[]
         {
             new FilterAspect("activities--activities", "Activities"),

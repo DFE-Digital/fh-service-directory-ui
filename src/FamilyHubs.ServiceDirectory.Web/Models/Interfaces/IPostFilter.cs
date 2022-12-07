@@ -2,5 +2,5 @@
 
 public interface IPostFilter : IFilter
 {
-    public string? Value { get; }
+    string? Value { get; }
 }

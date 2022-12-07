@@ -9,9 +9,6 @@ public enum FilterType
     Radios
 }
 
-#pragma warning disable
-//public record Filter(string Name, string Description, FilterType FilterType, IEnumerable<IFilterAspect> Aspects) : IFilter;
-
 public class Filter : IFilter
 {
     public string Name { get; }
@@ -32,16 +29,10 @@ public class Filter : IFilter
         return new PostFilter(this, form, remove);
     }
 
-    //todo: property
-    //todo: can we use this instead of PostFilter aspect implementation?
-    public IEnumerable<IFilterAspect> SelectedAspects()
-    {
-        return Aspects.Where(a => a.SelectedByDefault);
-    }
+    public IEnumerable<IFilterAspect> SelectedAspects => Aspects.Where(a => a.SelectedByDefault);
 
     public bool IsSelected(IFilterAspect aspect)
     {
-        //todo: or exception?
         Debug.Assert(aspect.Id.StartsWith(Name));
 
         return aspect.SelectedByDefault;

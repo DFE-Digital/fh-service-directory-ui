@@ -2,7 +2,7 @@
 
 public interface IFilterAspect
 {
-    public string Id { get; }
-    public string Description { get; }
-    public bool SelectedByDefault { get; }
+    string Id { get; }
+    string Description { get; }
+    bool SelectedByDefault { get; }
 }

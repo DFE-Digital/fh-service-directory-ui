@@ -2,10 +2,10 @@
 
 public interface IFilter
 {
-    public string Name { get; }
-    public string Description { get; }
-    public FilterType FilterType { get; }
-    public IEnumerable<IFilterAspect> Aspects { get; }
-    IEnumerable<IFilterAspect> SelectedAspects();
+    string Name { get; }
+    string Description { get; }
+    FilterType FilterType { get; }
+    IEnumerable<IFilterAspect> Aspects { get; }
+    IEnumerable<IFilterAspect> SelectedAspects { get; }
     bool IsSelected(IFilterAspect aspect);
 }

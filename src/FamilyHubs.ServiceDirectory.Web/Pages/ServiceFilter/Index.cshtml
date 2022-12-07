@@ -56,11 +56,11 @@ else {
                     
                     @foreach (var filter in Model.Filters)
                     {
-                        if (filter.SelectedAspects().Any())
+                        if (filter.SelectedAspects.Any())
                         {
                             <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
 
-                            @foreach (var selectedAspect in filter.SelectedAspects())
+                            @foreach (var selectedAspect in filter.SelectedAspects)
                             {
                                 <ul class="moj-filter-tags">
                                     <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
