@@ -3,18 +3,24 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
 public class ServiceDirectoryClient : IServiceDirectoryClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IMemoryCache _memoryCache;
     internal const string HttpClientName = "servicedirectory";
     private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience";
 
-    public ServiceDirectoryClient(IHttpClientFactory httpClientFactory)
+    public ServiceDirectoryClient(
+        IHttpClientFactory httpClientFactory,
+        IMemoryCache memoryCache)
     {
         _httpClientFactory = httpClientFactory;
+        _memoryCache = memoryCache;
     }
 
     //todo: categories are passed as comma separated taxonmyIds
@@ -89,5 +95,52 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         }
 
         return services;
+    }
+
+    public Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(id);
+
+        return GetOrganisationTryCache(id, cancellationToken);
+    }
+
+    private async Task<OpenReferralOrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
+    {
+        if (_memoryCache.TryGetValue(id, out OpenReferralOrganisationDto? organisation))
+            return organisation!;
+
+        // doesn't really matter if multiple threads fetch organisations at the same time
+        // not optimal, but they should all get and set the same result, so let's KISS
+        organisation = await GetOrganisationFromApi(id, cancellationToken);
+        _memoryCache.Set(id, organisation, TimeSpan.FromHours(1));
+        return organisation;
+    }
+
+    private async Task<OpenReferralOrganisationDto> GetOrganisationFromApi(string id, CancellationToken cancellationToken)
+    {
+        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        var response = await httpClient.GetAsync($"api/organizations/{id}", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+
+        var organisation = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationDto>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            cancellationToken);
+
+        if (organisation is null)
+        {
+            // the only time it'll be null, is if the API returns "null"
+            // (see https://stackoverflow.com/questions/71162382/why-are-the-return-types-of-nets-system-text-json-jsonserializer-deserialize-m)
+            // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
+            // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
+            throw new ServiceDirectoryClientException(response, "null");
+        }
+
+        return organisation;
     }
 }
