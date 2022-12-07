@@ -4,10 +4,11 @@ using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 namespace FamilyHubs.ServiceDirectory.Web.Content;
 
 //todo: 0.00 miles
-//todo: search within 20 miles by default now
 
 public static class FilterDefinitions
 {
+    public const string SearchWithinFilterName = "search_within";
+
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
     {
         //todo: can we get these from the db?
@@ -88,7 +89,7 @@ public static class FilterDefinitions
             new FilterAspect("show--family-hubs", "Family hubs"),
             new FilterAspect("show--services-and-groups", "Services and groups")
         }),
-        new Filter("search_within", "Search within", FilterType.Radios, new IFilterAspect[]
+        new Filter(SearchWithinFilterName, "Search within", FilterType.Radios, new IFilterAspect[]
         {
             new FilterAspect("search_within--1", "1 mile"),
             new FilterAspect("search_within--2", "2 miles"),

@@ -68,25 +68,15 @@ public class ServiceFilterModel : PageModel
     private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
     {
         Postcode = postcode;
-        //todo: apply clear filters for initial selected
 
-        var postFilters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
+        Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
 
-        //todo: null
-        Filters = postFilters;
-
-        var filter = postFilters.First(f => f.Name == "search_within");
+        var filter = (IPostFilter)Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
 
         int? searchWithinMeters = null;
         if (filter.Value != null)
         {
-            if (!int.TryParse(filter.Value, out var searchWithinMiles))
-            {
-                //todo:
-                throw new NotImplementedException();
-            }
-
-            searchWithinMeters = DistanceConverter.MilesToMeters(searchWithinMiles);
+            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(filter.Value));
         }
 
         var services = await _serviceDirectoryClient.GetServices(

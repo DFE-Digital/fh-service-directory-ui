@@ -56,8 +56,6 @@ else {
                     
                     @foreach (var filter in Model.Filters)
                     {
-                        //var filter = Model.Filters.First(f => f.Name == "search_within");
-
                         if (filter.SelectedAspects().Any())
                         {
                             <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>

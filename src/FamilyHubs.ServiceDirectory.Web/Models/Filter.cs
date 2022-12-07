@@ -21,9 +21,14 @@ public interface IFilter
 #pragma warning disable
 //public record Filter(string Name, string Description, FilterType FilterType, IEnumerable<IFilterAspect> Aspects) : IFilter;
 
+public interface IPostFilter : IFilter
+{
+    public string? Value { get; }
+}
+
 // composition or inheritance?
 //todo: starting to look like inheritance would be better (despite prefer composition)
-public class PostFilter : IFilter
+public class PostFilter : IPostFilter
 {
     private readonly Filter _filter;
     private static string? _fullValue;
