@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
     
@@ -20,4 +21,14 @@ public interface IServiceDirectoryClient
 
     // caches organisations for 1 hour
     Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
+
+    Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
+        string districtCode,
+        float latitude,
+        float longitude,
+        int? maximumProximityMeters = null,
+        int? minimumAge = null,
+        int? maximumAge = null,
+        bool? isPaidFor = null,
+        CancellationToken cancellationToken = default);
 }

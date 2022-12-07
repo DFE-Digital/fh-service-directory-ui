@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -21,6 +22,33 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
     {
         _httpClientFactory = httpClientFactory;
         _memoryCache = memoryCache;
+    }
+
+    public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
+        string districtCode,
+        float latitude,
+        float longitude,
+        int? maximumProximityMeters = null,
+        int? minimumAge = null,
+        int? maximumAge = null,
+        bool? isPaidFor = null,
+        CancellationToken cancellationToken = default)
+    {
+        var services = await GetServices(
+            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, cancellationToken);
+
+        //todo: probably need locking
+        var servicesWithOrganisations = await Task.WhenAll(
+            services.Items.Select(async s =>
+                new ServiceWithOrganisation(s, await GetOrganisation(s.OpenReferralOrganisationId, cancellationToken))));
+
+        return new PaginatedList<ServiceWithOrganisation>(
+            servicesWithOrganisations.ToList(),
+            services.TotalCount,
+            services.PageNumber,
+            //todo: calc if we need & can
+            //this.TotalPages = (int) Math.Ceiling((double) count / (double) pageSize);
+            0);
     }
 
     //todo: categories are passed as comma separated taxonmyIds
