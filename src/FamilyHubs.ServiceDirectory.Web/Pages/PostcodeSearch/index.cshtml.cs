@@ -25,7 +25,7 @@ public class PostcodeSearchModel : PageModel
         var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postcode);
         if (postcodeError != PostcodeError.None)
         {
-            return RedirectToPage("/PostcodeSearch", new { postcodeError });
+            return RedirectToPage("/PostcodeSearch/Index", new { postcodeError });
         }
 
         return RedirectToPage("/ServiceFilter/Index", new

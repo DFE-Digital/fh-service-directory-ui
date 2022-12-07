@@ -2,6 +2,9 @@
 
 * this looks useful for exception testing: https://github.com/dotnet/aspnetcore/blob/ed1ac4285213158a85f69449dba448ef0c65fbf4/src/Testing/src/ExceptionAssertions.cs
 
+* when add filter that filters to no results, see no results page, then back to postcode search, and need to search again
+* check with designers, if would be better to keep filterw visible with a message in the results section
+
 * use razor page css isolation?
 
 * does moj js do anything with filter?

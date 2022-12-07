@@ -1,4 +1,4 @@
-﻿@model Filter
+﻿@model IFilter
 
 <div class="govuk-form-group app-filter-group">
     <fieldset class="govuk-fieldset">
@@ -14,10 +14,10 @@
                     {
                         <div class="govuk-checkboxes__item">
                             <input class="govuk-checkboxes__input" id="@aspect.Id" name="@Model.Name" type="checkbox" value="@aspect.Id"
-                               @if (aspect.Selected)
-                               {
-                                   @:checked
-                               }>
+                                   @if (Model.IsSelected(aspect))
+                                   {
+                                       @:checked
+                                   }>
                             <label class="govuk-label govuk-checkboxes__label" for="@aspect.Id">
                                 @aspect.Description
                             </label>
@@ -30,11 +30,12 @@
                     @foreach (var aspect in Model.Aspects)
                     {
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="@aspect.Id" name="@Model.Name" type="radio" value="@aspect.Id"
-                               @if (aspect.Selected)
+                               <input class="govuk-radios__input" id="@aspect.Id" name="@Model.Name" type="radio" value="@aspect.Id"
+                               @if (Model.IsSelected(aspect))
                                {
                                    @:checked
                                }>
+
                             <label class="govuk-label govuk-radios__label" for="@aspect.Id">
                                 @aspect.Description
                             </label>

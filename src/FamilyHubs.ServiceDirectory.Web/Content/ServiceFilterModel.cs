@@ -1,14 +1,16 @@
 ﻿using FamilyHubs.ServiceDirectory.Web.Models;
 using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
+namespace FamilyHubs.ServiceDirectory.Web.Content;
 
-public partial class ServiceFilterModel : PageModel
+//todo: 0.00 miles
+
+public static class FilterDefinitions
 {
+    public const string SearchWithinFilterName = "search_within";
+
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
     {
-        //todo: can we get these from the db?
         new("activities", "Activities, clubs and groups", FilterType.Checkboxes, new IFilterAspect[]
         {
             new FilterAspect("activities--activities", "Activities"),
@@ -86,13 +88,13 @@ public partial class ServiceFilterModel : PageModel
             new FilterAspect("show--family-hubs", "Family hubs"),
             new FilterAspect("show--services-and-groups", "Services and groups")
         }),
-        new Filter("search-within", "Search within", FilterType.Radios, new IFilterAspect[]
+        new Filter(SearchWithinFilterName, "Search within", FilterType.Radios, new IFilterAspect[]
         {
-            new FilterAspect("search-within--1-mile", "1 mile"),
-            new FilterAspect("search-within--2-miles", "2 miles"),
-            new FilterAspect("search-within--5-miles", "5 miles"),
-            new FilterAspect("search-within--10-miles", "10 miles"),
-            new FilterAspect("search-within--20-miles", "20 miles")
+            new FilterAspect("search_within--1", "1 mile"),
+            new FilterAspect("search_within--2", "2 miles"),
+            new FilterAspect("search_within--5", "5 miles"),
+            new FilterAspect("search_within--10", "10 miles"),
+            new FilterAspect("search_within--20", "20 miles", true)
         }),
         new Filter("age-range", "Age range", FilterType.Checkboxes, new IFilterAspect[]
         {

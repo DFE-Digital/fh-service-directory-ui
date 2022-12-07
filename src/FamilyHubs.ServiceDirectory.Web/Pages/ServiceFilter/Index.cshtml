@@ -39,6 +39,7 @@ else {
 
             </div>
 
+            <form method="post">
             <div class="moj-filter__content">
                 <div class="moj-filter__selected">
                     <div class="moj-filter__selected-heading">
@@ -53,30 +54,38 @@ else {
                         </div>
                     </div>
                     
-                    @*todo: these need to be driven from the applied filters in the model. hardcoding just for now*@
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Search within</h3>
+                    @foreach (var filter in Model.Filters)
+                    {
+                        if (filter.SelectedAspects.Any())
+                        {
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
 
-                    <ul class="moj-filter-tags">
-                        <li><a class="moj-filter__tag app-icon-cross app-remove-filter-tag" href="/path/to/remove/this"><span class="govuk-visually-hidden">Remove this filter</span>20 miles</a></li>
-                    </ul>
+                            @foreach (var selectedAspect in filter.SelectedAspects)
+                            {
+                                <ul class="moj-filter-tags">
+                                    <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                </ul>
+                            }
+                        }
+                    }
                 </div>
                 
-                <form method="post">
                     <div id="filters" class="moj-filter__options">
-
-                        <button class="govuk-button" data-module="govuk-button">
+                        
+                        @*todo: data-prevent-double-click?*@
+                        <button type="submit" class="govuk-button" data-module="govuk-button">
                             Apply filters
                         </button>
 
-                        <partial name="_FilterGroupSubGroups" model="ServiceFilterModel.CategoryFilter" />
+                        <partial name="_FilterGroupSubGroups" model="Model.CategoryFilter" />
 
-                        @foreach (var filter in ServiceFilterModel.Filters)
+                        @foreach (var filterGroup in Model.Filters)
                         {
-                            <partial name="_FilterGroup" model="filter" />
+                            <partial name="_FilterGroup" model="filterGroup" />
                         }
                     </div>
-                </form>
             </div>
+            </form>
         </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
