@@ -1,6 +1,8 @@
-﻿namespace FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿#if spanky
+namespace FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 
 public interface IPostFilter : IFilter
 {
     string? Value { get; }
 }
+#endif

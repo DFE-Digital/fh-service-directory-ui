@@ -8,4 +8,5 @@ public interface IFilter
     IEnumerable<IFilterAspect> Aspects { get; }
     IEnumerable<IFilterAspect> SelectedAspects { get; }
     bool IsSelected(IFilterAspect aspect);
+    string? Value { get; }
 }
