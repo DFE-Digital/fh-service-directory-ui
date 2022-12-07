@@ -17,14 +17,11 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
         double? Distance,
         IEnumerable<string> Cost,
         IEnumerable<string> Where,
+        IEnumerable<string> When,
         string? RunBy = null,
         string? AgeRange = null,
-        string? When = null,
         string? Phone = null,
         string? Email = null,
         string? WebsiteName = null,
-        string? WebsiteUrl = null
-        // Availability has been taken out of MVP
-        //string? Availability = null,
-        );
+        string? WebsiteUrl = null);
 }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
-public class PostFilter : IPostFilter
+public class PostFilter : IFilter
 {
     private readonly Filter _filter;
     private readonly IFilterAspect[] _selectedFilterAspects;

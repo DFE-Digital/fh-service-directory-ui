@@ -52,11 +52,7 @@ public class ServiceFilterModel : PageModel
     {
         Postcode = postcode;
 
-        var services = await _serviceDirectoryClient.GetServices(
-            adminDistrict,
-            latitude,
-            longitude);
-        Services = ServiceMapper.ToViewModel(services.Items);
+        Services = await GetServices(adminDistrict, latitude, longitude);
     }
 
     public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove)
@@ -72,7 +68,12 @@ public class ServiceFilterModel : PageModel
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
 
-        var filter = (IPostFilter)Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
+        Services = await GetServices(adminDistrict, latitude, longitude);
+    }
+
+    private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
+    {
+        var filter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
 
         int? searchWithinMeters = null;
         if (filter.Value != null)
@@ -80,12 +81,16 @@ public class ServiceFilterModel : PageModel
             searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(filter.Value));
         }
 
-        var services = await _serviceDirectoryClient.GetServices(
+        // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
+        // we could assume that they all share the same organisation
+        // leave it as-is for now though (as we handle the more generic case)
+
+        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
             adminDistrict,
             latitude,
             longitude,
             searchWithinMeters);
-        Services = ServiceMapper.ToViewModel(services.Items);
+        return ServiceMapper.ToViewModel(services.Items);
     }
 }
 //todo: long distances
