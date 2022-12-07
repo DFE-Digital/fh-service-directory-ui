@@ -7,6 +7,8 @@ namespace FamilyHubs.ServiceDirectory.Web.Content;
 
 public static class FilterDefinitions
 {
+    public const string AspectIdSeparator = "--";
+    public const string CostFilterName = "cost";
     public const string SearchWithinFilterName = "search_within";
 
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
@@ -78,10 +80,10 @@ public static class FilterDefinitions
 
     public static readonly IEnumerable<Filter> Filters = new[]
     {
-        new Filter("cost", "Cost", FilterType.Checkboxes, new IFilterAspect[]
+        new Filter(CostFilterName, "Cost", FilterType.Checkboxes, new IFilterAspect[]
         {
-            new FilterAspect("cost--free", "Free"),
-            new FilterAspect("cost--pay-to-use", "Pay to use")
+            new FilterAspect(CostFilterName+AspectIdSeparator+"free", "Free"),
+            new FilterAspect(CostFilterName+AspectIdSeparator+"pay-to-use", "Pay to use")
         }),
         new Filter("show", "Show", FilterType.Checkboxes, new IFilterAspect[]
         {
@@ -90,11 +92,11 @@ public static class FilterDefinitions
         }),
         new Filter(SearchWithinFilterName, "Search within", FilterType.Radios, new IFilterAspect[]
         {
-            new FilterAspect("search_within--1", "1 mile"),
-            new FilterAspect("search_within--2", "2 miles"),
-            new FilterAspect("search_within--5", "5 miles"),
-            new FilterAspect("search_within--10", "10 miles"),
-            new FilterAspect("search_within--20", "20 miles", true)
+            new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"1", "1 mile"),
+            new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"2", "2 miles"),
+            new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"5", "5 miles"),
+            new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"10", "10 miles"),
+            new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"20", "20 miles", true)
         }),
         new Filter("age-range", "Age range", FilterType.Checkboxes, new IFilterAspect[]
         {

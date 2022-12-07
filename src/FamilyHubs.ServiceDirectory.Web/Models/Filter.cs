@@ -9,6 +9,8 @@ public enum FilterType
     Radios
 }
 
+//todo: switch on type, or have RadioFilter / CheckboxFilter with different values
+
 public class Filter : IFilter
 {
     public string Name { get; }

@@ -73,13 +73,21 @@ public class ServiceFilterModel : PageModel
 
     private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
     {
-        var filter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
+        var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
 
         int? searchWithinMeters = null;
-        if (filter.Value != null)
+        if (searchWithinFilter.Value != null)
         {
-            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(filter.Value));
+            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilter.Value));
         }
+
+        bool? isPaidFor = null;
+#pragma warning disable
+        //var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
+        //if (costFilter.Values.Count() == 1)
+        //{
+        //    isPaidFor = costFilter.Values.First() == "pay-to-use";
+        //}
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
         // we could assume that they all share the same organisation
@@ -89,8 +97,10 @@ public class ServiceFilterModel : PageModel
             adminDistrict,
             latitude,
             longitude,
-            searchWithinMeters);
+            searchWithinMeters,
+            null,
+            null,
+            isPaidFor);
         return ServiceMapper.ToViewModel(services.Items);
     }
 }
-//todo: long distances
