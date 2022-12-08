@@ -2,13 +2,6 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
-public interface IFilterSubGroups
-{
-    string Name { get; }
-    string Description { get; }
-    IEnumerable<IFilter> SubFilters { get; }
-}
-
 public class PostFilterSubGroups : IFilterSubGroups
 {
     private readonly FilterSubGroups _filterSubGroups;
