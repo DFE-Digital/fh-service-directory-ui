@@ -5,12 +5,17 @@ namespace FamilyHubs.ServiceDirectory.Web.Models;
 
 public class PostFilter : IFilter
 {
+    public string Name => _filter.Name;
+    public string Description => _filter.Description;
+    public FilterType FilterType => _filter.FilterType;
+    public IEnumerable<IFilterAspect> Aspects => _filter.Aspects;
+    public IEnumerable<IFilterAspect> SelectedAspects => _selectedFilterAspects;
     public IEnumerable<string> Values { get; }
 
-    private readonly Filter _filter;
+    private readonly IFilter _filter;
     private readonly IFilterAspect[] _selectedFilterAspects;
 
-    public PostFilter(Filter filter, IFormCollection form, string? remove)
+    public PostFilter(IFilter filter, IFormCollection form, string? remove)
     {
         _filter = filter;
 
@@ -30,12 +35,6 @@ public class PostFilter : IFilter
             _selectedFilterAspects = _filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
         }
     }
-
-    public string Name => _filter.Name;
-    public string Description => _filter.Description;
-    public FilterType FilterType => _filter.FilterType;
-    public IEnumerable<IFilterAspect> Aspects => _filter.Aspects;
-    public IEnumerable<IFilterAspect> SelectedAspects => _selectedFilterAspects;
 
     public bool IsSelected(IFilterAspect aspect)
     {
