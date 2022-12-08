@@ -75,9 +75,6 @@ public class ServiceFilterModel : PageModel
 
     private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
     {
-#pragma warning disable
-        //CategoryFilter.SubFilters
-
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
         var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
@@ -114,7 +111,8 @@ public class ServiceFilterModel : PageModel
             searchWithinMeters,
             null,
             null,
-            isPaidFor);
+            isPaidFor,
+            CategoryFilter.Values);
         return ServiceMapper.ToViewModel(services.Items);
     }
 }

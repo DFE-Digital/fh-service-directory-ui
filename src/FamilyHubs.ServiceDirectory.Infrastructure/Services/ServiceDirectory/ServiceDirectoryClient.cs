@@ -32,12 +32,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, taxonomyIds, cancellationToken);
 
-        //todo: probably need locking
         var servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
                 new ServiceWithOrganisation(s, await GetOrganisation(s.OpenReferralOrganisationId, cancellationToken))));
@@ -51,7 +51,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             0);
     }
 
-    //todo: categories are passed as comma separated taxonmyIds
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
         string districtCode,
         float latitude,
@@ -60,6 +59,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -94,11 +94,10 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("isPaidFor", isPaidFor.ToString());
         }
 
-#pragma warning disable
-        //if (taxonomyIds != null)
-        //{
-        //    queryParams.Add("taxonmyIds", "");
-        //}
+        if (taxonomyIds != null && taxonomyIds.Any())
+        {
+            queryParams.Add("taxonmyIds", string.Join(',', taxonomyIds));
+        }
 
         //todo: filtering by service/family hub really belongs in the api, but to minimise any possible disruption to the is side before mvp, we'll do it in the front-end for now
         // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy

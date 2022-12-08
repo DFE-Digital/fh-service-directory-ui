@@ -22,7 +22,7 @@ public class PostFilter : IFilter
         Values = Enumerable.Empty<string>();
         _selectedFilterAspects = Array.Empty<IFilterAspect>();
 
-        if (remove?.StartsWith(filter.Name) != false)
+        if (remove?.StartsWith(filter.Name) == true)
             return;
 
         string? fullValuesCsv = form[filter.Name];

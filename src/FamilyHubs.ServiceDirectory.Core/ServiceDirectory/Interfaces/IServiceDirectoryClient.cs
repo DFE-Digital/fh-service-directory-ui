@@ -17,6 +17,7 @@ public interface IServiceDirectoryClient
         int? maximumAge = null,
         //todo: enum?
         bool? isPaidFor = null,
+        IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default);
 
     // caches organisations for 1 hour
@@ -30,5 +31,6 @@ public interface IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default);
 }

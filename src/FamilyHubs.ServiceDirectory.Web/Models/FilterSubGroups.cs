@@ -2,5 +2,18 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
-//todo: this should probably be a subclass of filter
-public sealed record FilterSubGroups(string Name, string Description, IEnumerable<IFilter> SubFilters) : IFilterSubGroups;
+public sealed class FilterSubGroups : IFilterSubGroups
+{
+    public string Name { get; }
+    public string Description { get; }
+    public IEnumerable<IFilter> SubFilters { get; }
+    public IEnumerable<string> Values { get; }
+
+    public FilterSubGroups(string name, string description, IEnumerable<IFilter> subFilters)
+    {
+        Name = name;
+        Description = description;
+        SubFilters = subFilters;
+        Values = SubFilters.SelectMany(f => f.Values);
+    }
+}
