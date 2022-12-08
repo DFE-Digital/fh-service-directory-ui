@@ -2,38 +2,43 @@
 using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
+#pragma warning disable
 
 public class PostFilter : IFilter
 {
+    public IEnumerable<string> Values { get; }
+
     private readonly Filter _filter;
     private readonly IFilterAspect[] _selectedFilterAspects;
-
-    public string? Value { get; }
 
     public PostFilter(Filter filter, IFormCollection form, string? remove)
     {
         _filter = filter;
 
-        //todo: this is radio specific : have PostRadioFilter and PostCheckboxFilter (or check type)
+        Values = Enumerable.Empty<string>();
+        _selectedFilterAspects = Array.Empty<IFilterAspect>();
+
         if (remove?.StartsWith(filter.Name) == true)
         {
 #if fall_back_to_default_selection
             // user wants to remove the current radio selection, so we fall back to the initial default selection
-            _fullValue = filter.Aspects.FirstOrDefault(a => a.Selected)?.Id;
+            Values = filter.Aspects.Where(a => a.Selected).Select(Id[(filter.Name.Length + 2)..]);
 #endif
             // user wants to remove the current radio selection, so we don't select any radio option
-            Value = null;
-            _selectedFilterAspects = Array.Empty<IFilterAspect>();
+            //Values = Enumerable.Empty<string>();
+            //_selectedFilterAspects = Array.Empty<IFilterAspect>();
         }
         else
         {
-            string? fullValue = form[filter.Name];
-            if (fullValue != null)
+            string? fullValuesCsv = form[filter.Name];
+            if (fullValuesCsv != null)
             {
                 //todo: const on filter? 2 is for "--"
-                Value = fullValue[(filter.Name.Length + 2)..];
+                //todo: helper for this?
+                string[] fullValues = fullValuesCsv.Split(',');
+                Values = fullValues.Select(v => v[(filter.Name.Length + 2)..]);
+                _selectedFilterAspects = _filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
             }
-            _selectedFilterAspects = _filter.Aspects.Where(a => a.Id == fullValue).ToArray();
         }
     }
 

@@ -76,18 +76,19 @@ public class ServiceFilterModel : PageModel
         var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
 
         int? searchWithinMeters = null;
-        if (searchWithinFilter.Value != null)
+        var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
+        if (searchWithFilterValue != null)
         {
-            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilter.Value));
+            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithFilterValue));
         }
 
         bool? isPaidFor = null;
 #pragma warning disable
-        //var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
-        //if (costFilter.Values.Count() == 1)
-        //{
-        //    isPaidFor = costFilter.Values.First() == "pay-to-use";
-        //}
+        var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
+        if (costFilter.Values.Count() == 1)
+        {
+            isPaidFor = costFilter.Values.First() == "pay-to-use";
+        }
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
         // we could assume that they all share the same organisation
