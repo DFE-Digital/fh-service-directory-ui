@@ -75,10 +75,12 @@ public class ServiceFilterModel : PageModel
     {
         var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
 
+        //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
         var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
         if (searchWithFilterValue != null)
         {
+            //todo: cut out name here, rather than for all
             searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithFilterValue));
         }
 
@@ -87,6 +89,14 @@ public class ServiceFilterModel : PageModel
         if (costFilter.Values.Count() == 1)
         {
             isPaidFor = costFilter.Values.First() == "pay-to-use";
+        }
+
+#pragma warning disable
+        string? showOrganisationType = null;
+        var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
+        if (showFilter.Values.Count() == 1)
+        {
+            showOrganisationType = costFilter.Values.First();
         }
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service

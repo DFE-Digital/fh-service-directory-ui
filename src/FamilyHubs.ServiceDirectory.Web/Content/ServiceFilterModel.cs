@@ -9,6 +9,7 @@ public static class FilterDefinitions
 {
     public const string AspectIdSeparator = "--";
     public const string CostFilterName = "cost";
+    public const string ShowFilterName = "show";
     public const string SearchWithinFilterName = "search_within";
 
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
@@ -85,10 +86,10 @@ public static class FilterDefinitions
             new FilterAspect(CostFilterName+AspectIdSeparator+"free", "Free"),
             new FilterAspect(CostFilterName+AspectIdSeparator+"pay-to-use", "Pay to use")
         }),
-        new Filter("show", "Show", FilterType.Checkboxes, new IFilterAspect[]
+        new Filter(ShowFilterName, "Show", FilterType.Checkboxes, new IFilterAspect[]
         {
-            new FilterAspect("show--family-hubs", "Family hubs"),
-            new FilterAspect("show--services-and-groups", "Services and groups")
+            new FilterAspect(ShowFilterName+AspectIdSeparator+"3", "Family hubs"),
+            new FilterAspect(ShowFilterName+AspectIdSeparator+"1", "Services and groups")
         }),
         new Filter(SearchWithinFilterName, "Search within", FilterType.Radios, new IFilterAspect[]
         {
