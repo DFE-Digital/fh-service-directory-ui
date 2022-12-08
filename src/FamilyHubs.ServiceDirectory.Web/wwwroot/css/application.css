@@ -7536,4 +7536,14 @@ p + .govuk-heading-s,
   background-position: 5px center;
 }
 
+.app-button-link {
+  border: none;
+  padding: 0 !important;
+  color: #1d70b8;
+  cursor: pointer;
+}
+.app-button-link:hover {
+  text-decoration: none;
+}
+
 /*# sourceMappingURL=application.css.map */

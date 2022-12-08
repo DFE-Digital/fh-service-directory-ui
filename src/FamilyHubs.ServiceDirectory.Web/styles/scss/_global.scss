@@ -1,1 +1,12 @@
 ﻿@import "pages/ServiceFilter";
+
+.app-button-link {
+    border: none;
+    padding: 0 !important;
+    color: $govuk-link-colour;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
