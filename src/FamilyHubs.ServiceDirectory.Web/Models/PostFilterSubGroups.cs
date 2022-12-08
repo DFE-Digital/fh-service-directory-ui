@@ -2,6 +2,7 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
+//todo: clear filter css
 //todo: can it also implement IFilter?
 public class PostFilterSubGroups : IFilterSubGroups
 {

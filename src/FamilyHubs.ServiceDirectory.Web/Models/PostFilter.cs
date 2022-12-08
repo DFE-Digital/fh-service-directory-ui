@@ -21,7 +21,8 @@ public class PostFilter : IFilter
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
-        if (remove?.StartsWith(filter.Name) == true)
+        //todo: const for magic value
+        if (remove is "all")
             return;
 
         string? fullValuesCsv = form[filter.Name];
@@ -30,6 +31,13 @@ public class PostFilter : IFilter
             //todo: const on filter? 2 is for "--", or just store full values?
             //todo: helper for this?
             string[] fullValues = fullValuesCsv.Split(',');
+
+            if (remove?.StartsWith(filter.Name) == true)
+            {
+                fullValues = fullValues
+                    .Where(v => v != remove)
+                    .ToArray();
+            }
             Values = fullValues.Select(v => v[(filter.Name.Length + 2)..]);
             SelectedAspects = _filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
         }
