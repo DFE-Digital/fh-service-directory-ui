@@ -83,7 +83,6 @@ public class ServiceFilterModel : PageModel
         }
 
         bool? isPaidFor = null;
-#pragma warning disable
         var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
         if (costFilter.Values.Count() == 1)
         {

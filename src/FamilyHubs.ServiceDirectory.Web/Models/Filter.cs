@@ -9,9 +9,7 @@ public enum FilterType
     Radios
 }
 
-//todo: switch on type, or have RadioFilter / CheckboxFilter with different values
 //todo: not really a model anymore, move elsewhere
-#pragma warning disable
 public class Filter : IFilter
 {
     public string Name { get; }
@@ -31,9 +29,6 @@ public class Filter : IFilter
 
         _selectedFilterAspects = Aspects.Where(a => a.SelectedByDefault).ToArray();
 
-        //todo: assume radio for now
-        //var selectedByDefaultAspects = _selectedFilterAspects.FirstOrDefault(IsSelected);
-        //Value = selectedByDefaultAspect?.Id[(Name.Length + 2)..];
         Values = _selectedFilterAspects.Select(a => a.Id[(Name.Length + 2)..]);
     }
 
