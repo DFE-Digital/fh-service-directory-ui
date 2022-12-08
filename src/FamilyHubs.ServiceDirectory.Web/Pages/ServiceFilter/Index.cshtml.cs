@@ -18,6 +18,7 @@ public class ServiceFilterModel : PageModel
     public string? Postcode { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
+    public bool IsGet { get; set; }
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
@@ -25,7 +26,7 @@ public class ServiceFilterModel : PageModel
         Filters = FilterDefinitions.Filters;
         CategoryFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
-        // we set this to true when neither show filter is selected
+        //todo: we set this to true when neither show filter is selected
         OnlyShowOneFamilyHubAndHighlightIt = true;
     }
 
@@ -50,6 +51,7 @@ public class ServiceFilterModel : PageModel
 
     private async Task HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
     {
+        IsGet = true;
         Postcode = postcode;
 
         Services = await GetServices(adminDistrict, latitude, longitude);
@@ -64,6 +66,8 @@ public class ServiceFilterModel : PageModel
 
     private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
     {
+        IsGet = false;
+
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
