@@ -2,7 +2,7 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
-//todo: can it also implement IFilter? (would have to rename subgroup's name & description)
+//todo: can it also implement IFilter?
 public class PostFilterSubGroups : IFilterSubGroups
 {
     public string Name => _filterSubGroups.Name;

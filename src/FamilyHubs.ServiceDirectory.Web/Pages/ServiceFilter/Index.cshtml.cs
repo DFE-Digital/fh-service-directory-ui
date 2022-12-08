@@ -92,12 +92,11 @@ public class ServiceFilterModel : PageModel
             isPaidFor = costFilter.Values.First() == "pay-to-use";
         }
 
-#pragma warning disable
         string? showOrganisationType = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
         if (showFilter.Values.Count() == 1)
         {
-            showOrganisationType = costFilter.Values.First();
+            showOrganisationType = showFilter.Values.First();
         }
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
@@ -112,6 +111,7 @@ public class ServiceFilterModel : PageModel
             null,
             null,
             isPaidFor,
+            showOrganisationType,
             CategoryFilter.Values);
         return ServiceMapper.ToViewModel(services.Items);
     }

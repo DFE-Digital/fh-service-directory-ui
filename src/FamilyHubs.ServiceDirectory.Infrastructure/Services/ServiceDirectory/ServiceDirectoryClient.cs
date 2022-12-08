@@ -32,15 +32,22 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
             districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, taxonomyIds, cancellationToken);
 
-        var servicesWithOrganisations = await Task.WhenAll(
+        IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
                 new ServiceWithOrganisation(s, await GetOrganisation(s.OpenReferralOrganisationId, cancellationToken))));
+
+        if (showOrganisationTypeIds != null)
+        {
+            servicesWithOrganisations =
+                servicesWithOrganisations.Where(s => s.Organisation.OrganisationType.Id == showOrganisationTypeIds);
+        }
 
         return new PaginatedList<ServiceWithOrganisation>(
             servicesWithOrganisations.ToList(),

@@ -31,6 +31,7 @@ public interface IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default);
 }
