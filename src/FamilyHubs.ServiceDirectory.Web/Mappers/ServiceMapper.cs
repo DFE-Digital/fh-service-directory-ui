@@ -59,10 +59,8 @@ public static class ServiceMapper
         var eligibility = service.Eligibilities?.FirstOrDefault();
         string? ageRange = eligibility == null ? null : $"{eligibility.Minimum_age} to {eligibility.Maximum_age}";
 
-        //todo: how we check for family hubs is going to change
-        // instead we'll check the type of the organisation
-        // or check id == d242700a-b2ad-42fe-8848-61534002156c instead??
-        bool isFamilyHub = service.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
+        const string familyHubOrganisationId = "3";
+        bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == familyHubOrganisationId;
 
         IEnumerable<string> cost;
         if (service.Cost_options?.Any() == false)
