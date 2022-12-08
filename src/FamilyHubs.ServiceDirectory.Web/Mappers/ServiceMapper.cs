@@ -71,6 +71,8 @@ public static class ServiceMapper
         {
             cost = service.Cost_options!.Select(co =>
             {
+                // imported services are not going to have cost options with a 0 amount,
+                // so we _could_ remove this check, but it might come later on, so leave it in
                 if (co.Amount == decimal.Zero)
                     return "Free";
 

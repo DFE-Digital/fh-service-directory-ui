@@ -110,7 +110,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         }
 
         //todo: instead of fetching the org per service and caching, we could query the api at startup to get all the organisations (but if we go with the option above, we'd remove that anyway, so we'll leave for now)
-        //todo: imported services are not going to have cost options with a 0 amount, so we could clean up our display code -> it might come later, so leave it in
         //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
         //todo: SEND as a param in api? needs investigation
 

@@ -5,6 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Models;
 
 public class PostFilter : IFilter
 {
+    public const string RemoveAll = "all";
     public string Name => _filter.Name;
     public string Description => _filter.Description;
     public FilterType FilterType => _filter.FilterType;
@@ -21,8 +22,7 @@ public class PostFilter : IFilter
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
-        //todo: const for magic value
-        if (remove is "all")
+        if (remove != null && remove == RemoveAll)
             return;
 
         string? fullValuesCsv = form[filter.Name];
