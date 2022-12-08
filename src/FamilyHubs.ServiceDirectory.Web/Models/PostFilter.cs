@@ -9,18 +9,17 @@ public class PostFilter : IFilter
     public string Description => _filter.Description;
     public FilterType FilterType => _filter.FilterType;
     public IEnumerable<IFilterAspect> Aspects => _filter.Aspects;
-    public IEnumerable<IFilterAspect> SelectedAspects => _selectedFilterAspects;
+    public IEnumerable<IFilterAspect> SelectedAspects { get; }
     public IEnumerable<string> Values { get; }
 
     private readonly IFilter _filter;
-    private readonly IFilterAspect[] _selectedFilterAspects;
 
     public PostFilter(IFilter filter, IFormCollection form, string? remove)
     {
         _filter = filter;
 
         Values = Enumerable.Empty<string>();
-        _selectedFilterAspects = Array.Empty<IFilterAspect>();
+        SelectedAspects = Array.Empty<IFilterAspect>();
 
         if (remove?.StartsWith(filter.Name) == true)
             return;
@@ -32,7 +31,7 @@ public class PostFilter : IFilter
             //todo: helper for this?
             string[] fullValues = fullValuesCsv.Split(',');
             Values = fullValues.Select(v => v[(filter.Name.Length + 2)..]);
-            _selectedFilterAspects = _filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
+            SelectedAspects = _filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
         }
     }
 
@@ -40,6 +39,6 @@ public class PostFilter : IFilter
     {
         Debug.Assert(aspect.Id.StartsWith(Name));
 
-        return _selectedFilterAspects.Any(a => a.Id == aspect.Id);
+        return SelectedAspects.Any(a => a.Id == aspect.Id);
     }
 }
