@@ -94,7 +94,17 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("isPaidFor", isPaidFor.ToString());
         }
 
-        //todo: search category by taxonomy
+#pragma warning disable
+        //if (taxonomyIds != null)
+        //{
+        //    queryParams.Add("taxonmyIds", "");
+        //}
+
+        //todo: filtering by service/family hub really belongs in the api, but to minimise any possible disruption to the is side before mvp, we'll do it in the front-end for now
+        // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy
+        // we could then pass the organisation data back too (the api currently doesn't fetch the associated org entity when fetching the services)
+        //todo: instead of fetching the org per service and caching, we could query the api at startup to get all the organisations (but if we go with the option above, we'd remove that anyway, so we'll leave for now)
+        //todo: imported services are not going to have cost options with a 0 amount, so we could clean up our display code
         //todo: search show family hubs/services and groups by taxonomy
         //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
         //todo: SEND as a param in api? needs investigation

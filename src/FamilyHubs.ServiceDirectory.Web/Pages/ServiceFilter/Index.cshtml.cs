@@ -14,7 +14,7 @@ public class ServiceFilterModel : PageModel
 
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
-    public FilterSubGroups CategoryFilter { get; set; }
+    public IFilterSubGroups CategoryFilter { get; set; }
     public string? Postcode { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
@@ -67,16 +67,20 @@ public class ServiceFilterModel : PageModel
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
+        //todo: change FilterSubGroup to class and add ToPost...?
+        CategoryFilter = new PostFilterSubGroups(FilterDefinitions.CategoryFilter, Request.Form, remove);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
 
     private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
     {
-        var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
+#pragma warning disable
+        //CategoryFilter.SubFilters
 
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
+        var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
         var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
         if (searchWithFilterValue != null)
         {
