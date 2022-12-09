@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
@@ -34,11 +35,10 @@ public class ServiceFilterModel : PageModel
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+        return HandleGet(postcode, adminDistrict, latitude.Value, longitude.Value);
     }
 
-    //todo: attribute to say null safe?
-    private static void CheckParameters(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
     {
         // we _could_ degrade gracefully if postcode or lat/long is missing,
         // as we can handle that by not showing the postcode or distances
