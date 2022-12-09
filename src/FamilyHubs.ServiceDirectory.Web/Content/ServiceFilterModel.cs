@@ -12,6 +12,9 @@ public static class FilterDefinitions
     public const string ShowFilterName = "show";
     public const string SearchWithinFilterName = "search_within";
 
+    public const string OrganisationTypeIdFamilyHub = "3";
+    public const string OrganisationTypeIdLa = "1";
+
     //todo: we could read this data from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
     public static readonly FilterSubGroups CategoryFilter = new("type-of-support", "Type of support", new Filter[]
     {
@@ -89,11 +92,10 @@ public static class FilterDefinitions
         }),
         new Filter(ShowFilterName, "Show", FilterType.Checkboxes, new IFilterAspect[]
         {
-            //todo: const not magic
             // new OrganisationType("3", "FamilyHub", "Family Hub"),
-            new FilterAspect(ShowFilterName+AspectIdSeparator+"3", "Family hubs"),
+            new FilterAspect(ShowFilterName+AspectIdSeparator+OrganisationTypeIdFamilyHub, "Family hubs"),
             // new OrganisationType("1", "LA", "Local Authority"),
-            new FilterAspect(ShowFilterName+AspectIdSeparator+"1", "Services and groups")
+            new FilterAspect(ShowFilterName+AspectIdSeparator+OrganisationTypeIdLa, "Services and groups")
         }),
         new Filter(SearchWithinFilterName, "Search within", FilterType.Radios, new IFilterAspect[]
         {

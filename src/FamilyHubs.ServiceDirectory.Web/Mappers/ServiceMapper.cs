@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Web.Content;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -59,8 +60,7 @@ public static class ServiceMapper
         var eligibility = service.Eligibilities?.FirstOrDefault();
         string? ageRange = eligibility == null ? null : $"{eligibility.Minimum_age} to {eligibility.Maximum_age}";
 
-        const string familyHubOrganisationId = "3";
-        bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == familyHubOrganisationId;
+        bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == FilterDefinitions.OrganisationTypeIdFamilyHub;
 
         IEnumerable<string> cost;
         if (service.Cost_options?.Any() == false)
