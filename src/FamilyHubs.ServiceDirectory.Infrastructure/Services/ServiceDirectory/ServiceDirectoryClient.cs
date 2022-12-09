@@ -29,15 +29,14 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
-        int? minimumAge = null,
-        int? maximumAge = null,
+        int? givenAge = null,
         bool? isPaidFor = null,
         string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, taxonomyIds, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, taxonomyIds, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -66,8 +65,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
-        int? minimumAge = null,
-        int? maximumAge = null,
+        int? givenAge = null,
         bool? isPaidFor = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
@@ -88,6 +86,10 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("proximity", maximumProximityMeters.ToString());
         }
 
+#if min_max_age
+        // todo: to my eye, min and max age handling in the api looks broken
+        // (we'll switch to using given_age instead)
+        // perhaps nothing is using min & max age??
         if (minimumAge != null)
         {
             queryParams.Add("minimum_age", minimumAge.ToString());
@@ -96,6 +98,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         if (maximumAge != null)
         {
             queryParams.Add("maximum_age", minimumAge.ToString());
+        }
+#endif
+        if (givenAge != null)
+        {
+            queryParams.Add("given_age", givenAge.ToString());
         }
 
         if (isPaidFor != null)

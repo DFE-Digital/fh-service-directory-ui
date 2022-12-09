@@ -105,6 +105,7 @@ public class ServiceFilterModel : PageModel
                 break;
         }
 
+#if min_max_age
         int? minimumAge = null, maximumAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
         var childFilterValue = childrenFilter.Values.FirstOrDefault();
@@ -112,6 +113,16 @@ public class ServiceFilterModel : PageModel
         if (childFilterValue != null && childFilterValue != "all")
         {
             minimumAge = maximumAge = int.Parse(childFilterValue);
+        }
+#endif
+
+        int? givenAge = null;
+        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
+        var childFilterValue = childrenFilter.Values.FirstOrDefault();
+        //todo: hard coding
+        if (childFilterValue != null && childFilterValue != "all")
+        {
+            givenAge = int.Parse(childFilterValue);
         }
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
@@ -123,8 +134,7 @@ public class ServiceFilterModel : PageModel
             latitude,
             longitude,
             searchWithinMeters,
-            minimumAge,
-            maximumAge,
+            givenAge,
             isPaidFor,
             showOrganisationType,
             TypeOfSupportFilter.Values);

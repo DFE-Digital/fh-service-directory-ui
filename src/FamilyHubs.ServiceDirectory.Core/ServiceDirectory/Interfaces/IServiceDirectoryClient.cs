@@ -13,9 +13,7 @@ public interface IServiceDirectoryClient
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
-        int? minimumAge = null,
-        int? maximumAge = null,
-        //todo: enum?
+        int? givenAge = null,
         bool? isPaidFor = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default);
@@ -28,8 +26,7 @@ public interface IServiceDirectoryClient
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
-        int? minimumAge = null,
-        int? maximumAge = null,
+        int? givenAge = null,
         bool? isPaidFor = null,
         string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
