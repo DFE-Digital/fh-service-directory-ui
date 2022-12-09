@@ -24,7 +24,7 @@ public class FilterOptionalSelect : Filter, IFilterOptionalSelect
         IsOptionSelected = optionSelectedByDefault;
     }
 
-    public override IFilter ToPostFilter(IFormCollection form, string? remove)
+    public override IFilterOptionalSelect ToPostFilter(IFormCollection form, string? remove)
     {
         return new PostFilterOptionalSelect(this, form, remove);
     }
