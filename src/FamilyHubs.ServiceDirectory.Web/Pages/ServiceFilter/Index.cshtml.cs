@@ -71,8 +71,7 @@ public class ServiceFilterModel : PageModel
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        //todo: change FilterSubGroup to class and add ToPost...?
-        CategoryFilter = new PostFilterSubGroups(FilterDefinitions.CategoryFilter, Request.Form, remove);
+        CategoryFilter = FilterDefinitions.CategoryFilter.ToPostFilterSubGroups(Request.Form, remove);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
@@ -85,7 +84,6 @@ public class ServiceFilterModel : PageModel
         var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
         if (searchWithFilterValue != null)
         {
-            //todo: cut out name here, rather than for all
             searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithFilterValue));
         }
 

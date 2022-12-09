@@ -18,4 +18,9 @@ public sealed class FilterSubGroups : IFilterSubGroups
         Values = SubFilters.SelectMany(f => f.Values);
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
+
+    public PostFilterSubGroups ToPostFilterSubGroups(IFormCollection form, string? remove)
+    {
+        return new PostFilterSubGroups(this, form, remove);
+    }
 }
