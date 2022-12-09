@@ -120,6 +120,7 @@ else {
         else
         {
             Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
+            IEnumerable<Service> servicesAndHubsToShow;
             if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
             {
                 <div class="app-family-hub">
@@ -127,18 +128,20 @@ else {
                     <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
                 </div>
 
+                servicesAndHubsToShow = Model.Services.Where(s => s.Type == ServiceType.Service);
+            }
+            else
+            {
+                servicesAndHubsToShow = Model.Services;
+            }
+
+            if (servicesAndHubsToShow.Any())
+            {
                 <p id="services-description">
                     Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
                 </p>
 
-                @foreach (var service in Model.Services.Where(s => s.Type == ServiceType.Service))
-                {
-                    <partial name="_Service" model='service'/>
-                }
-            }
-            else
-            {
-                foreach (var service in Model.Services)
+                foreach (var service in servicesAndHubsToShow)
                 {
                     <partial name="_Service" model='service'/>
                 }

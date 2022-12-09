@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Models;
 
+//todo: check for invalid chars in postcode search before sending to api
+//todo: when both services and family hubs are selected, don't show box
+
 public class PostFilter : IFilter
 {
     public const string RemoveAll = "all";
