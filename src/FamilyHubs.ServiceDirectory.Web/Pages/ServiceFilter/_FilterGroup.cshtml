@@ -65,7 +65,7 @@
                             <select class="govuk-select" id="@(filterOptionalSelect.Name)-select" name="@filterOptionalSelect.Name">
                                 @foreach (var aspect in filterOptionalSelect.Aspects)
                                 {
-                                    <option value="@aspect.Id">@aspect.Description</option>
+                                    <!option value="@aspect.Id" @(filterOptionalSelect.IsSelected(aspect)?"selected":"")>@aspect.Description</!option>
                                 }
                             </select>
                         </div>
