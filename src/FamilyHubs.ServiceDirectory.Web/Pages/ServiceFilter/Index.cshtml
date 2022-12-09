@@ -86,12 +86,11 @@ else {
                 </div>
                 
                     <div id="filters" class="moj-filter__options">
-                        
-                        @*todo: data-prevent-double-click?*@
-                        <button type="submit" class="govuk-button" data-module="govuk-button">
+                        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                             Apply filters
                         </button>
-
+                        
+                        @*todo: store name of partial in filter?*@
                         <partial name="_FilterGroupSubGroups" model="Model.TypeOfSupportFilter" />
 
                         @foreach (var filterGroup in Model.Filters)

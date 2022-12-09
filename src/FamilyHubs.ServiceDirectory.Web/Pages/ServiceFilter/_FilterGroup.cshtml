@@ -43,6 +43,35 @@
                     }
                 </div>
                 break;
+            case FilterType.Select:
+                IFilterOptionalSelect filterOptionalSelect = (IFilterOptionalSelect) Model;
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="@(filterOptionalSelect.Name)-option-selected" name="@(filterOptionalSelect.Name)-option-selected" type="checkbox" value="true" data-aria-controls="@(filterOptionalSelect.Name)-select"
+                               @if (filterOptionalSelect.IsOptionSelected)
+                               {
+                                   @:checked
+                               }>
+                        <label class="govuk-label govuk-checkboxes__label" for="@(filterOptionalSelect.Name)-option-selected">
+                            @filterOptionalSelect.OptionDescription
+                        </label>
+                    </div>
+                        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="@(filterOptionalSelect.Name)-select">
+
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="@(filterOptionalSelect.Name)-select">
+                                @filterOptionalSelect.SelectDescription
+                            </label>
+                            <select class="govuk-select" id="@(filterOptionalSelect.Name)-select" name="@filterOptionalSelect.Name">
+                                @foreach (var aspect in filterOptionalSelect.Aspects)
+                                {
+                                    <option value="@aspect.Id">@aspect.Description</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                break;
         }
     </fieldset>
 </div>

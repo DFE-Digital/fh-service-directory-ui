@@ -115,8 +115,8 @@ public static class FilterDefinitions
             new FilterAspect("age-range--16-to-18", "16 to 18"),
             new FilterAspect("age-range--19-to-25-with-send", "19 to 25 with SEND")
         }),
-        new FilterOptionalSelect(
-        ChildrenAndYoungPeopleFilterName, "Children and young people", new IFilterAspect[]
+        new FilterOptionalSelect(ChildrenAndYoungPeopleFilterName, "Children and young people",
+            "For children and young people", "Age", new IFilterAspect[]
         {
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"all", "All ages"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"0", "0 to 12 months"),
