@@ -11,6 +11,7 @@ public static class FilterDefinitions
     public const string CostFilterName = "cost";
     public const string ShowFilterName = "show";
     public const string SearchWithinFilterName = "search_within";
+    public const string ChildrenAndYoungPeopleFilterName = "children_and_young";
 
     // new OrganisationType("3", "FamilyHub", "Family Hub"),
     // new OrganisationType("1", "LA", "Local Authority"),
@@ -18,7 +19,7 @@ public static class FilterDefinitions
     public const string OrganisationTypeIdLa = "1";
 
     //todo: we could read this data from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
-    public static readonly FilterSubGroups CategoryFilter = new("type-of-support", "Type of support", new Filter[]
+    public static readonly FilterSubGroups TypeOfSupportFilter = new("type-of-support", "Type of support", new Filter[]
     {
         new("activities", "Activities, clubs and groups", FilterType.Checkboxes, new IFilterAspect[]
         {
@@ -115,4 +116,36 @@ public static class FilterDefinitions
             new FilterAspect("age-range--19-to-25-with-send", "19 to 25 with SEND")
         })
     };
+
+    public static readonly Filter ChildrenAndYoungPeopleFilter = new(
+        ChildrenAndYoungPeopleFilterName, "Children and young people", FilterType.Select, new IFilterAspect[]
+        {
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"all", "All ages"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"0", "0 to 12 months"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"1", "1 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"2", "2 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"3", "3 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"4", "4 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"5", "5 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"6", "6 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"7", "7 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"8", "8 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"9", "9 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"10", "10 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"11", "11 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"12", "12 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"13", "13 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"14", "14 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"15", "15 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"16", "16 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"17", "17 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"18", "18 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"19", "19 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"20", "20 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"21", "21 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"22", "22 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"23", "23 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"24", "24 year old"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"25", "25 year old")
+        });
 }

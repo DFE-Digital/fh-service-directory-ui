@@ -26,7 +26,7 @@ public class ServiceFilterModel : PageModel
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         Filters = FilterDefinitions.Filters;
-        CategoryFilter = FilterDefinitions.CategoryFilter;
+        CategoryFilter = FilterDefinitions.TypeOfSupportFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
     }
@@ -71,7 +71,7 @@ public class ServiceFilterModel : PageModel
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        CategoryFilter = FilterDefinitions.CategoryFilter.ToPostFilterSubGroups(Request.Form, remove);
+        CategoryFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilterSubGroups(Request.Form, remove);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }

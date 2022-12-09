@@ -3,5 +3,6 @@
 public enum FilterType
 {
     Checkboxes,
-    Radios
+    Radios,
+    Select
 }
