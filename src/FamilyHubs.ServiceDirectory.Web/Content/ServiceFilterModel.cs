@@ -86,7 +86,7 @@ public static class FilterDefinitions
         })
     });
 
-    public static readonly IEnumerable<Filter> Filters = new[]
+    public static readonly IEnumerable<IFilter> Filters = new[]
     {
         new Filter(CostFilterName, "Cost", FilterType.Checkboxes, new IFilterAspect[]
         {
@@ -114,11 +114,9 @@ public static class FilterDefinitions
             new FilterAspect("age-range--12-to-15", "12 to 15"),
             new FilterAspect("age-range--16-to-18", "16 to 18"),
             new FilterAspect("age-range--19-to-25-with-send", "19 to 25 with SEND")
-        })
-    };
-
-    public static readonly Filter ChildrenAndYoungPeopleFilter = new(
-        ChildrenAndYoungPeopleFilterName, "Children and young people", FilterType.Select, new IFilterAspect[]
+        }),
+        new FilterOptionalSelect(
+        ChildrenAndYoungPeopleFilterName, "Children and young people", new IFilterAspect[]
         {
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"all", "All ages"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"0", "0 to 12 months"),
@@ -147,5 +145,6 @@ public static class FilterDefinitions
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"23", "23 year old"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"24", "24 year old"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"25", "25 year old")
-        });
+        })
+    };
 }

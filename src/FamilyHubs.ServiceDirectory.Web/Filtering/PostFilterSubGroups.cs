@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
@@ -20,5 +21,11 @@ public class PostFilterSubGroups : IFilterSubGroups
         SubFilters = filterSubGroups.SubFilters.Select(f => new PostFilter(f, form, remove)).ToArray();
         Values = SubFilters.SelectMany(f => f.Values);
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
+    }
+
+    public IFilterSubGroups ToPostFilter(IFormCollection form, string? remove)
+    {
+        Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
+        return this;
     }
 }

@@ -48,4 +48,10 @@ public class PostFilter : IFilter
 
         return SelectedAspects.Any(a => a.Id == aspect.Id);
     }
+
+    public IFilter ToPostFilter(IFormCollection form, string? remove)
+    {
+        Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
+        return this;
+    }
 }
