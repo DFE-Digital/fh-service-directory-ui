@@ -9,8 +9,8 @@ public class PostFilter : IFilter
     public string Description => Filter.Description;
     public FilterType FilterType => Filter.FilterType;
     public IEnumerable<IFilterAspect> Aspects => Filter.Aspects;
-    public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    public IEnumerable<string> Values { get; }
+    public IEnumerable<IFilterAspect> SelectedAspects { get; protected set; }
+    public IEnumerable<string> Values { get; protected set; }
 
     protected readonly IFilter Filter;
 

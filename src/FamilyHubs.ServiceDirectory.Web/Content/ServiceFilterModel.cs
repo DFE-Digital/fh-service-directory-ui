@@ -106,6 +106,7 @@ public static class FilterDefinitions
             new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"10", "10 miles"),
             new FilterAspect(SearchWithinFilterName+AspectIdSeparator+"20", "20 miles", true)
         }),
+#if old_skool_age_filter
         new Filter("age-range", "Age range", FilterType.Checkboxes, new IFilterAspect[]
         {
             new FilterAspect("age-range--all-age-groups", "All age groups"),
@@ -115,6 +116,7 @@ public static class FilterDefinitions
             new FilterAspect("age-range--16-to-18", "16 to 18"),
             new FilterAspect("age-range--19-to-25-with-send", "19 to 25 with SEND")
         }),
+#endif
         new FilterOptionalSelect(ChildrenAndYoungPeopleFilterName, "Children and young people",
             "For children and young people", "Age", new IFilterAspect[]
         {
