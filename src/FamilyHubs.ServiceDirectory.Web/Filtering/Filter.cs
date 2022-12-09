@@ -1,15 +1,8 @@
 ﻿using System.Diagnostics;
-using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
-namespace FamilyHubs.ServiceDirectory.Web.Models;
+namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-public enum FilterType
-{
-    Checkboxes,
-    Radios
-}
-
-//todo: not really a model anymore, move elsewhere
 public class Filter : IFilter
 {
     public string Name { get; }

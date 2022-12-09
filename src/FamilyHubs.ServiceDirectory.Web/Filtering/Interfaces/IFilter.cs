@@ -1,7 +1,9 @@
-﻿namespace FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿namespace FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 public interface IFilter
 {
+    public const string RemoveAll = "all";
+
     string Name { get; }
     string Description { get; }
     FilterType FilterType { get; }

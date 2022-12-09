@@ -1,6 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
-namespace FamilyHubs.ServiceDirectory.Web.Models;
+namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
 public sealed class FilterSubGroups : IFilterSubGroups
 {

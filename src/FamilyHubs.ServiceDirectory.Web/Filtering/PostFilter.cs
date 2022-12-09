@@ -1,14 +1,10 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using System.Diagnostics;
 
-namespace FamilyHubs.ServiceDirectory.Web.Models;
-
-//todo: check for invalid chars in postcode search before sending to api
-//todo: when both services and family hubs are selected, don't show box
+namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
 public class PostFilter : IFilter
 {
-    public const string RemoveAll = "all";
     public string Name => _filter.Name;
     public string Description => _filter.Description;
     public FilterType FilterType => _filter.FilterType;
@@ -25,7 +21,7 @@ public class PostFilter : IFilter
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
-        if (remove != null && remove == RemoveAll)
+        if (remove != null && remove == IFilter.RemoveAll)
             return;
 
         string? fullValuesCsv = form[filter.Name];

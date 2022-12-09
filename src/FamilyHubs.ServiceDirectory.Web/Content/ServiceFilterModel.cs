@@ -1,5 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Models;
-using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Web.Filtering;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Web.Content;
 
@@ -12,6 +12,8 @@ public static class FilterDefinitions
     public const string ShowFilterName = "show";
     public const string SearchWithinFilterName = "search_within";
 
+    // new OrganisationType("3", "FamilyHub", "Family Hub"),
+    // new OrganisationType("1", "LA", "Local Authority"),
     public const string OrganisationTypeIdFamilyHub = "3";
     public const string OrganisationTypeIdLa = "1";
 
@@ -92,9 +94,7 @@ public static class FilterDefinitions
         }),
         new Filter(ShowFilterName, "Show", FilterType.Checkboxes, new IFilterAspect[]
         {
-            // new OrganisationType("3", "FamilyHub", "Family Hub"),
             new FilterAspect(ShowFilterName+AspectIdSeparator+OrganisationTypeIdFamilyHub, "Family hubs"),
-            // new OrganisationType("1", "LA", "Local Authority"),
             new FilterAspect(ShowFilterName+AspectIdSeparator+OrganisationTypeIdLa, "Services and groups")
         }),
         new Filter(SearchWithinFilterName, "Search within", FilterType.Radios, new IFilterAspect[]

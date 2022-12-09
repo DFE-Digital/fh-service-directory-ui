@@ -1,8 +1,7 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
-namespace FamilyHubs.ServiceDirectory.Web.Models;
+namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-//todo: clear filter css
 //todo: can it also implement IFilter?
 public class PostFilterSubGroups : IFilterSubGroups
 {

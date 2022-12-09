@@ -1,4 +1,4 @@
-﻿namespace FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+﻿namespace FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 public interface IFilterSubGroups
 {
