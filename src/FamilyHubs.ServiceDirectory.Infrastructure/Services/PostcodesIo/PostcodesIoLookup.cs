@@ -18,6 +18,10 @@ public class PostcodesIoLookup : IPostcodeLookup
         if (string.IsNullOrWhiteSpace(postcode))
             return (PostcodeError.NoPostcode, null);
 
+        // light touch validation (ie no regex). do enough so that postcodes.io can do it's own validation
+        if (!postcode.All(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c)))
+            return (PostcodeError.InvalidPostcode, null);
+
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
         using var response = await httpClient.GetAsync(postcode, HttpCompletionOption.ResponseHeadersRead, cancellationToken);

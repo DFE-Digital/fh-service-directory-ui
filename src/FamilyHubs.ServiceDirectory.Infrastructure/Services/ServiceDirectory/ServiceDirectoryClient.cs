@@ -32,15 +32,25 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        string? showOrganisationTypeIds = null,
+        IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, taxonomyIds, cancellationToken);
 
-        //todo: probably need locking
-        var servicesWithOrganisations = await Task.WhenAll(
+        IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
                 new ServiceWithOrganisation(s, await GetOrganisation(s.OpenReferralOrganisationId, cancellationToken))));
+
+        //todo: filtering by service/family hub really belongs in the api, but to minimise any possible disruption to the is side before mvp, we'll do it in the front-end for now
+        // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy
+        // we could then pass the organisation data back too (the api currently doesn't fetch the associated org entity when fetching the services)
+        if (showOrganisationTypeIds != null)
+        {
+            servicesWithOrganisations =
+                servicesWithOrganisations.Where(s => s.Organisation.OrganisationType.Id == showOrganisationTypeIds);
+        }
 
         return new PaginatedList<ServiceWithOrganisation>(
             servicesWithOrganisations.ToList(),
@@ -51,7 +61,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             0);
     }
 
-    //todo: categories are passed as comma separated taxonmyIds
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
         string districtCode,
         float latitude,
@@ -60,6 +69,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? minimumAge = null,
         int? maximumAge = null,
         bool? isPaidFor = null,
+        IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -94,8 +104,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("isPaidFor", isPaidFor.ToString());
         }
 
-        //todo: search category by taxonomy
-        //todo: search show family hubs/services and groups by taxonomy
+        if (taxonomyIds != null && taxonomyIds.Any())
+        {
+            queryParams.Add("taxonmyIds", string.Join(',', taxonomyIds));
+        }
+
+        //todo: instead of fetching the org per service and caching, we could query the api at startup to get all the organisations (but if we go with the option above, we'd remove that anyway, so we'll leave for now)
         //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
         //todo: SEND as a param in api? needs investigation
 

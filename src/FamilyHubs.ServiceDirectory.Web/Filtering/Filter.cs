@@ -1,13 +1,7 @@
 ﻿using System.Diagnostics;
-using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
-namespace FamilyHubs.ServiceDirectory.Web.Models;
-
-public enum FilterType
-{
-    Checkboxes,
-    Radios
-}
+namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
 public class Filter : IFilter
 {
@@ -15,7 +9,7 @@ public class Filter : IFilter
     public string Description { get; }
     public FilterType FilterType { get; }
     public IEnumerable<IFilterAspect> Aspects { get; }
-    public string? Value { get; }
+    public IEnumerable<string> Values { get; }
 
     private readonly IFilterAspect[] _selectedFilterAspects;
 
@@ -28,9 +22,7 @@ public class Filter : IFilter
 
         _selectedFilterAspects = Aspects.Where(a => a.SelectedByDefault).ToArray();
 
-        //todo: assume radio for now
-        var selectedByDefaultAspect = _selectedFilterAspects.FirstOrDefault(IsSelected);
-        Value = selectedByDefaultAspect?.Id[(Name.Length + 2)..];
+        Values = _selectedFilterAspects.Select(a => a.Id[(Name.Length + 2)..]);
     }
 
     public PostFilter ToPostFilter(IFormCollection form, string? remove)

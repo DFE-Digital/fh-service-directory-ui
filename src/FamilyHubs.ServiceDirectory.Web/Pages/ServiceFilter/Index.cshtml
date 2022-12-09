@@ -8,7 +8,8 @@
     <a asp-page="/PostcodeSearch/Index" class="govuk-back-link">Back</a>
 }
 
-@if (!Model.Services.Any()) {
+@*todo: doesn't let user unselect default 'within 20 miles'!*@
+@if (Model.IsGet && !Model.Services.Any()) {
     <partial name="_ServiceFilterNoResults" />
 }
 else {
@@ -36,7 +37,6 @@ else {
 
                 <div class="moj-filter__header-action">
                 </div>
-
             </div>
 
             <form method="post">
@@ -50,10 +50,25 @@ else {
                         </div>
 
                         <div class="moj-filter__heading-action">
-                            <p><a class="govuk-link--no-visited-state" href="">Clear filters</a></p>
+                            <p><button type="submit" class="govuk-link app-button-link" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
                         </div>
                     </div>
                     
+                    @if (Model.CategoryFilter.SelectedAspects.Any())
+                    {
+                        @*todo: we could either list all sub filters under the group, or give a title by each subgroup description*@
+                        @*we'll do it by the name of all the groups (as it should look neater), but check with the designers *@
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.CategoryFilter.Description</h3>
+
+                        @foreach (var selectedAspect in Model.CategoryFilter.SelectedAspects)
+                        {
+                            @*todo: partial for this and above?*@
+                            <ul class="moj-filter-tags">
+                                <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                            </ul>
+                        }
+                    }
+
                     @foreach (var filter in Model.Filters)
                     {
                         if (filter.SelectedAspects.Any())
@@ -89,32 +104,49 @@ else {
         </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
-    @{
-        Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
-        if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
+        @if (!Model.Services.Any())
         {
-            <div class="app-family-hub">
-                <partial name="_Service" , model="firstFamilyHub" />
-                <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
-            </div>
+            <h2 class="govuk-heading-m">
+                Try another search
+            </h2>
 
-            <p id="services-description">
-                Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
-            </p>
-
-            @foreach (var service in Model.Services.Where(s => s.Type == ServiceType.Service))
-            {
-                <partial name="_Service" model='service'/>
-            }
+            <p>You may get more results if you change the:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>age range</li>
+                <li>distance to search within</li>
+                <li>type of support</li>
+            </ul>
         }
         else
         {
-            @foreach (var service in Model.Services)
+            Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
+            IEnumerable<Service> servicesAndHubsToShow;
+            if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
+            {
+                <div class="app-family-hub">
+                    <partial name="_Service" , model="firstFamilyHub" />
+                    <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
+                </div>
+
+                servicesAndHubsToShow = Model.Services.Where(s => s.Type == ServiceType.Service);
+
+                if (servicesAndHubsToShow.Any())
+                {
+                    <p id="services-description">
+                        Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
+                    </p>
+                }
+            }
+            else
+            {
+                servicesAndHubsToShow = Model.Services;
+            }
+
+            foreach (var service in servicesAndHubsToShow)
             {
                 <partial name="_Service" model='service'/>
             }
         }
-    }
     </div>
 </div>
 }

@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
+using FamilyHubs.ServiceDirectory.Web.Filtering;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
-using FamilyHubs.ServiceDirectory.Web.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
@@ -14,10 +16,11 @@ public class ServiceFilterModel : PageModel
 
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
-    public FilterSubGroups CategoryFilter { get; set; }
+    public IFilterSubGroups CategoryFilter { get; set; }
     public string? Postcode { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
+    public bool IsGet { get; set; }
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
@@ -25,19 +28,17 @@ public class ServiceFilterModel : PageModel
         Filters = FilterDefinitions.Filters;
         CategoryFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
-        // we set this to true when neither show filter is selected
-        OnlyShowOneFamilyHubAndHighlightIt = true;
+        OnlyShowOneFamilyHubAndHighlightIt = false;
     }
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+        return HandleGet(postcode, adminDistrict, latitude.Value, longitude.Value);
     }
 
-    //todo: attribute to say null safe?
-    private static void CheckParameters(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
     {
         // we _could_ degrade gracefully if postcode or lat/long is missing,
         // as we can handle that by not showing the postcode or distances
@@ -50,6 +51,7 @@ public class ServiceFilterModel : PageModel
 
     private async Task HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
     {
+        IsGet = true;
         Postcode = postcode;
 
         Services = await GetServices(adminDistrict, latitude, longitude);
@@ -64,21 +66,44 @@ public class ServiceFilterModel : PageModel
 
     private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
     {
+        IsGet = false;
+
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
+        CategoryFilter = FilterDefinitions.CategoryFilter.ToPostFilterSubGroups(Request.Form, remove);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
 
     private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
     {
-        var filter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
-
+        //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
-        if (filter.Value != null)
+        var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
+        var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
+        if (searchWithFilterValue != null)
         {
-            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(filter.Value));
+            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithFilterValue));
+        }
+
+        bool? isPaidFor = null;
+        var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
+        if (costFilter.Values.Count() == 1)
+        {
+            isPaidFor = costFilter.Values.First() == "pay-to-use";
+        }
+
+        string? showOrganisationType = null;
+        var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
+        switch (showFilter.Values.Count())
+        {
+            case 0:
+                OnlyShowOneFamilyHubAndHighlightIt = true;
+                break;
+            case 1:
+                showOrganisationType = showFilter.Values.First();
+                break;
         }
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
@@ -89,8 +114,12 @@ public class ServiceFilterModel : PageModel
             adminDistrict,
             latitude,
             longitude,
-            searchWithinMeters);
+            searchWithinMeters,
+            null,
+            null,
+            isPaidFor,
+            showOrganisationType,
+            CategoryFilter.Values);
         return ServiceMapper.ToViewModel(services.Items);
     }
 }
-//todo: long distances

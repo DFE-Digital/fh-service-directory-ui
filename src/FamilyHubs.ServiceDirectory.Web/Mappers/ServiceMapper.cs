@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Web.Content;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -59,10 +60,7 @@ public static class ServiceMapper
         var eligibility = service.Eligibilities?.FirstOrDefault();
         string? ageRange = eligibility == null ? null : $"{eligibility.Minimum_age} to {eligibility.Maximum_age}";
 
-        //todo: how we check for family hubs is going to change
-        // instead we'll check the type of the organisation
-        // or check id == d242700a-b2ad-42fe-8848-61534002156c instead??
-        bool isFamilyHub = service.Service_taxonomys?.Any(t => t.Taxonomy?.Name == "FamilyHub") ?? false;
+        bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == FilterDefinitions.OrganisationTypeIdFamilyHub;
 
         IEnumerable<string> cost;
         if (service.Cost_options?.Any() == false)
@@ -73,6 +71,8 @@ public static class ServiceMapper
         {
             cost = service.Cost_options!.Select(co =>
             {
+                // imported services are not going to have cost options with a 0 amount,
+                // so we _could_ remove this check, but it might come later on, so leave it in
                 if (co.Amount == decimal.Zero)
                     return "Free";
 
