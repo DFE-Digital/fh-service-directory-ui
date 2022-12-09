@@ -18,6 +18,8 @@ public static class FilterDefinitions
     public const string OrganisationTypeIdFamilyHub = "3";
     public const string OrganisationTypeIdLa = "1";
 
+    public const string ChildrenAndYoungPeopleAllId = "all";
+
     //todo: we could read this data from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
     public static readonly FilterSubGroups TypeOfSupportFilter = new("type-of-support", "Type of support", new Filter[]
     {
@@ -120,7 +122,7 @@ public static class FilterDefinitions
         new FilterOptionalSelect(ChildrenAndYoungPeopleFilterName, "Children and young people",
             "For children and young people", "Age", new IFilterAspect[]
         {
-            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"all", "All ages"),
+            new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+ChildrenAndYoungPeopleAllId, "All ages"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"0", "0 to 12 months"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"1", "1 year old"),
             new FilterAspect(ChildrenAndYoungPeopleFilterName+AspectIdSeparator+"2", "2 year old"),

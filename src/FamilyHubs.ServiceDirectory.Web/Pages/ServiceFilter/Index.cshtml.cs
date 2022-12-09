@@ -109,8 +109,7 @@ public class ServiceFilterModel : PageModel
         int? minimumAge = null, maximumAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
         var childFilterValue = childrenFilter.Values.FirstOrDefault();
-        //todo: hard coding
-        if (childFilterValue != null && childFilterValue != "all")
+        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
         {
             minimumAge = maximumAge = int.Parse(childFilterValue);
         }
@@ -119,8 +118,7 @@ public class ServiceFilterModel : PageModel
         int? givenAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
         var childFilterValue = childrenFilter.Values.FirstOrDefault();
-        //todo: hard coding
-        if (childFilterValue != null && childFilterValue != "all")
+        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
         {
             givenAge = int.Parse(childFilterValue);
         }
