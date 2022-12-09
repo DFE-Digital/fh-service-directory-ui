@@ -105,6 +105,15 @@ public class ServiceFilterModel : PageModel
                 break;
         }
 
+        int? minimumAge = null, maximumAge = null;
+        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
+        var childFilterValue = childrenFilter.Values.FirstOrDefault();
+        //todo: hard coding
+        if (childFilterValue != null && childFilterValue != "all")
+        {
+            minimumAge = maximumAge = int.Parse(childFilterValue);
+        }
+
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
         // we could assume that they all share the same organisation
         // leave it as-is for now though (as we handle the more generic case)
@@ -114,8 +123,8 @@ public class ServiceFilterModel : PageModel
             latitude,
             longitude,
             searchWithinMeters,
-            null,
-            null,
+            minimumAge,
+            maximumAge,
             isPaidFor,
             showOrganisationType,
             TypeOfSupportFilter.Values);

@@ -88,7 +88,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("proximity", maximumProximityMeters.ToString());
         }
 
-        //todo: map from the front end (where's best?) ranges for these
         if (minimumAge != null)
         {
             queryParams.Add("minimum_age", minimumAge.ToString());
