@@ -26,8 +26,7 @@ public class ServiceFilterModel : PageModel
         Filters = FilterDefinitions.Filters;
         CategoryFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
-        //todo: we set this to true when neither show filter is selected
-        OnlyShowOneFamilyHubAndHighlightIt = true;
+        OnlyShowOneFamilyHubAndHighlightIt = false;
     }
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -98,9 +97,14 @@ public class ServiceFilterModel : PageModel
 
         string? showOrganisationType = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
-        if (showFilter.Values.Count() == 1)
+        switch (showFilter.Values.Count())
         {
-            showOrganisationType = showFilter.Values.First();
+            case 0:
+                OnlyShowOneFamilyHubAndHighlightIt = true;
+                break;
+            case 1:
+                showOrganisationType = showFilter.Values.First();
+                break;
         }
 
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
