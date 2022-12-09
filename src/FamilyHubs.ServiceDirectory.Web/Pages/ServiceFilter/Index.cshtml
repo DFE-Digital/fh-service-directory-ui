@@ -129,22 +129,22 @@ else {
                 </div>
 
                 servicesAndHubsToShow = Model.Services.Where(s => s.Type == ServiceType.Service);
+
+                if (servicesAndHubsToShow.Any())
+                {
+                    <p id="services-description">
+                        Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
+                    </p>
+                }
             }
             else
             {
                 servicesAndHubsToShow = Model.Services;
             }
 
-            if (servicesAndHubsToShow.Any())
+            foreach (var service in servicesAndHubsToShow)
             {
-                <p id="services-description">
-                    Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
-                </p>
-
-                foreach (var service in servicesAndHubsToShow)
-                {
-                    <partial name="_Service" model='service'/>
-                }
+                <partial name="_Service" model='service'/>
             }
         }
     </div>
