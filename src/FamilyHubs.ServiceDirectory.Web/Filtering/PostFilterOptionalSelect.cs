@@ -26,7 +26,7 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
             IsOptionSelected = isOptionSelected;
         }
 
-        //todo: we _could_ remember the selection when the option isn't selected, but not have it as an active selection
+        // we _could_ remember the selection when the option isn't selected, but not have it as an active selection
         if (!IsOptionSelected)
         {
             Values = Enumerable.Empty<string>();
