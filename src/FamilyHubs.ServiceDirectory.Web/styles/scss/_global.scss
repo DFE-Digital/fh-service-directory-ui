@@ -1,4 +1,4 @@
-﻿doesn't match the '
+﻿
 .app-button-link {
     border: none;
     padding: 0 !important;
@@ -30,6 +30,11 @@
 
     .govuk-header__logo {
         width: 100%;
+    }
+
+    .govuk-header__link--homepage {
+        padding-bottom: 10px;
+        margin-right: 0;
     }
 
     .govuk-header__logotype-crown-fallback-image {

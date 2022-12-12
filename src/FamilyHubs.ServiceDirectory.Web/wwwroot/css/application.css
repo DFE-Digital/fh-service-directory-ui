@@ -7452,9 +7452,11 @@ p + .govuk-heading-s,
 }
 
 /*todo: we've copied the prototype for the header html & css, but it's not ideal.
-    check if we need to copy, or if it is as it is, as that was what was available.
+    the prototype doesn't match the ideal design. i'll add a story to match the ideal design
     e.g.
     * bar '|' lives on its own. should it belong to the product name?
+      we could implement this by having a bar to the left of the 2 span elements and effectively hiding it on the first
+    see: https://stackoverflow.com/questions/45309860/flexbox-target-wrapped-items
     * product name within govuk-header__logo div
 */
 .app-header {
@@ -7472,6 +7474,10 @@ p + .govuk-heading-s,
 }
 .app-header .govuk-header__logo {
   width: 100%;
+}
+.app-header .govuk-header__link--homepage {
+  padding-bottom: 10px;
+  margin-right: 0;
 }
 .app-header .govuk-header__logotype-crown-fallback-image {
   height: 45px;
