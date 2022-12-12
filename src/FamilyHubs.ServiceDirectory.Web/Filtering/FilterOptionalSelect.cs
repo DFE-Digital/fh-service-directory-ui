@@ -9,6 +9,7 @@ public class FilterOptionalSelect : Filter, IFilterOptionalSelect
     public bool IsOptionSelected { get; }
     public string OptionDescription { get; }
     public string SelectDescription { get; }
+    public string OptionSelectedName { get; }
 
     public FilterOptionalSelect(
         string name,
@@ -22,6 +23,7 @@ public class FilterOptionalSelect : Filter, IFilterOptionalSelect
         OptionDescription = optionDescription;
         SelectDescription = selectDescription;
         IsOptionSelected = optionSelectedByDefault;
+        OptionSelectedName = $"{Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
     }
 
     public override IFilterOptionalSelect ToPostFilter(IFormCollection form, string? remove)

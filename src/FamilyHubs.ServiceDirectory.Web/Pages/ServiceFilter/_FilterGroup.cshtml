@@ -47,12 +47,12 @@
                 IFilterOptionalSelect filterOptionalSelect = (IFilterOptionalSelect) Model;
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="@(filterOptionalSelect.Name)-option-selected" name="@(filterOptionalSelect.Name)-option-selected" type="checkbox" value="true" data-aria-controls="@(filterOptionalSelect.Name)-select"
+                        <input class="govuk-checkboxes__input" id="@(filterOptionalSelect.OptionSelectedName)" name="@(filterOptionalSelect.OptionSelectedName)" type="checkbox" value="true" data-aria-controls="@(filterOptionalSelect.Name)-select"
                                @if (filterOptionalSelect.IsOptionSelected)
                                {
                                    @:checked
                                }>
-                        <label class="govuk-label govuk-checkboxes__label" for="@(filterOptionalSelect.Name)-option-selected">
+                        <label class="govuk-label govuk-checkboxes__label" for="@(filterOptionalSelect.OptionSelectedName)">
                             @filterOptionalSelect.OptionDescription
                         </label>
                     </div>

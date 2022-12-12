@@ -7,12 +7,13 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
     public bool IsOptionSelected { get; }
     public string OptionDescription => ((IFilterOptionalSelect)Filter).OptionDescription;
     public string SelectDescription => ((IFilterOptionalSelect)Filter).SelectDescription;
+    public string OptionSelectedName { get; }
 
     public PostFilterOptionalSelect(IFilterOptionalSelect filter, IFormCollection form, string? remove)
         : base(filter, form, remove)
     {
-        //todo: const
-        var isOptionSelectedStr = form[$"{filter.Name}-option-selected"];
+        OptionSelectedName = $"{filter.Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
+        var isOptionSelectedStr = form[OptionSelectedName];
         bool.TryParse(isOptionSelectedStr, out var isOptionSelected);
         IsOptionSelected = isOptionSelected;
 
