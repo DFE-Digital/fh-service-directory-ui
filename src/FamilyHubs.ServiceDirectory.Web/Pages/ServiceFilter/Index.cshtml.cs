@@ -5,14 +5,13 @@ using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
-    private readonly IServiceDirectoryClient _serviceDirectoryClient;
-
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
     public IFilterSubGroups TypeOfSupportFilter { get; set; }
@@ -20,6 +19,13 @@ public class ServiceFilterModel : PageModel
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
+    [BindProperty]
+    public int CurrentPage { get; set; }
+    [BindProperty]
+    public int MaxPages { get; set; }
+
+    private readonly IServiceDirectoryClient _serviceDirectoryClient;
+    private const int PageSize = 1;
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
@@ -28,6 +34,7 @@ public class ServiceFilterModel : PageModel
         TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
+        CurrentPage = 1;
     }
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -135,7 +142,15 @@ public class ServiceFilterModel : PageModel
             givenAge,
             isPaidFor,
             showOrganisationType,
-            TypeOfSupportFilter.Values);
+            TypeOfSupportFilter.Values,
+            CurrentPage,
+            PageSize);
+
+        //todo: tidy
+        //todo: looks like api pagination is borked
+        //todo: need to fix up our total pages
+        MaxPages = services.TotalPages;
+
         return ServiceMapper.ToViewModel(services.Items);
     }
 }

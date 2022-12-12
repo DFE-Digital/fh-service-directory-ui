@@ -16,6 +16,8 @@ public interface IServiceDirectoryClient
         int? givenAge = null,
         bool? isPaidFor = null,
         IEnumerable<string>? taxonomyIds = null,
+        int? pageNumber = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default);
 
     // caches organisations for 1 hour
@@ -30,5 +32,7 @@ public interface IServiceDirectoryClient
         bool? isPaidFor = null,
         string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
+        int? pageNumber = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default);
 }

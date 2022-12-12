@@ -33,10 +33,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         bool? isPaidFor = null,
         string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
+        int? pageNumber = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, taxonomyIds, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, taxonomyIds, pageNumber, pageSize, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -69,6 +71,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? givenAge = null,
         bool? isPaidFor = null,
         IEnumerable<string>? taxonomyIds = null,
+        int? pageNumber = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
