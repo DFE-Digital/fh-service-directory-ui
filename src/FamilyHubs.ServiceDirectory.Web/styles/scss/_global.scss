@@ -32,6 +32,13 @@
         width: 100%;
     }
 
+    .app-header-logo-link:hover, .app-header-logo-link:active {
+        /* govuk-header__link--homepage uses a border rather than an underline, so we can't do this... */
+        /*   text-underline-offset: 10px;*/
+        /*font-weight the equivalent like this..*/
+        padding-bottom: 7px;
+    }
+
     .govuk-header__logotype-crown-fallback-image {
         height: 45px;
         width: 45px;
