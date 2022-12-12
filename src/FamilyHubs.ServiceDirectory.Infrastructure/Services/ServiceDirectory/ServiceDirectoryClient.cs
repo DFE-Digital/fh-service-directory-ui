@@ -45,6 +45,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         //todo: filtering by service/family hub really belongs in the api, but to minimise any possible disruption to the is side before mvp, we'll do it in the front-end for now
         // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy
         // we could then pass the organisation data back too (the api currently doesn't fetch the associated org entity when fetching the services)
+        // searching by family hub in api pr .. https://github.com/DFE-Digital/fh-service-directory-api/pull/85
         if (showOrganisationTypeIds != null)
         {
             servicesWithOrganisations =
