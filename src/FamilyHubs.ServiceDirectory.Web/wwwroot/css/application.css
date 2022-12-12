@@ -7461,9 +7461,9 @@ p + .govuk-heading-s,
 */
 .app-header {
   background-color: #003a69;
+  border-bottom: 10px solid #347ca9;
 }
 .app-header .govuk-header__container {
-  border-bottom: 10px solid #347ca9;
   padding-top: 15px;
   padding-bottom: 15px;
 }

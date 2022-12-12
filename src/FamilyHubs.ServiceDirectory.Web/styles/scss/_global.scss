@@ -21,9 +21,9 @@
 
 .app-header {
     background-color: #003a69;
+    border-bottom: 10px solid #347ca9;
 
     .govuk-header__container {
-        border-bottom: 10px solid #347ca9;
         @include govuk-responsive-padding(5, "top");
         @include govuk-responsive-padding(3, "bottom");
     }
