@@ -7460,9 +7460,6 @@ p + .govuk-heading-s,
 .app-header .govuk-header__logo {
   width: 100%;
 }
-.app-header .govuk-header__link--homepage {
-  padding-bottom: 10px;
-}
 .app-header .govuk-header__logotype-crown-fallback-image {
   height: 45px;
   width: 45px;
