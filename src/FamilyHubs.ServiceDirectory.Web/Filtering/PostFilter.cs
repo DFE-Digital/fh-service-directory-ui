@@ -5,18 +5,18 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
 public class PostFilter : IFilter
 {
-    public string Name => _filter.Name;
-    public string Description => _filter.Description;
-    public FilterType FilterType => _filter.FilterType;
-    public IEnumerable<IFilterAspect> Aspects => _filter.Aspects;
-    public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    public IEnumerable<string> Values { get; }
+    public string Name => Filter.Name;
+    public string Description => Filter.Description;
+    public FilterType FilterType => Filter.FilterType;
+    public IEnumerable<IFilterAspect> Aspects => Filter.Aspects;
+    public IEnumerable<IFilterAspect> SelectedAspects { get; protected set; }
+    public IEnumerable<string> Values { get; protected set; }
 
-    private readonly IFilter _filter;
+    protected readonly IFilter Filter;
 
     public PostFilter(IFilter filter, IFormCollection form, string? remove)
     {
-        _filter = filter;
+        Filter = filter;
 
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
@@ -38,7 +38,7 @@ public class PostFilter : IFilter
                     .ToArray();
             }
             Values = fullValues.Select(v => v[(filter.Name.Length + 2)..]);
-            SelectedAspects = _filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
+            SelectedAspects = Filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
         }
     }
 
@@ -47,5 +47,11 @@ public class PostFilter : IFilter
         Debug.Assert(aspect.Id.StartsWith(Name));
 
         return SelectedAspects.Any(a => a.Id == aspect.Id);
+    }
+
+    public IFilter ToPostFilter(IFormCollection form, string? remove)
+    {
+        Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
+        return this;
     }
 }

@@ -7441,6 +7441,49 @@ p + .govuk-heading-s,
   margin-bottom: 0;
 }
 
+.app-button-link {
+  border: none;
+  padding: 0 !important;
+  color: #1d70b8;
+  cursor: pointer;
+}
+.app-button-link:hover {
+  text-decoration: none;
+}
+
+/*todo: we've copied the prototype for the header html & css, but it's not ideal.
+    check if we need to copy, or if it is as it is, as that was what was available.
+    e.g.
+    * bar '|' lives on its own. should it belong to the product name?
+    * product name within govuk-header__logo div
+*/
+.app-header {
+  background-color: #003a69;
+}
+.app-header .govuk-header__container {
+  border-bottom: 10px solid #347ca9;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+@media (min-width: 40.0625em) {
+  .app-header .govuk-header__container {
+    padding-top: 25px;
+  }
+}
+.app-header .govuk-header__logo {
+  width: 100%;
+}
+.app-header .govuk-header__logotype-crown-fallback-image {
+  height: 45px;
+  width: 45px;
+  float: left;
+  margin-right: 10px;
+}
+.app-header .govuk-header__logotype-text, .app-header .govuk-header__product-name {
+  line-height: 2.5rem !important;
+  font-size: 1.2rem;
+}
+
 .app-open-close-filters {
   display: none;
 }
@@ -7534,16 +7577,6 @@ p + .govuk-heading-s,
   line-height: 1.5;
   padding-left: 25px;
   background-position: 5px center;
-}
-
-.app-button-link {
-  border: none;
-  padding: 0 !important;
-  color: #1d70b8;
-  cursor: pointer;
-}
-.app-button-link:hover {
-  text-decoration: none;
 }
 
 /*# sourceMappingURL=application.css.map */

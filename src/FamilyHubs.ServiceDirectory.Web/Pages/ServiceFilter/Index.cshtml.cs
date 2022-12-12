@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
-using FamilyHubs.ServiceDirectory.Web.Filtering;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -16,7 +15,7 @@ public class ServiceFilterModel : PageModel
 
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
-    public IFilterSubGroups CategoryFilter { get; set; }
+    public IFilterSubGroups TypeOfSupportFilter { get; set; }
     public string? Postcode { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
@@ -26,7 +25,7 @@ public class ServiceFilterModel : PageModel
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         Filters = FilterDefinitions.Filters;
-        CategoryFilter = FilterDefinitions.CategoryFilter;
+        TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
     }
@@ -61,7 +60,7 @@ public class ServiceFilterModel : PageModel
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
 
-        return HandlePost(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, remove);
+        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove);
     }
 
     private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
@@ -71,7 +70,7 @@ public class ServiceFilterModel : PageModel
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        CategoryFilter = FilterDefinitions.CategoryFilter.ToPostFilterSubGroups(Request.Form, remove);
+        TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
@@ -106,6 +105,24 @@ public class ServiceFilterModel : PageModel
                 break;
         }
 
+#if min_max_age
+        int? minimumAge = null, maximumAge = null;
+        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
+        var childFilterValue = childrenFilter.Values.FirstOrDefault();
+        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
+        {
+            minimumAge = maximumAge = int.Parse(childFilterValue);
+        }
+#endif
+
+        int? givenAge = null;
+        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
+        var childFilterValue = childrenFilter.Values.FirstOrDefault();
+        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
+        {
+            givenAge = int.Parse(childFilterValue);
+        }
+
         // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
         // we could assume that they all share the same organisation
         // leave it as-is for now though (as we handle the more generic case)
@@ -115,11 +132,10 @@ public class ServiceFilterModel : PageModel
             latitude,
             longitude,
             searchWithinMeters,
-            null,
-            null,
+            givenAge,
             isPaidFor,
             showOrganisationType,
-            CategoryFilter.Values);
+            TypeOfSupportFilter.Values);
         return ServiceMapper.ToViewModel(services.Items);
     }
 }

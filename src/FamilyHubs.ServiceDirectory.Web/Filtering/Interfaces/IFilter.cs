@@ -10,5 +10,6 @@ public interface IFilter
     IEnumerable<IFilterAspect> Aspects { get; }
     IEnumerable<IFilterAspect> SelectedAspects { get; }
     bool IsSelected(IFilterAspect aspect);
-    public IEnumerable<string> Values { get; }
+    IEnumerable<string> Values { get; }
+    IFilter ToPostFilter(IFormCollection form, string? remove);
 }

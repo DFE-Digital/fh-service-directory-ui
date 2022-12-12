@@ -25,7 +25,7 @@ public class Filter : IFilter
         Values = _selectedFilterAspects.Select(a => a.Id[(Name.Length + 2)..]);
     }
 
-    public PostFilter ToPostFilter(IFormCollection form, string? remove)
+    public virtual IFilter ToPostFilter(IFormCollection form, string? remove)
     {
         return new PostFilter(this, form, remove);
     }

@@ -7,4 +7,5 @@ public interface IFilterSubGroups
     IEnumerable<IFilter> SubFilters { get; }
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
     public IEnumerable<string> Values { get; }
+    IFilterSubGroups ToPostFilter(IFormCollection form, string? remove);
 }

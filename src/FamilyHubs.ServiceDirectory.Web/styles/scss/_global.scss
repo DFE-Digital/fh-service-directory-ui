@@ -1,5 +1,4 @@
-﻿@import "pages/ServiceFilter";
-
+﻿doesn't match the '
 .app-button-link {
     border: none;
     padding: 0 !important;
@@ -10,3 +9,40 @@
         text-decoration: none;
     }
 }
+
+/*todo: we've copied the prototype for the header html & css, but it's not ideal.
+    the prototype doesn't match the ideal design. i'll add a story to match the ideal design
+    e.g.
+    * bar '|' lives on its own. should it belong to the product name?
+      we could implement this by having a bar to the left of the 2 span elements and effectively hiding it on the first
+    see: https://stackoverflow.com/questions/45309860/flexbox-target-wrapped-items
+    * product name within govuk-header__logo div
+*/
+
+.app-header {
+    background-color: #003a69;
+
+    .govuk-header__container {
+        border-bottom: 10px solid #347ca9;
+        @include govuk-responsive-padding(5, "top");
+        @include govuk-responsive-padding(3, "bottom");
+    }
+
+    .govuk-header__logo {
+        width: 100%;
+    }
+
+    .govuk-header__logotype-crown-fallback-image {
+        height: 45px;
+        width: 45px;
+        float: left;
+        @include govuk-responsive-margin(2, "right");
+    }
+
+    .govuk-header__logotype-text, .govuk-header__product-name {
+        line-height: 2.5rem !important;
+        font-size: 1.2rem;
+    }
+}
+
+@import "pages/ServiceFilter";

@@ -29,15 +29,14 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
-        int? minimumAge = null,
-        int? maximumAge = null,
+        int? givenAge = null,
         bool? isPaidFor = null,
         string? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, minimumAge, maximumAge, isPaidFor, taxonomyIds, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, taxonomyIds, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -46,6 +45,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         //todo: filtering by service/family hub really belongs in the api, but to minimise any possible disruption to the is side before mvp, we'll do it in the front-end for now
         // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy
         // we could then pass the organisation data back too (the api currently doesn't fetch the associated org entity when fetching the services)
+        // searching by family hub in api pr .. https://github.com/DFE-Digital/fh-service-directory-api/pull/85
         if (showOrganisationTypeIds != null)
         {
             servicesWithOrganisations =
@@ -66,8 +66,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
-        int? minimumAge = null,
-        int? maximumAge = null,
+        int? givenAge = null,
         bool? isPaidFor = null,
         IEnumerable<string>? taxonomyIds = null,
         CancellationToken cancellationToken = default)
@@ -88,7 +87,10 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("proximity", maximumProximityMeters.ToString());
         }
 
-        //todo: map from the front end (where's best?) ranges for these
+#if min_max_age
+        // todo: to my eye, min and max age handling in the api looks broken
+        // (we'll switch to using given_age instead)
+        // perhaps nothing is using min & max age??
         if (minimumAge != null)
         {
             queryParams.Add("minimum_age", minimumAge.ToString());
@@ -97,6 +99,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         if (maximumAge != null)
         {
             queryParams.Add("maximum_age", minimumAge.ToString());
+        }
+#endif
+        if (givenAge != null)
+        {
+            queryParams.Add("given_age", givenAge.ToString());
         }
 
         if (isPaidFor != null)
