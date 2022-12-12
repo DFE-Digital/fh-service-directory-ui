@@ -1,5 +1,4 @@
-﻿@import "pages/ServiceFilter";
-
+﻿
 .app-button-link {
     border: none;
     padding: 0 !important;
@@ -10,3 +9,38 @@
         text-decoration: none;
     }
 }
+
+/*todo: we've copied the prototype for the header html & css, but it's not ideal.
+    check if we need to copy, or if it is as it is, as that was what was available.
+    e.g.
+    * bar '|' lives on its own. should it belong to the product name?
+    * product name within govuk-header__logo div
+*/
+
+.app-header {
+    background-color: #003a69;
+
+    .govuk-header__container {
+        border-bottom: 10px solid #347ca9;
+        @include govuk-responsive-padding(5, "top");
+        @include govuk-responsive-padding(3, "bottom");
+    }
+
+    .govuk-header__logo {
+        width: 100%;
+    }
+
+    .govuk-header__logotype-crown-fallback-image {
+        height: 45px;
+        width: 45px;
+        float: left;
+        @include govuk-responsive-margin(2, "right");
+    }
+
+    .govuk-header__logotype-text, .govuk-header__product-name {
+        line-height: 2.5rem !important;
+        font-size: 1.2rem;
+    }
+}
+
+@import "pages/ServiceFilter";
