@@ -142,6 +142,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             }
         }
 
+        if (maxFamilyHubs != null)
+        {
+            queryParams.Add("maxFamilyHubs", maxFamilyHubs.ToString());
+        }
+
         if (taxonomyIds != null && taxonomyIds.Any())
         {
             queryParams.Add("taxonmyIds", string.Join(',', taxonomyIds));
@@ -176,6 +181,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
 
         return services;
     }
+
+    //private void AddOptionalQueryParams
 
     public Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
     {
