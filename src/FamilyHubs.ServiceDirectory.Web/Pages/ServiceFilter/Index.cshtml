@@ -13,6 +13,7 @@
     <partial name="_ServiceFilterNoResults" />
 }
 else {
+<form method="post">
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -39,7 +40,6 @@ else {
                 </div>
             </div>
 
-            <form method="post">
             <div class="moj-filter__content">
                 <div class="moj-filter__selected">
                     <div class="moj-filter__selected-heading">
@@ -99,7 +99,6 @@ else {
                         }
                     </div>
             </div>
-            </form>
         </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
@@ -146,8 +145,9 @@ else {
                 <partial name="_Service" model='service'/>
             }
 
-            <partial name="_Pagination" model='(Model.CurrentPage, Model.MaxPages)'/>
+            <partial name="_Pagination" model='Model'/>
         }
     </div>
 </div>
+</form>
 }

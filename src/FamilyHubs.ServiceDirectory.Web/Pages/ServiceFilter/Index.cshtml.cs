@@ -37,6 +37,13 @@ public class ServiceFilterModel : PageModel
         CurrentPage = 1;
     }
 
+#pragma warning disable
+    //public string PageUrl(int page)
+    //{
+    //    var pageQueryParams = Request.QueryString.Add("currentPage", page.ToString());
+    //    return $"{Request.PathBase}{Request.Path}{pageQueryParams.Value}";
+    //}
+
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
@@ -63,14 +70,14 @@ public class ServiceFilterModel : PageModel
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
 
-    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove)
+    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? page)
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
 
-        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove);
+        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove, page);
     }
 
-    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
+    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove, string? page)
     {
         IsGet = false;
 
@@ -78,6 +85,10 @@ public class ServiceFilterModel : PageModel
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
         TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
+
+        //todo: have page in querystring for bookmarking
+        if (!string.IsNullOrWhiteSpace(page))
+            CurrentPage = int.Parse(page);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }

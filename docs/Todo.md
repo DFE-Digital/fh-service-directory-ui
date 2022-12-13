@@ -2,6 +2,8 @@
 
 * add category ad data-attribute to services to help front end tests
 
+* improve accessibility of multiple submit buttons, e.g. have visually hidden text to give a better description of what they do, on the label
+
 * we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
  (reuse old service to update data on the fly)
 

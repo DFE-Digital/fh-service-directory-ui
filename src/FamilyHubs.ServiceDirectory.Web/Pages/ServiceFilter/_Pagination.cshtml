@@ -1,6 +1,6 @@
-﻿@model (int CurrentPage, int TotalPages)
+﻿@model ServiceFilterModel
 
-@if (Model.TotalPages > 1)
+@if (Model.MaxPages > 1)
 {
     <nav class="govuk-pagination" role="navigation" aria-label="results">
         @if (Model.CurrentPage > 1)
@@ -14,16 +14,17 @@
             </div>
         }
         <ul class="govuk-pagination__list">
-            @for (int pageNum = 1; pageNum <= Model.TotalPages; ++pageNum)
+            @for (int pageNum = 1; pageNum <= Model.MaxPages; ++pageNum)
             {
                 <li class="govuk-pagination__item @(Model.CurrentPage == pageNum ? "govuk-pagination__item--current":"")">
-                    <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page @(pageNum)" @(Model.CurrentPage==pageNum ? "aria-current=\"page\"":"")>
+                    @*                    <a class="govuk-link govuk-pagination__link" href="" aria-label="Page @(pageNum)" @(Model.CurrentPage==pageNum ? "aria-current=\"page\"":"")>
                         @pageNum
-                    </a>
+                    </a>*@
+                    <p><button type="submit" class="govuk-link govuk-pagination__link app-button-link" name="page" value="@pageNum" aria-label="Page @(pageNum)" @(Model.CurrentPage==pageNum ? "aria-current=\"page\"":"")>@pageNum</button></p>
                 </li>
             }
         </ul>
-        @if (Model.CurrentPage < Model.TotalPages)
+        @if (Model.CurrentPage < Model.MaxPages)
         {
             <div class="govuk-pagination__next">
                 <a class="govuk-link govuk-pagination__link" href="#" rel="next"> <span class="govuk-pagination__link-title">Next</span>
