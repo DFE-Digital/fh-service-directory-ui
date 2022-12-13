@@ -25,7 +25,7 @@ public class ServiceFilterModel : PageModel
     public int MaxPages { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
-    private const int PageSize = 1;
+    private const int PageSize = 2;
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
@@ -147,7 +147,6 @@ public class ServiceFilterModel : PageModel
             PageSize);
 
         //todo: tidy
-        //todo: looks like api pagination is borked
         //todo: need to fix up our total pages
         MaxPages = services.TotalPages;
 

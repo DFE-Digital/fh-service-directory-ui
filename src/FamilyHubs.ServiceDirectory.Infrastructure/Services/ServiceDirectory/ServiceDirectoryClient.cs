@@ -58,9 +58,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             servicesWithOrganisations.ToList(),
             services.TotalCount,
             services.PageNumber,
-            //todo: calc if we need & can
-            //this.TotalPages = (int) Math.Ceiling((double) count / (double) pageSize);
-            0);
+            //todo: not nice to hard-code default from api
+            pageSize ?? 10);
     }
 
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
@@ -113,6 +112,16 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         if (isPaidFor != null)
         {
             queryParams.Add("isPaidFor", isPaidFor.ToString());
+        }
+
+        if (pageNumber != null)
+        {
+            queryParams.Add("pageNumber", pageNumber.ToString());
+        }
+
+        if (pageSize != null)
+        {
+            queryParams.Add("pageSize", pageSize.ToString());
         }
 
         if (taxonomyIds != null && taxonomyIds.Any())
