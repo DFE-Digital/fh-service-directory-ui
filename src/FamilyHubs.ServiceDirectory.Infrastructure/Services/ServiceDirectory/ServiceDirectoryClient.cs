@@ -31,14 +31,15 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? maximumProximityMeters = null,
         int? givenAge = null,
         bool? isPaidFor = null,
-        string? showOrganisationTypeIds = null,
+        int? maxFamilyHubs = null,
+        IEnumerable<string>? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
         int? pageNumber = null,
         int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, taxonomyIds, pageNumber, pageSize, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, showOrganisationTypeIds, taxonomyIds, pageNumber, pageSize, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -48,18 +49,18 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy
         // we could then pass the organisation data back too (the api currently doesn't fetch the associated org entity when fetching the services)
         // searching by family hub in api pr .. https://github.com/DFE-Digital/fh-service-directory-api/pull/85
-        if (showOrganisationTypeIds != null)
-        {
-            servicesWithOrganisations =
-                servicesWithOrganisations.Where(s => s.Organisation.OrganisationType.Id == showOrganisationTypeIds);
-        }
+        //if (showOrganisationTypeIds != null)
+        //{
+        //    servicesWithOrganisations =
+        //        servicesWithOrganisations.Where(s => s.Organisation.OrganisationType.Id == showOrganisationTypeIds);
+        //}
 
         return new PaginatedList<ServiceWithOrganisation>(
             servicesWithOrganisations.ToList(),
             services.TotalCount,
             services.PageNumber,
             //todo: not nice to hard-code default from api
-            pageSize ?? 10);
+            pageSize ?? 1);
     }
 
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
@@ -69,6 +70,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? maximumProximityMeters = null,
         int? givenAge = null,
         bool? isPaidFor = null,
+        int? maxFamilyHubs = null,
+        IEnumerable<string>? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
         int? pageNumber = null,
         int? pageSize = null,
@@ -122,6 +125,21 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         if (pageSize != null)
         {
             queryParams.Add("pageSize", pageSize.ToString());
+        }
+
+        if (showOrganisationTypeIds != null)
+        {
+            switch (showOrganisationTypeIds.Count())
+            {
+                case 0:
+                    break;
+                case 1:
+                    var showOrgTypeId = showOrganisationTypeIds.First();
+                    queryParams.Add("isFamilyHub", (showOrgTypeId == ServiceDirectoryConstants.OrganisationTypeIdFamilyHub).ToString());
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         if (taxonomyIds != null && taxonomyIds.Any())

@@ -100,7 +100,7 @@ public class ServiceFilterModel : PageModel
             isPaidFor = costFilter.Values.First() == "pay-to-use";
         }
 
-        string? showOrganisationType = null;
+        IEnumerable<string>? showOrganisationType = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
         switch (showFilter.Values.Count())
         {
@@ -108,8 +108,9 @@ public class ServiceFilterModel : PageModel
                 OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
-                showOrganisationType = showFilter.Values.First();
+                showOrganisationType = showFilter.Values;
                 break;
+            //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
 
 #if min_max_age
@@ -141,6 +142,7 @@ public class ServiceFilterModel : PageModel
             searchWithinMeters,
             givenAge,
             isPaidFor,
+            OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
             showOrganisationType,
             TypeOfSupportFilter.Values,
             CurrentPage,
