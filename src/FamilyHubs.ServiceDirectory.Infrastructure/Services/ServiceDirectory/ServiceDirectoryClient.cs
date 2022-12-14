@@ -83,20 +83,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("proximity", maximumProximityMeters.ToString());
         }
 
-#if min_max_age
-        // todo: to my eye, min and max age handling in the api looks broken
-        // (we'll switch to using given_age instead)
-        // perhaps nothing is using min & max age??
-        if (minimumAge != null)
-        {
-            queryParams.Add("minimum_age", minimumAge.ToString());
-        }
-
-        if (maximumAge != null)
-        {
-            queryParams.Add("maximum_age", minimumAge.ToString());
-        }
-#endif
         if (givenAge != null)
         {
             queryParams.Add("given_age", givenAge.ToString());
