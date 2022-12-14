@@ -4,9 +4,14 @@
     padding: 0 !important;
     color: $govuk-link-colour;
     cursor: pointer;
+    background: none !important;
 
     &:hover {
         text-decoration: none;
+    }
+
+    &:focus {
+        background-color: $govuk-focus-colour !important;
     }
 }
 

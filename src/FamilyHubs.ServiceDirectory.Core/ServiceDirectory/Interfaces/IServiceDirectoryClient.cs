@@ -15,7 +15,11 @@ public interface IServiceDirectoryClient
         int? maximumProximityMeters = null,
         int? givenAge = null,
         bool? isPaidFor = null,
+        int? maxFamilyHubs = null,
+        IEnumerable<string>? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
+        int? pageNumber = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default);
 
     // caches organisations for 1 hour
@@ -28,7 +32,10 @@ public interface IServiceDirectoryClient
         int? maximumProximityMeters = null,
         int? givenAge = null,
         bool? isPaidFor = null,
-        string? showOrganisationTypeIds = null,
+        int? maxFamilyHubs = null,
+        IEnumerable<string>? showOrganisationTypeIds = null,
         IEnumerable<string>? taxonomyIds = null,
+        int? pageNumber = null,
+        int? pageSize = null,
         CancellationToken cancellationToken = default);
 }

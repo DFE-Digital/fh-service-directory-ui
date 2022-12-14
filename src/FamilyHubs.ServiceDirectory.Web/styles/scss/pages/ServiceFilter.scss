@@ -66,4 +66,34 @@
     line-height: 1.5;
     padding-left: 25px;
     background-position: 5px center;
+    border: 2px solid $govuk-link-active-colour;
+
+    &:hover {
+        @include govuk-text-colour;
+        background-color: govuk-colour("white");
+        border: 2px solid $govuk-link-hover-colour;
+        cursor: pointer;
+    }
+}
+
+li.govuk-pagination__item--current {
+    .app-button-link {
+        color: govuk-colour("white");
+        @include govuk-typography-weight-bold(false);
+    }
+}
+
+.govuk-pagination__item, .govuk-pagination__next, .govuk-pagination__prev {
+    .app-button-link {
+        @include govuk-font($size: 16);
+
+        &:hover {
+            @include govuk-link-decoration;
+            @include govuk-link-hover-decoration;
+        }
+
+        &:active:hover {
+            text-decoration: none;
+        }
+    }
 }

@@ -7431,9 +7431,13 @@ p + .govuk-heading-s,
   padding: 0 !important;
   color: #1d70b8;
   cursor: pointer;
+  background: none !important;
 }
 .app-button-link:hover {
   text-decoration: none;
+}
+.app-button-link:focus {
+  background-color: #ffdd00 !important;
 }
 
 /*todo: we've copied the prototype for the header html & css, but it's not ideal.
@@ -7570,6 +7574,64 @@ p + .govuk-heading-s,
   line-height: 1.5;
   padding-left: 25px;
   background-position: 5px center;
+  border: 2px solid #0b0c0c;
+}
+.app-remove-filter-tag:hover {
+  color: #0b0c0c;
+  background-color: #ffffff;
+  border: 2px solid #003078;
+  cursor: pointer;
+}
+@media print {
+  .app-remove-filter-tag:hover {
+    color: #000000;
+  }
+}
+
+li.govuk-pagination__item--current .app-button-link {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.govuk-pagination__item .app-button-link, .govuk-pagination__next .app-button-link, .govuk-pagination__prev .app-button-link {
+  font-family: BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.1428571429;
+}
+@media print {
+  .govuk-pagination__item .app-button-link, .govuk-pagination__next .app-button-link, .govuk-pagination__prev .app-button-link {
+    font-family: sans-serif;
+  }
+}
+@media (min-width: 40.0625em) {
+  .govuk-pagination__item .app-button-link, .govuk-pagination__next .app-button-link, .govuk-pagination__prev .app-button-link {
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+}
+@media print {
+  .govuk-pagination__item .app-button-link, .govuk-pagination__next .app-button-link, .govuk-pagination__prev .app-button-link {
+    font-size: 14pt;
+    line-height: 1.2;
+  }
+}
+.govuk-pagination__item .app-button-link:hover, .govuk-pagination__next .app-button-link:hover, .govuk-pagination__prev .app-button-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: max(1px, .0625rem);
+  text-underline-offset: 0.1em;
+  text-decoration-thickness: max(3px, .1875rem, .12em);
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+  -webkit-text-decoration-skip: none;
+  text-decoration-skip: none;
+}
+.govuk-pagination__item .app-button-link:active:hover, .govuk-pagination__next .app-button-link:active:hover, .govuk-pagination__prev .app-button-link:active:hover {
+  text-decoration: none;
 }
 
 /*# sourceMappingURL=application.css.map */

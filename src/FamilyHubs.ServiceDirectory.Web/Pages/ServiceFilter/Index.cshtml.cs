@@ -11,8 +11,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
-    private readonly IServiceDirectoryClient _serviceDirectoryClient;
-
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
     public IFilterSubGroups TypeOfSupportFilter { get; set; }
@@ -20,6 +18,11 @@ public class ServiceFilterModel : PageModel
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
+    public int CurrentPage { get; set; }
+    public int MaxPages { get; set; }
+
+    private readonly IServiceDirectoryClient _serviceDirectoryClient;
+    private const int PageSize = 10;
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
@@ -28,6 +31,7 @@ public class ServiceFilterModel : PageModel
         TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
+        CurrentPage = 1;
     }
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -53,17 +57,17 @@ public class ServiceFilterModel : PageModel
         IsGet = true;
         Postcode = postcode;
 
-        Services = await GetServices(adminDistrict, latitude, longitude);
+        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
     }
 
-    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove)
+    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
 
-        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove);
+        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove, pageNum);
     }
 
-    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove)
+    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove, string? pageNum)
     {
         IsGet = false;
 
@@ -72,10 +76,14 @@ public class ServiceFilterModel : PageModel
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
         TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
 
-        Services = await GetServices(adminDistrict, latitude, longitude);
+        //todo: have page in querystring for bookmarking?
+        if (!string.IsNullOrWhiteSpace(pageNum))
+            CurrentPage = int.Parse(pageNum);
+
+        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
     }
 
-    private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
+    private async Task<(IEnumerable<Service>, int)> GetServicesAndMaxPages(string adminDistrict, float latitude, float longitude)
     {
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
@@ -93,7 +101,7 @@ public class ServiceFilterModel : PageModel
             isPaidFor = costFilter.Values.First() == "pay-to-use";
         }
 
-        string? showOrganisationType = null;
+        IEnumerable<string>? showOrganisationType = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
         switch (showFilter.Values.Count())
         {
@@ -101,19 +109,10 @@ public class ServiceFilterModel : PageModel
                 OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
-                showOrganisationType = showFilter.Values.First();
+                showOrganisationType = showFilter.Values;
                 break;
+            //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
-
-#if min_max_age
-        int? minimumAge = null, maximumAge = null;
-        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
-        var childFilterValue = childrenFilter.Values.FirstOrDefault();
-        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
-        {
-            minimumAge = maximumAge = int.Parse(childFilterValue);
-        }
-#endif
 
         int? givenAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
@@ -134,8 +133,12 @@ public class ServiceFilterModel : PageModel
             searchWithinMeters,
             givenAge,
             isPaidFor,
+            OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
             showOrganisationType,
-            TypeOfSupportFilter.Values);
-        return ServiceMapper.ToViewModel(services.Items);
+            TypeOfSupportFilter.Values,
+            CurrentPage,
+            PageSize);
+
+        return (ServiceMapper.ToViewModel(services.Items), services.TotalPages);
     }
 }
