@@ -37,13 +37,6 @@ public class ServiceFilterModel : PageModel
         CurrentPage = 1;
     }
 
-#pragma warning disable
-    //public string PageUrl(int page)
-    //{
-    //    var pageQueryParams = Request.QueryString.Add("currentPage", page.ToString());
-    //    return $"{Request.PathBase}{Request.Path}{pageQueryParams.Value}";
-    //}
-
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
@@ -123,16 +116,6 @@ public class ServiceFilterModel : PageModel
                 break;
             //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
-
-#if min_max_age
-        int? minimumAge = null, maximumAge = null;
-        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
-        var childFilterValue = childrenFilter.Values.FirstOrDefault();
-        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
-        {
-            minimumAge = maximumAge = int.Parse(childFilterValue);
-        }
-#endif
 
         int? givenAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
