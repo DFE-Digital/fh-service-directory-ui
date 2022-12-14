@@ -5,7 +5,6 @@ using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
@@ -19,9 +18,7 @@ public class ServiceFilterModel : PageModel
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
-    [BindProperty]
     public int CurrentPage { get; set; }
-    [BindProperty]
     public int MaxPages { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
@@ -60,7 +57,7 @@ public class ServiceFilterModel : PageModel
         IsGet = true;
         Postcode = postcode;
 
-        Services = await GetServices(adminDistrict, latitude, longitude);
+        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
     }
 
     public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
@@ -79,14 +76,14 @@ public class ServiceFilterModel : PageModel
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
         TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
 
-        //todo: have page in querystring for bookmarking
+        //todo: have page in querystring for bookmarking?
         if (!string.IsNullOrWhiteSpace(pageNum))
             CurrentPage = int.Parse(pageNum);
 
-        Services = await GetServices(adminDistrict, latitude, longitude);
+        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
     }
 
-    private async Task<IEnumerable<Service>> GetServices(string adminDistrict, float latitude, float longitude)
+    private async Task<(IEnumerable<Service>, int)> GetServicesAndMaxPages(string adminDistrict, float latitude, float longitude)
     {
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
@@ -142,10 +139,6 @@ public class ServiceFilterModel : PageModel
             CurrentPage,
             PageSize);
 
-        //todo: tidy
-        //todo: need to fix up our total pages
-        MaxPages = services.TotalPages;
-
-        return ServiceMapper.ToViewModel(services.Items);
+        return (ServiceMapper.ToViewModel(services.Items), services.TotalPages);
     }
 }
