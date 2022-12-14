@@ -4,6 +4,7 @@ using FamilyHubs.SharedKernel;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -78,30 +79,13 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         };
 
         // optional params
-        if (maximumProximityMeters != null)
-        {
-            queryParams.Add("proximity", maximumProximityMeters.ToString());
-        }
-
-        if (givenAge != null)
-        {
-            queryParams.Add("given_age", givenAge.ToString());
-        }
-
-        if (isPaidFor != null)
-        {
-            queryParams.Add("isPaidFor", isPaidFor.ToString());
-        }
-
-        if (pageNumber != null)
-        {
-            queryParams.Add("pageNumber", pageNumber.ToString());
-        }
-
-        if (pageSize != null)
-        {
-            queryParams.Add("pageSize", pageSize.ToString());
-        }
+        queryParams
+            .AddOptionalQueryParams("proximity", maximumProximityMeters)
+            .AddOptionalQueryParams("given_age", givenAge)
+            .AddOptionalQueryParams("isPaidFor", isPaidFor)
+            .AddOptionalQueryParams("pageNumber", pageNumber)
+            .AddOptionalQueryParams("pageSize", pageSize)
+            .AddOptionalQueryParams("maxFamilyHubs", maxFamilyHubs);
 
         if (showOrganisationTypeIds != null)
         {
@@ -116,11 +100,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
                 default:
                     throw new NotImplementedException();
             }
-        }
-
-        if (maxFamilyHubs != null)
-        {
-            queryParams.Add("maxFamilyHubs", maxFamilyHubs.ToString());
         }
 
         if (taxonomyIds != null && taxonomyIds.Any())
@@ -156,8 +135,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
 
         return services;
     }
-
-    //private void AddOptionalQueryParams
 
     public Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
     {
