@@ -1,5 +1,8 @@
 # Todo
 
+* cost : api needs to add new field and use that for the every {new_field} bit
+  and also display cost description on line below if there is one
+
 * sass: pick up sass exe from .bin folder?
 
 * now that the API filters by organisation type, we could pass back the organisation (or what we need from the org), rather than fetching the service's org
