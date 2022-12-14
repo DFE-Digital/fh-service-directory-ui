@@ -1,4 +1,4 @@
-﻿@model FilterSubGroups
+﻿@model IFilterSubGroups
 
 <div class="govuk-form-group app-filter-group">
     <fieldset class="govuk-fieldset">
@@ -25,8 +25,8 @@
                                     @foreach (var aspect in subFilter.Aspects)
                                     {
                                         <div class="govuk-checkboxes__item">
-                                            <input class="govuk-checkboxes__input" id="@aspect.Id" name="@Model.Name" type="checkbox" value="@aspect.Id"
-                                                   @if (aspect.Selected)
+                                                <input class="govuk-checkboxes__input" id="@aspect.Id" name="@subFilter.Name" type="checkbox" value="@aspect.Id"
+                                                   @if (subFilter.IsSelected(aspect))
                                                    {
                                                        @:checked
                                                    }>

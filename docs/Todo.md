@@ -1,5 +1,14 @@
 # Todo
 
+* sass: pick up sass exe from .bin folder?
+
+* now that the API filters by organisation type, we could pass back the organisation (or what we need from the org), rather than fetching the service's org
+
+* add category as data-attribute to services to help front end tests
+
+* we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
+ (reuse old service to update data on the fly)
+
 * this looks useful for exception testing: https://github.com/dotnet/aspnetcore/blob/ed1ac4285213158a85f69449dba448ef0c65fbf4/src/Testing/src/ExceptionAssertions.cs
 
 * use razor page css isolation?

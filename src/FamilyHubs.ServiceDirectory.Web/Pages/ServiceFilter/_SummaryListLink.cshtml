@@ -10,7 +10,7 @@
             @switch (Model.LinkType)
             {
                 case LinkType.Normal:
-                    @if (Model.Value != null)
+                    @if (!string.IsNullOrEmpty(Model.Value))
                     {
                         <a href="@(Model.Value)">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description)</a>
                     }

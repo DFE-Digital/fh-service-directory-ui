@@ -19,7 +19,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+#if use_https
 app.UseHttpsRedirection();
+#endif
 app.UseStaticFiles();
 
 app.UseRouting();

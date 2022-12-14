@@ -14,7 +14,7 @@
     {
         <partial name="_SummaryListRow" model='("Run by", Model.RunBy)' />
         <partial name="_SummaryListRow" model='("Age range", Model.AgeRange)' />
-        <partial name="_SummaryListRow" model='("When", Model.When)' />
+        <partial name="_SummaryListRows" model='("When", Model.When)' />
     }
 
     <partial name="_SummaryListRows" model='("Where", Model.Where)' />
@@ -30,7 +30,7 @@
 
     @if (Model.Type == ServiceType.FamilyHub)
     {
-        <partial name="_SummaryListRow" model='("Opening hours", Model.When)' />
+        <partial name="_SummaryListRows" model='("Opening hours", Model.When)' />
     }
     <partial name="_SummaryListRows" model='("Cost", Model.Cost)' />
 </dl>
