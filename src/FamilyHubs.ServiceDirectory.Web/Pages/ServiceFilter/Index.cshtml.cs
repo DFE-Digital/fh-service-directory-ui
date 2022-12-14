@@ -22,7 +22,7 @@ public class ServiceFilterModel : PageModel
     public int MaxPages { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
-    private const int PageSize = 2;
+    private const int PageSize = 10;
 
     public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
     {
