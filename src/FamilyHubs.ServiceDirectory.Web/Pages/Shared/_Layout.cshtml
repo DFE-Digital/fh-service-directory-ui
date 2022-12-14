@@ -33,10 +33,10 @@
 
 <body class="govuk-template__body">
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <partial name="_CookieBanner.cshtml"/>
+
     <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
     
-@*todo: cookie banner*@
-@*    <partial name="_CookieBanner.cshtml" model="@Html.GetCookieViewModel()" view-data="ViewData" />*@
     <partial name="_Header.cshtml" />
 
     <div class="govuk-width-container">
