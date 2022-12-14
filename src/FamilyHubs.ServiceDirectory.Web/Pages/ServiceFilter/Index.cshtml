@@ -13,141 +13,131 @@
     <partial name="_ServiceFilterNoResults" />
 }
 else {
-<form method="post">
+    <form method="post">
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
-        <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch/Index">@Model.Postcode?.ToUpperInvariant()</a></span>
-    </div>
-</div>
-
-<button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
-    Open / close filters
-</button>
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <div class="moj-filter">
-            <div class="moj-filter__header">
-                
-                @*moj standard vs prototype*@
-                @*<div class="moj-filter__header-title">
-                    <h2 class="govuk-heading-m">Filter</h2>
-                </div>*@
-
-                <div class="moj-filter__header-action">
-                </div>
-            </div>
-
-            <div class="moj-filter__content">
-                <div class="moj-filter__selected">
-                    <div class="moj-filter__selected-heading">
-                        <div class="moj-filter__heading-title">
-                            @*moj standard vs prototype*@
-                            @*<h2 class="govuk-heading-m">Selected filters</h2>*@
-                            <h2 class="govuk-heading-m">Filter results</h2>
-                        </div>
-
-                        <div class="moj-filter__heading-action">
-                            <p><button type="submit" class="govuk-link app-button-link" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
-                        </div>
-                    </div>
-                    
-                    @if (Model.TypeOfSupportFilter.SelectedAspects.Any())
-                    {
-                        @*todo: we could either list all sub filters under the group, or give a title by each subgroup description*@
-                        @*we'll do it by the name of all the groups (as it should look neater), but check with the designers *@
-                        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.TypeOfSupportFilter.Description</h3>
-
-                        @foreach (var selectedAspect in Model.TypeOfSupportFilter.SelectedAspects)
-                        {
-                            @*todo: partial for this and above?*@
-                            <ul class="moj-filter-tags">
-                                <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
-                            </ul>
-                        }
-                    }
-
-                    @foreach (var filter in Model.Filters)
-                    {
-                        if (filter.SelectedAspects.Any())
-                        {
-                            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
-
-                            @foreach (var selectedAspect in filter.SelectedAspects)
-                            {
-                                <ul class="moj-filter-tags">
-                                    <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
-                                </ul>
-                            }
-                        }
-                    }
-                </div>
-                
-                    <div id="filters" class="moj-filter__options">
-                        <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
-                            Apply filters
-                        </button>
-                        
-                        @*todo: store name of partial in filter?*@
-                        <partial name="_FilterGroupSubGroups" model="Model.TypeOfSupportFilter" />
-
-                        @foreach (var filterGroup in Model.Filters)
-                        {
-                            <partial name="_FilterGroup" model="filterGroup" />
-                        }
-                    </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Your local family hubs, services and activities</h1>
+                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/PostcodeSearch/Index">@Model.Postcode?.ToUpperInvariant()</a></span>
             </div>
         </div>
-    </div>
-    <div class="govuk-grid-column-two-thirds">
-        @if (!Model.Services.Any())
-        {
-            <h2 class="govuk-heading-m">
-                Try another search
-            </h2>
 
-            <p>You may get more results if you change the:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>age range</li>
-                <li>distance to search within</li>
-                <li>type of support</li>
-            </ul>
-        }
-        else
-        {
-            Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
-            IEnumerable<Service> servicesAndHubsToShow;
-            if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
-            {
-                <div class="app-family-hub">
-                    <partial name="_Service" , model="firstFamilyHub" />
-                    <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
+        <button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
+            Open / close filters
+        </button>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third">
+                <div class="moj-filter">
+                    <div class="moj-filter__header">
+                        <div class="moj-filter__header-action">
+                        </div>
+                    </div>
+
+                    <div class="moj-filter__content">
+                        <div class="moj-filter__selected">
+                            <div class="moj-filter__selected-heading">
+                                <div class="moj-filter__heading-title">
+                                    <h2 class="govuk-heading-m">Filter results</h2>
+                                </div>
+
+                                <div class="moj-filter__heading-action">
+                                    <p><button type="submit" class="govuk-link app-button-link" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
+                                </div>
+                            </div>
+                    
+                            @if (Model.TypeOfSupportFilter.SelectedAspects.Any())
+                            {
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.TypeOfSupportFilter.Description</h3>
+
+                                @foreach (var selectedAspect in Model.TypeOfSupportFilter.SelectedAspects)
+                                {
+                                    @*todo: partial for this and above?*@
+                                    <ul class="moj-filter-tags">
+                                        <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
+                                    </ul>
+                                }
+                            }
+
+                            @foreach (var filter in Model.Filters)
+                            {
+                                if (filter.SelectedAspects.Any())
+                                {
+                                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
+
+                                    @foreach (var selectedAspect in filter.SelectedAspects)
+                                    {
+                                        <ul class="moj-filter-tags">
+                                            <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                        </ul>
+                                    }
+                                }
+                            }
+                        </div>
+                
+                        <div id="filters" class="moj-filter__options">
+                            <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
+                                Apply filters
+                            </button>
+                        
+                            @*todo: store name of partial in filter?*@
+                            <partial name="_FilterGroupSubGroups" model="Model.TypeOfSupportFilter" />
+
+                            @foreach (var filterGroup in Model.Filters)
+                            {
+                                <partial name="_FilterGroup" model="filterGroup" />
+                            }
+                        </div>
+                    </div>
                 </div>
-
-                servicesAndHubsToShow = Model.Services.Where(s => s.Type == ServiceType.Service);
-
-                if (servicesAndHubsToShow.Any())
+            </div>
+            <div class="govuk-grid-column-two-thirds">
+                @if (!Model.Services.Any())
                 {
-                    <p id="services-description">
-                        Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
-                    </p>
+                    <h2 class="govuk-heading-m">
+                        Try another search
+                    </h2>
+
+                    <p>You may get more results if you change the:</p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>age range</li>
+                        <li>distance to search within</li>
+                        <li>type of support</li>
+                    </ul>
                 }
-            }
-            else
-            {
-                servicesAndHubsToShow = Model.Services;
-            }
+                else
+                {
+                    Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
+                    IEnumerable<Service> servicesAndHubsToShow;
+                    if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
+                    {
+                        <div class="app-family-hub">
+                            <partial name="_Service" , model="firstFamilyHub" />
+                            <p id="family-hubs-description">This is your nearest family hub. You can drop in, meet others and find general services and activities in your area.</p>
+                        </div>
 
-            foreach (var service in servicesAndHubsToShow)
-            {
-                <partial name="_Service" model='service'/>
-            }
+                        servicesAndHubsToShow = Model.Services.Where(s => s.Type == ServiceType.Service);
 
-            <partial name="_Pagination" model='Model'/>
-        }
-    </div>
-</div>
-</form>
+                        if (servicesAndHubsToShow.Any())
+                        {
+                            <p id="services-description">
+                                Below are the nearest search results for services and groups in your area. These may take place at different locations, like family hubs, children's centres or community centres.
+                            </p>
+                        }
+                    }
+                    else
+                    {
+                        servicesAndHubsToShow = Model.Services;
+                    }
+
+                    foreach (var service in servicesAndHubsToShow)
+                    {
+                        <partial name="_Service" model='service'/>
+                    }
+
+                    <partial name="_Pagination" model='Model'/>
+                }
+            </div>
+        </div>
+    </form>
 }
