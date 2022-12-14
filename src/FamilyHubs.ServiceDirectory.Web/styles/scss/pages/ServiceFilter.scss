@@ -76,9 +76,11 @@
     }
 }
 
-li.govuk-pagination__item--current .app-button-link {
-    color: govuk-colour("white");
-    @include govuk-typography-weight-bold(false);
+li.govuk-pagination__item--current {
+    .app-button-link {
+        color: govuk-colour("white");
+        @include govuk-typography-weight-bold(false);
+    }
 }
 
 .govuk-pagination__item, .govuk-pagination__next, .govuk-pagination__prev {
@@ -88,6 +90,10 @@ li.govuk-pagination__item--current .app-button-link {
         &:hover {
             @include govuk-link-decoration;
             @include govuk-link-hover-decoration;
+        }
+
+        &:active:hover {
+            text-decoration: none;
         }
     }
 }

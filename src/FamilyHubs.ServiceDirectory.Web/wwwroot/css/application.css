@@ -7630,5 +7630,8 @@ li.govuk-pagination__item--current .app-button-link {
   -webkit-text-decoration-skip: none;
   text-decoration-skip: none;
 }
+.govuk-pagination__item .app-button-link:active:hover, .govuk-pagination__next .app-button-link:active:hover, .govuk-pagination__prev .app-button-link:active:hover {
+  text-decoration: none;
+}
 
 /*# sourceMappingURL=application.css.map */
