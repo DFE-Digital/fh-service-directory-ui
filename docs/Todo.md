@@ -1,5 +1,7 @@
 # Todo
 
+* sass: pick up sass exe from .bin folder?
+
 * now that the API filters by organisation type, we could pass back the organisation (or what we need from the org), rather than fetching the service's org
 
 * add category as data-attribute to services to help front end tests
