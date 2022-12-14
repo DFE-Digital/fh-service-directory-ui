@@ -1,16 +1,13 @@
 # Todo
 
-* add category ad data-attribute to services to help front end tests
+* now that the API filters by organisation type, we could pass back the organisation (or what we need from the org), rather than fetching the service's org
 
-* improve accessibility of multiple submit buttons, e.g. have visually hidden text to give a better description of what they do, on the label
+* add category as data-attribute to services to help front end tests
 
 * we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
  (reuse old service to update data on the fly)
 
 * this looks useful for exception testing: https://github.com/dotnet/aspnetcore/blob/ed1ac4285213158a85f69449dba448ef0c65fbf4/src/Testing/src/ExceptionAssertions.cs
-
-* when add filter that filters to no results, see no results page, then back to postcode search, and need to search again
-* check with designers, if would be better to keep filterw visible with a message in the results section
 
 * use razor page css isolation?
 

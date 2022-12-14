@@ -45,22 +45,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             services.Items.Select(async s =>
                 new ServiceWithOrganisation(s, await GetOrganisation(s.OpenReferralOrganisationId, cancellationToken))));
 
-        //todo: filtering by service/family hub really belongs in the api, but to minimise any possible disruption to the is side before mvp, we'll do it in the front-end for now
-        // we'd pass down a csv param for filtering by organisationtypeid in the same manner as it currently handles filtering by taxonomy
-        // we could then pass the organisation data back too (the api currently doesn't fetch the associated org entity when fetching the services)
-        // searching by family hub in api pr .. https://github.com/DFE-Digital/fh-service-directory-api/pull/85
-        //if (showOrganisationTypeIds != null)
-        //{
-        //    servicesWithOrganisations =
-        //        servicesWithOrganisations.Where(s => s.Organisation.OrganisationType.Id == showOrganisationTypeIds);
-        //}
-
         return new PaginatedList<ServiceWithOrganisation>(
             servicesWithOrganisations.ToList(),
             services.TotalCount,
             services.PageNumber,
             //todo: not nice to hard-code default from api
-            pageSize ?? 1);
+            pageSize ?? 10);
     }
 
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
@@ -152,7 +142,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             queryParams.Add("taxonmyIds", string.Join(',', taxonomyIds));
         }
 
-        //todo: instead of fetching the org per service and caching, we could query the api at startup to get all the organisations (but if we go with the option above, we'd remove that anyway, so we'll leave for now)
         //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
         //todo: SEND as a param in api? needs investigation
 
