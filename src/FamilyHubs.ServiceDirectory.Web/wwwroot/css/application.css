@@ -7570,6 +7570,13 @@ p + .govuk-heading-s,
   line-height: 1.5;
   padding-left: 25px;
   background-position: 5px center;
+  border: 2px solid #0b0c0c;
+}
+.app-remove-filter-tag:hover {
+  background-color: #ffffff;
+  color: #0b0c0c;
+  border: 2px solid #003078;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=application.css.map */

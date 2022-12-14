@@ -66,4 +66,12 @@
     line-height: 1.5;
     padding-left: 25px;
     background-position: 5px center;
+    border: 2px solid $govuk-link-active-colour;
+
+    &:hover {
+        background-color: govuk-colour("white");
+        color: $govuk-text-colour;
+        border: 2px solid $govuk-link-hover-colour;
+        cursor: pointer;
+    }
 }

@@ -70,14 +70,14 @@ public class ServiceFilterModel : PageModel
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
 
-    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? page)
+    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         CheckParameters(postcode, adminDistrict, latitude, longitude);
 
-        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove, page);
+        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove, pageNum);
     }
 
-    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove, string? page)
+    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove, string? pageNum)
     {
         IsGet = false;
 
@@ -87,8 +87,8 @@ public class ServiceFilterModel : PageModel
         TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
 
         //todo: have page in querystring for bookmarking
-        if (!string.IsNullOrWhiteSpace(page))
-            CurrentPage = int.Parse(page);
+        if (!string.IsNullOrWhiteSpace(pageNum))
+            CurrentPage = int.Parse(pageNum);
 
         Services = await GetServices(adminDistrict, latitude, longitude);
     }
