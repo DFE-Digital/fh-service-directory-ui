@@ -7436,6 +7436,9 @@ p + .govuk-heading-s,
 .app-button-link:hover {
   text-decoration: none;
 }
+.app-button-link:focus {
+  background-color: #ffdd00 !important;
+}
 
 /*todo: we've copied the prototype for the header html & css, but it's not ideal.
     the prototype doesn't match the ideal design. i'll add a story to match the ideal design

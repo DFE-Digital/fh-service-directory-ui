@@ -9,6 +9,10 @@
     &:hover {
         text-decoration: none;
     }
+
+    &:focus {
+        background-color: $govuk-focus-colour !important;
+    }
 }
 
 /*todo: we've copied the prototype for the header html & css, but it's not ideal.

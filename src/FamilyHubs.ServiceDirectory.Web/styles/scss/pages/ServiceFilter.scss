@@ -86,8 +86,8 @@ li.govuk-pagination__item--current .app-button-link {
         @include govuk-font($size: 16);
 
         &:hover {
-            @include govuk-link-decoration();
-            @include govuk-link-hover-decoration();
+            @include govuk-link-decoration;
+            @include govuk-link-hover-decoration;
         }
     }
 }
