@@ -18,7 +18,7 @@
 	<ItemGroup>
 	  <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.1.13" />
 	  <PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.4" />
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="8.49.0.57237">
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="8.50.0.58025">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>

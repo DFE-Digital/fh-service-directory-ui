@@ -1,33 +1,40 @@
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace FamilyHubs.ServiceDirectory.Web;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-
-builder.Services.AddPostcodesIoClient(builder.Configuration);
-builder.Services.AddServiceDirectoryClient(builder.Configuration);
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+public static class Program
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    public static IServiceProvider ServiceProvider { get; private set; } = default!;
+
+    public static void Main(string[] args)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
+
+        Log.Information("Starting up");
+
+        try
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.ConfigureHost();
+
+            builder.Services.ConfigureServices(builder.Configuration);
+
+            var app = builder.Build();
+
+            ServiceProvider = app.ConfigureWebApplication();
+
+            app.Run();
+        }
+        catch (Exception e)
+        {
+            Log.Fatal(e, "An unhandled exception occurred during bootstrapping");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
 }
-
-#if use_https
-app.UseHttpsRedirection();
-#endif
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapRazorPages();
-
-app.Run();
