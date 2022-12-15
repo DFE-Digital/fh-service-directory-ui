@@ -1,7 +1,7 @@
 ﻿@*as we don't use session state (what GDS calls server cookies!), the banner can only be shown when js is enabled, see https://design-system.service.gov.uk/components/cookie-banner/*@
 
 <div class="govuk-cookie-banner app-js-show" data-nosnippet role="region" aria-label="Cookies on find local family support">
-    <div class="govuk-cookie-banner__message govuk-width-container">
+    <div class="govuk-cookie-banner__message govuk-width-container js-cookie-banner-message">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on find local family support</h2>
@@ -12,16 +12,16 @@
             </div>
         </div>
         <div class="govuk-button-group">
-            <button value="accept" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+            <button value="accept" type="button" name="cookies" class="govuk-button js-cookie-banner-accept" data-module="govuk-button">
                 Accept analytics cookies
             </button>
-            <button value="reject" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+            <button value="reject" type="button" name="cookies" class="govuk-button js-cookie-banner-reject" data-module="govuk-button">
                 Reject analytics cookies
             </button>
             <a class="govuk-link" asp-page="/Cookies/Index">View cookies</a>
         </div>
     </div>
-    
+
     <div class="govuk-cookie-banner__message govuk-width-container" role="alert" hidden>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="govuk-button-group">
-            <button class="govuk-button" data-module="govuk-button">
+            <button class="govuk-button js-cookie-banner-hide js-cookie-banner-hide--accept" data-module="govuk-button">
                 Hide cookie message
             </button>
         </div>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="govuk-button-group">
-            <button class="govuk-button" data-module="govuk-button">
+            <button class="govuk-button js-cookie-banner-hide js-cookie-banner-hide--reject" data-module="govuk-button">
                 Hide cookie message
             </button>
         </div>
