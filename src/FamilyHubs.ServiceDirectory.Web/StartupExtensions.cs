@@ -49,8 +49,9 @@ public static class StartupExtensions
             app.UseHsts();
         }
 
+#if use_https
         app.UseHttpsRedirection();
-
+#endif
         app.UseStaticFiles();
 
         app.UseRouting();
