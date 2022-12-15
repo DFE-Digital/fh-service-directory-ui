@@ -1,6 +1,7 @@
 # Todo
 
 * remove jquery (https://insidegovuk.blog.gov.uk/2022/08/11/how-and-why-we-removed-jquery-from-gov-uk/)
+  ^^ moj uses it
 
 * apply tweaks to setCookie from cookie_consent.ts
 

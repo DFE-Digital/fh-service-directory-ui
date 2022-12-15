@@ -1,5 +1,11 @@
 ﻿// js components have been snaffled from https://github.com/alphagov/govuk-design-system/blob/main/src/javascripts/components/
 
+declare global {
+    interface Window {
+        GDS_CONSENT_COOKIE_VERSION: any;
+    }
+}
+
 import CookieBanner from '../wwwroot/js/components/cookie-banner.js'
 import { getConsentCookie, isValidConsentCookie } from '../wwwroot/js/components/cookie-functions.js'
 import Analytics from '../wwwroot/js/components/analytics.js'
