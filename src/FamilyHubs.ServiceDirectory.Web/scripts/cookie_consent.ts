@@ -1,9 +1,4 @@
-﻿////todo: better to reuse this...
-////https://github.com/alphagov/govuk-design-system/blob/main/src/javascripts/components/cookie-functions.js
-//// or gurneys (or another esfa one?)..
-////https://github.com/SkillsFundingAgency/dfc-discoverskillsandcareers/blob/master/src/Dfc.DiscoverSkillsAndCareers.WebApp/src/js/modules/cookieprefrences.js
-
-//import $ = require("jquery");
+﻿//import $ = require("jquery");
 
 //function setCookie(name, value, options) {
 

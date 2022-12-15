@@ -2,6 +2,8 @@
 
 * remove jquery (https://insidegovuk.blog.gov.uk/2022/08/11/how-and-why-we-removed-jquery-from-gov-uk/)
 
+* apply tweaks to setCookie from cookie_consent.ts
+
 * tidy up js files everywhere
 
 * take out typescript? more hassle than it's worth (especially with all the plain js we've borrowed)?
