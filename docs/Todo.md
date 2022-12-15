@@ -2,6 +2,8 @@
 
 * remove jquery (https://insidegovuk.blog.gov.uk/2022/08/11/how-and-why-we-removed-jquery-from-gov-uk/)
 
+* add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
+
 * cost : api needs to add new field and use that for the every {new_field} bit
   and also display cost description on line below if there is one
 

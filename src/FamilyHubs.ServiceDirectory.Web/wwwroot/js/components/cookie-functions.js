@@ -15,7 +15,7 @@
 import Analytics from './analytics.js'
 
 /* Name of the cookie to save users cookie preferences to. */
-var CONSENT_COOKIE_NAME = 'design_system_cookies_policy'
+var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy'
 
 /* Google Analytics tracking IDs for preview and live environments. */
 var TRACKING_PREVIEW_ID = 'TODO:STICKITHERE'
@@ -30,7 +30,7 @@ var COOKIE_CATEGORIES = {
      * only allow adding cookies that are documented in this object, so they need
      * to be added here.
      */
-    essential: ['design_system_cookies_policy']
+    essential: ['service_directory_cookies_policy']
 }
 
 /*

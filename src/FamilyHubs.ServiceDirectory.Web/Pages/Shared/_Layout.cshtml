@@ -70,8 +70,10 @@
         //todo: initialize just the components we use https://design-patterns.service.justice.gov.uk/get-started/setting-up-javascript/
         window.MOJFrontend.initAll()
     </script>
-
+    
+    @*todo: get optimization into this pr*@
     <script src="~/js/app.js" asp-append-version="true"></script>
+    <script src="~/js/components/cookie-banner.js" type="module" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
