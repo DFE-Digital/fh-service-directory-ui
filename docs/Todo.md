@@ -1,5 +1,7 @@
 # Todo
 
+* remove jquery (https://insidegovuk.blog.gov.uk/2022/08/11/how-and-why-we-removed-jquery-from-gov-uk/)
+
 * cost : api needs to add new field and use that for the every {new_field} bit
   and also display cost description on line below if there is one
 
