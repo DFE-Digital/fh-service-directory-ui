@@ -7426,6 +7426,14 @@ p + .govuk-heading-s,
   margin-bottom: 0;
 }
 
+.js-enabled .app-js-show {
+  display: block;
+}
+
+.app-js-show {
+  display: none;
+}
+
 .app-button-link {
   border: none;
   padding: 0 !important;
