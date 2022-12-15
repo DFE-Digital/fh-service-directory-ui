@@ -1,11 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var CookieFunctions = require("./cookie-functions.js");
+import * as CookieFunctions from './cookie-functions.js';
 /*todo: we don't meed a pollyfill for bind, as long as we server up the non js version of the site for ie8 (https://caniuse.com/?search=bind) */
 /*import 'govuk-frontend/govuk/vendor/polyfills/Function/prototype/bind'*/
 /*todo: i think we're ok for this too (see above about ie8), but we _might_ need it for >8 ie (use? https://www.npmjs.com/package/events-polyfill)*/
 /*import 'govuk-frontend/govuk/vendor/polyfills/Event'*/
-var helpers_js_1 = require("./helpers.js");
+import { nodeListForEach } from './helpers.js';
 var cookieBannerAcceptSelector = '.js-cookie-banner-accept';
 var cookieBannerRejectSelector = '.js-cookie-banner-reject';
 var cookieBannerHideButtonSelector = '.js-cookie-banner-hide';
@@ -39,7 +37,7 @@ CookieBanner.prototype.init = function () {
     }
     this.$acceptButton.addEventListener('click', this.acceptCookies.bind(this));
     this.$rejectButton.addEventListener('click', this.rejectCookies.bind(this));
-    (0, helpers_js_1.nodeListForEach)(this.$cookieBannerHideButtons, function ($cookieBannerHideButton) {
+    nodeListForEach(this.$cookieBannerHideButtons, function ($cookieBannerHideButton) {
         $cookieBannerHideButton.addEventListener('click', this.hideBanner.bind(this));
     }.bind(this));
 };
@@ -74,5 +72,5 @@ CookieBanner.prototype.revealConfirmationMessage = function (confirmationMessage
 CookieBanner.prototype.onCookiesPage = function () {
     return window.location.pathname === '/cookies/';
 };
-exports.default = CookieBanner;
+export default CookieBanner;
 //# sourceMappingURL=cookie-banner.js.map

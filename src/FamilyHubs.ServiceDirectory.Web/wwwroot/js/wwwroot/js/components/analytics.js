@@ -1,7 +1,5 @@
-"use strict";
 //todo: incorporate nonce support to this from fts
-Object.defineProperty(exports, "__esModule", { value: true });
-function loadAnalytics() {
+export default function loadAnalytics() {
     if (!window.ga || !window.ga.loaded) {
         // Load gtm script
         // Script based on snippet at https://developers.google.com/tag-manager/quickstart
@@ -19,5 +17,4 @@ function loadAnalytics() {
         })(window, document, 'script', 'dataLayer', 'GTM-53XG2JT');
     }
 }
-exports.default = loadAnalytics;
 //# sourceMappingURL=analytics.js.map

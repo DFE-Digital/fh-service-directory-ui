@@ -34,4 +34,8 @@
     <ProjectReference Include="..\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\scripts\" />
+  </ItemGroup>
+
 </Project>

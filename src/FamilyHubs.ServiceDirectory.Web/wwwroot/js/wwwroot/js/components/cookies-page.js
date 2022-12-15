@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var cookie_functions_js_1 = require("./cookie-functions.js");
-var helpers_js_1 = require("./helpers.js");
+import { getConsentCookie, setConsentCookie } from './cookie-functions.js';
+import { nodeListForEach } from './helpers.js';
 function CookiesPage($module) {
     this.$module = $module;
 }
@@ -13,8 +11,8 @@ CookiesPage.prototype.init = function () {
     this.$cookieForm = this.$cookiePage.querySelector('.js-cookies-page-form');
     this.$cookieFormFieldsets = this.$cookieForm.querySelectorAll('.js-cookies-page-form-fieldset');
     this.$successNotification = this.$cookiePage.querySelector('.js-cookies-page-success');
-    (0, helpers_js_1.nodeListForEach)(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
-        this.showUserPreference($cookieFormFieldset, (0, cookie_functions_js_1.getConsentCookie)());
+    nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
+        this.showUserPreference($cookieFormFieldset, getConsentCookie());
         $cookieFormFieldset.removeAttribute('hidden');
     }.bind(this));
     // Show submit button
@@ -25,13 +23,13 @@ CookiesPage.prototype.savePreferences = function (event) {
     // Stop default form submission behaviour
     event.preventDefault();
     var preferences = {};
-    (0, helpers_js_1.nodeListForEach)(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
+    nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
         var cookieType = this.getCookieType($cookieFormFieldset);
         var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value;
         preferences[cookieType] = selectedItem === 'yes';
     }.bind(this));
     // Save preferences to cookie and show success notification
-    (0, cookie_functions_js_1.setConsentCookie)(preferences);
+    setConsentCookie(preferences);
     this.showSuccessNotification();
 };
 CookiesPage.prototype.showUserPreference = function ($cookieFormFieldset, preferences) {
@@ -59,5 +57,5 @@ CookiesPage.prototype.showSuccessNotification = function () {
 CookiesPage.prototype.getCookieType = function ($cookieFormFieldset) {
     return $cookieFormFieldset.id;
 };
-exports.default = CookiesPage;
+export default CookiesPage;
 //# sourceMappingURL=cookies-page.js.map

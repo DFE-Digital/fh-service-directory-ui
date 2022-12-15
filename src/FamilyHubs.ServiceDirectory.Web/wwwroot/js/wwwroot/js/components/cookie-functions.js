@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Cookie functions
  * ================
@@ -12,9 +11,7 @@
  * as soon as possible, to avoid a high Cumulative Layout Shift (CLS) score.
  * The consent cookie version is defined in cookie-banner.njk
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetCookies = exports.setConsentCookie = exports.isValidConsentCookie = exports.getConsentCookie = exports.Cookie = void 0;
-var analytics_js_1 = require("./analytics.js");
+import Analytics from './analytics.js';
 /* Name of the cookie to save users cookie preferences to. */
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 /* Google Analytics tracking IDs for preview and live environments. */
@@ -55,7 +52,7 @@ var DEFAULT_COOKIE_CONSENT = {
  *   Deleting a cookie:
  *   Cookie('hobnob', null)
  */
-function Cookie(name, value, options) {
+export function Cookie(name, value, options) {
     if (typeof value !== 'undefined') {
         if (value === false || value === null) {
             deleteCookie(name);
@@ -72,13 +69,12 @@ function Cookie(name, value, options) {
         return getCookie(name);
     }
 }
-exports.Cookie = Cookie;
 /** Return the user's cookie preferences.
  *
  * If the consent cookie is malformed, or not present,
  * returns null.
  */
-function getConsentCookie() {
+export function getConsentCookie() {
     var consentCookie = getCookie(CONSENT_COOKIE_NAME);
     var consentCookieObj;
     if (consentCookie) {
@@ -94,7 +90,6 @@ function getConsentCookie() {
     }
     return consentCookieObj;
 }
-exports.getConsentCookie = getConsentCookie;
 /** Check the cookie preferences object.
  *
  * If the consent object is not present, malformed, or incorrect version,
@@ -102,12 +97,11 @@ exports.getConsentCookie = getConsentCookie;
  *
  * This is also duplicated in cookie-banner.njk - the two need to be kept in sync
  */
-function isValidConsentCookie(options) {
+export function isValidConsentCookie(options) {
     return (options && options.version >= window.GDS_CONSENT_COOKIE_VERSION);
 }
-exports.isValidConsentCookie = isValidConsentCookie;
 /** Update the user's cookie preferences. */
-function setConsentCookie(options) {
+export function setConsentCookie(options) {
     var cookieConsent = getConsentCookie();
     if (!cookieConsent) {
         cookieConsent = JSON.parse(JSON.stringify(DEFAULT_COOKIE_CONSENT));
@@ -124,12 +118,11 @@ function setConsentCookie(options) {
     // Update the other cookies
     resetCookies();
 }
-exports.setConsentCookie = setConsentCookie;
 /** Apply the user's cookie preferences
  *
  * Deletes any cookies the user has not consented to.
  */
-function resetCookies() {
+export function resetCookies() {
     var options = getConsentCookie();
     // If no preferences or old version use the default
     if (!isValidConsentCookie(options)) {
@@ -148,7 +141,7 @@ function resetCookies() {
             // Enable GA if allowed
             window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = false;
             window['ga-disable-UA-' + TRACKING_LIVE_ID] = false;
-            (0, analytics_js_1.default)();
+            Analytics();
         }
         else {
             // Disable GA if not allowed
@@ -165,7 +158,6 @@ function resetCookies() {
         }
     }
 }
-exports.resetCookies = resetCookies;
 function userAllowsCookieCategory(cookieCategory, cookiePreferences) {
     // Essential cookies are always allowed
     if (cookieCategory === 'essential') {
