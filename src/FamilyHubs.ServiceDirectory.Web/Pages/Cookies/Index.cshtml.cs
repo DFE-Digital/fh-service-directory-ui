@@ -37,6 +37,7 @@ public class IndexModel : PageModel
     /// </summary>
     private void ResetCookies()
     {
-        //todo:
+        //todo: GA_TODO delete ga cookies
+        //analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_PREVIEW_ID, '_gat_UA-' + TRACKING_LIVE_ID],
     }
 }
