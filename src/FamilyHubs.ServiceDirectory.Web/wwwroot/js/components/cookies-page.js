@@ -30,6 +30,10 @@ CookiesPage.prototype.savePreferences = function (event) {
     }.bind(this));
     // Save preferences to cookie and show success notification
     setConsentCookie(preferences);
+    // handle the corner case, where the user has selected their preference on the cookie page, whilst the banner is still open as they haven't previously selected their preference
+    //todo: call hideBanner
+    var banner = document.querySelector('[data-module="govuk-cookie-banner"]');
+    banner.setAttribute('hidden', 'true');
     this.showSuccessNotification();
 };
 CookiesPage.prototype.showUserPreference = function ($cookieFormFieldset, preferences) {
