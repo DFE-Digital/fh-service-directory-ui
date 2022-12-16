@@ -58,7 +58,7 @@ public static class ServiceMapper
         var serviceAtLocation = service.Service_at_locations?.FirstOrDefault();
         var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
         var eligibility = service.Eligibilities?.FirstOrDefault();
-        string? ageRange = eligibility == null ? null : $"{eligibility.Minimum_age} to {eligibility.Maximum_age}";
+        string? ageRange = eligibility == null ? null : $"{AgeToString(eligibility.Minimum_age)} to {AgeToString(eligibility.Maximum_age)}";
 
         bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == ServiceDirectoryConstants.OrganisationTypeIdFamilyHub;
 
@@ -98,6 +98,11 @@ public static class ServiceMapper
             service.Email,
             service.Name,
             service.Url);
+    }
+
+    private static string AgeToString(int age)
+    {
+        return age == 127 ? "25+" : age.ToString();
     }
 
     private static IEnumerable<string> RemoveEmpty(params string?[] list)
