@@ -206,12 +206,13 @@ function getCookie(name) {
     }
     return null;
 }
+// do we need to set the domain?
 function setCookie(name, value, options) {
     if (userAllowsCookie(name)) {
         if (typeof options === 'undefined') {
             options = {};
         }
-        var cookieString = name + '=' + value + '; path=/';
+        var cookieString = name + '=' + value + '; path=/; SameSite=Strict';
         if (options.days) {
             var date = new Date();
             date.setTime(date.getTime() + (options.days * 24 * 60 * 60 * 1000));
