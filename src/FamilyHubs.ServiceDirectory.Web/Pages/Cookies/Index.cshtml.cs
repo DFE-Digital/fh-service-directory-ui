@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
+//todo: test without javascript
+
 public class IndexModel : PageModel
 {
     // GDS says (Option 3) If you set non-essential cookies, but only on the client
