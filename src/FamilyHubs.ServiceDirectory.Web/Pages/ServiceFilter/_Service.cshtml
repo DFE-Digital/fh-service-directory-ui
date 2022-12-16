@@ -12,7 +12,7 @@
     
     @if (Model.Type == ServiceType.Service)
     {
-        <partial name="_SummaryListRow" model='("Category", Model.RunBy)' />
+        <partial name="_SummaryListRow" model='("Category", Model.Category)' />
         <partial name="_SummaryListRow" model='("Age range", Model.AgeRange)' />
         <partial name="_SummaryListRows" model='("When", Model.When)' />
     }

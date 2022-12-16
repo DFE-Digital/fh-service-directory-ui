@@ -85,6 +85,8 @@ public static class ServiceMapper
             serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description.Split('\n').Select(l => l.Trim())
             ?? Enumerable.Empty<string>();
 
+        string? category = service.Service_taxonomys?.FirstOrDefault()?.Taxonomy?.Name;
+
         return new Service(
             isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
             service.Name,
@@ -92,6 +94,7 @@ public static class ServiceMapper
             cost,
             RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
             when,
+            category,
             serviceWithOrganisation.Organisation.Name,
             ageRange,
             service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
