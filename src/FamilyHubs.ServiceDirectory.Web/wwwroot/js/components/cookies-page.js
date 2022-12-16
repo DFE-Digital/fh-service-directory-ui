@@ -37,7 +37,7 @@ CookiesPage.prototype.savePreferences = function (event) {
         var cookieType = this.getCookieType($cookieFormFieldset)
         var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value
 
-        preferences[cookieType] = selectedItem === 'yes'
+        preferences[cookieType] = selectedItem === 'true'
     }.bind(this))
 
     // Save preferences to cookie and show success notification
@@ -53,7 +53,7 @@ CookiesPage.prototype.showUserPreference = function ($cookieFormFieldset, prefer
         preference = preferences[cookieType]
     }
 
-    var radioValue = preference ? 'yes' : 'no'
+    var radioValue = preference ? 'true' : 'false'
     var radio = $cookieFormFieldset.querySelector('input[name=' + cookieType + '][value=' + radioValue + ']')
     radio.checked = true
 }

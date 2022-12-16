@@ -26,7 +26,7 @@ CookiesPage.prototype.savePreferences = function (event) {
     nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
         var cookieType = this.getCookieType($cookieFormFieldset);
         var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value;
-        preferences[cookieType] = selectedItem === 'yes';
+        preferences[cookieType] = selectedItem === 'true';
     }.bind(this));
     // Save preferences to cookie and show success notification
     setConsentCookie(preferences);
@@ -38,7 +38,7 @@ CookiesPage.prototype.showUserPreference = function ($cookieFormFieldset, prefer
     if (cookieType && preferences && preferences[cookieType] !== undefined) {
         preference = preferences[cookieType];
     }
-    var radioValue = preference ? 'yes' : 'no';
+    var radioValue = preference ? 'true' : 'false';
     var radio = $cookieFormFieldset.querySelector('input[name=' + cookieType + '][value=' + radioValue + ']');
     radio.checked = true;
 };

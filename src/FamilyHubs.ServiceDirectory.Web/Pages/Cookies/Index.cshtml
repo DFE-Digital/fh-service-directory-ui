@@ -5,119 +5,133 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-two-thirds">
+        <div data-module="app-cookies-page">
 
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Cookies</h1>
+            <div class="govuk-notification-banner govuk-notification-banner--success js-cookies-page-success" role="alert"
+                 aria-labelledby="govuk-notification-banner-title"
+                 data-module="govuk-notification-banner" hidden="true">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title" >
+                        Success
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-notification-banner__heading">You’ve set your cookie preferences.</p>
+                </div>
+            </div>
 
-        <p>This service puts small files (known as 'cookies') onto your computer. These cookies are used to:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>help us understand how you use the website, so we can make improvements</li>
-            <li>remember what notifications you've seen, so you're not shown them more than once</li>
-            <li>temporarily store the selections you make</li>
-        </ul>
-        <p>Find out more about <a href="https://ico.org.uk/your-data-matters/online/cookies/" title="" class="govuk-link">how to manage cookies</a>.</p>
-        
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Essential cookies (strictly necessary)</h2>
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-4">Cookies</h1>
 
-        <p class="govuk-body">We use an essential cookie to remember when you accept or reject cookies on our website.</p>
+            <p>This service puts small files (known as 'cookies') onto your computer. These cookies are used to:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>help us understand how you use the website, so we can make improvements</li>
+                <li>remember what notifications you've seen, so you're not shown them more than once</li>
+                <li>temporarily store the selections you make</li>
+            </ul>
+            <p>Find out more about <a href="https://ico.org.uk/your-data-matters/online/cookies/" title="" class="govuk-link">how to manage cookies</a>.</p>
 
-        <table class="govuk-table">
-            <caption class="govuk-table__caption">Essential cookies we use</caption>
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Name</th>
-                <th scope="col" class="govuk-table__header">Purpose</th>
-                <th scope="col" class="govuk-table__header">Expires</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">service_directory_cookies_policy</td>
-                <td class="govuk-table__cell">Saves your cookie consent settings</td>
-                <td class="govuk-table__cell">1 year</td>
-            </tr>
-            </tbody>
-        </table>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Essential cookies (strictly necessary)</h2>
 
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Analytics cookies (optional)</h2>
-        <p>We use Google Analytics software (Universal Analytics) to collect anonymised information about how you use the service. We do this to help make sure the service is meeting the needs of its users and to help us make improvements.</p>
-        <p>We do not allow Google to use or share the data about how you use this service.</p>
-        <p>Google Analytics stores information about:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>how you got to the service</li>
-            <li>the pages you visit on this service and how long you spend on them</li>
-            <li>what you click on while you're visiting the service</li>
-        </ul>
-        <p>We may also set our own cookies to understand how people move through the service.</p>
+            <p class="govuk-body">We use an essential cookie to remember when you accept or reject cookies on our website.</p>
 
-        <table class="govuk-table" aria-label="Cookies that measure website usage">
-            <caption class="govuk-table__caption">Analytics cookies we use</caption>
-            <thead class="govuk-table__head">
-            <tr>
-                <th scope="col" class="govuk-table__header">
-                    Name
-                </th>
-                <th scope="col" class="govuk-table__header">
-                    Purpose
-                </th>
-                <th scope="col" class="govuk-table__header">
-                    Expires
-                </th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr>
-                <td class="govuk-table__cell">
-                    _ga
-                </td>
-                <td class="govuk-table__cell">
-                    Used by Google Analytics to distinguish users
-                </td>
-                <td class="govuk-table__cell">
-                    2 years
-                </td>
-            </tr>
-            <tr>
-                <td class="govuk-table__cell">
-                    _gat
-                </td>
-                <td class="govuk-table__cell">
-                    Google Analytics throttling rate request
-                </td>
-                <td class="govuk-table__cell">
-                    1 minute
-                </td>
-            </tr>
-            <tr>
-                <td class="govuk-table__cell">
-                    _gid
-                </td>
-                <td class="govuk-table__cell">
-                    Used by Google Analytics to distinguish users
-                </td>
-                <td class="govuk-table__cell">
-                    1 day
-                </td>
-            </tr>
-            <tr>
-                <td class="govuk-table__cell">
-                    _gat_UA-[random number]
-                </td>
-                <td class="govuk-table__cell">
-                    Used to reduce the number of requests
-                </td>
-                <td class="govuk-table__cell">
-                    1 minute
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <table class="govuk-table">
+                <caption class="govuk-table__caption">Essential cookies we use</caption>
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Name</th>
+                    <th scope="col" class="govuk-table__header">Purpose</th>
+                    <th scope="col" class="govuk-table__header">Expires</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">service_directory_cookies_policy</td>
+                    <td class="govuk-table__cell">Saves your cookie consent settings</td>
+                    <td class="govuk-table__cell">1 year</td>
+                </tr>
+                </tbody>
+            </table>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-heading-l">Change your cookie settings</h2>
-                <form method="post" novalidate>
-@*                    <div class="govuk-form-group">
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Analytics cookies (optional)</h2>
+            <p>We use Google Analytics software (Universal Analytics) to collect anonymised information about how you use the service. We do this to help make sure the service is meeting the needs of its users and to help us make improvements.</p>
+            <p>We do not allow Google to use or share the data about how you use this service.</p>
+            <p>Google Analytics stores information about:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>how you got to the service</li>
+                <li>the pages you visit on this service and how long you spend on them</li>
+                <li>what you click on while you're visiting the service</li>
+            </ul>
+            <p>We may also set our own cookies to understand how people move through the service.</p>
+
+            <table class="govuk-table" aria-label="Cookies that measure website usage">
+                <caption class="govuk-table__caption">Analytics cookies we use</caption>
+                <thead class="govuk-table__head">
+                <tr>
+                    <th scope="col" class="govuk-table__header">
+                        Name
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        Purpose
+                    </th>
+                    <th scope="col" class="govuk-table__header">
+                        Expires
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr>
+                    <td class="govuk-table__cell">
+                        _ga
+                    </td>
+                    <td class="govuk-table__cell">
+                        Used by Google Analytics to distinguish users
+                    </td>
+                    <td class="govuk-table__cell">
+                        2 years
+                    </td>
+                </tr>
+                <tr>
+                    <td class="govuk-table__cell">
+                        _gat
+                    </td>
+                    <td class="govuk-table__cell">
+                        Google Analytics throttling rate request
+                    </td>
+                    <td class="govuk-table__cell">
+                        1 minute
+                    </td>
+                </tr>
+                <tr>
+                    <td class="govuk-table__cell">
+                        _gid
+                    </td>
+                    <td class="govuk-table__cell">
+                        Used by Google Analytics to distinguish users
+                    </td>
+                    <td class="govuk-table__cell">
+                        1 day
+                    </td>
+                </tr>
+                <tr>
+                    <td class="govuk-table__cell">
+                        _gat_UA-[random number]
+                    </td>
+                    <td class="govuk-table__cell">
+                        Used to reduce the number of requests
+                    </td>
+                    <td class="govuk-table__cell">
+                        1 minute
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-l">Change your cookie settings</h2>
+                    <form method="post" class="js-cookies-page-form" novalidate>
+                        @*                    <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 Do you want to accept functional cookies?
@@ -138,31 +152,33 @@
                             </div>
                         </fieldset>
                     </div>
-*@                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                Do you want to accept analytics cookies?
-                            </legend>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="analytics-cookies-yes" name="analytics" type="radio" value="true">
-                                    <label class="govuk-label govuk-radios__label" for="analytics-cookies-yes">
-                                        Yes
-                                    </label>
+*@
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset js-cookies-page-form-fieldset" id="analytics" hidden>
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                    Do you want to accept analytics cookies?
+                                </legend>
+                                <div class="govuk-radios" data-module="govuk-radios">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="analytics-cookies-yes" name="analytics" type="radio" value="true">
+                                        <label class="govuk-label govuk-radios__label" for="analytics-cookies-yes">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="analytics-cookies-no" name="analytics" type="radio" value="false" checked>
+                                        <label class="govuk-label govuk-radios__label" for="analytics-cookies-no">
+                                            No
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="analytics-cookies-no" name="analytics" type="radio" value="false" checked>
-                                    <label class="govuk-label govuk-radios__label" for="analytics-cookies-no">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <button class="govuk-button" data-module="govuk-button">
-                        Save cookie settings
-                    </button>
-                </form>
+                            </fieldset>
+                        </div>
+                        <button class="govuk-button js-cookies-form-button" data-module="govuk-button" hidden>
+                            Save cookie settings
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
