@@ -21,6 +21,7 @@ if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
     Analytics()
 }
 
+//todo: move this into scripts section on cookie page
 // Initialise cookie page
 var $cookiesPage = document.querySelector('[data-module="app-cookies-page"]')
 new CookiesPage($cookiesPage).init()
