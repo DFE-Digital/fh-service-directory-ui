@@ -58,7 +58,6 @@ public static class ServiceMapper
 
         //todo: check got one. always the first??
         var serviceAtLocation = service.Service_at_locations?.FirstOrDefault();
-        var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
         var eligibility = service.Eligibilities?.FirstOrDefault();
         string? ageRange = eligibility == null ? null : $"{AgeToString(eligibility.Minimum_age)} to {AgeToString(eligibility.Maximum_age)}";
 
@@ -71,7 +70,7 @@ public static class ServiceMapper
             service.Name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
-            RemoveEmpty(address?.Address_1, address?.City, address?.State_province, address?.Postal_code),
+            GetAddress(serviceAtLocation),
             GetWhen(serviceAtLocation),
             category,
             serviceWithOrganisation.Organisation.Name,
@@ -80,6 +79,18 @@ public static class ServiceMapper
             service.Email,
             service.Name,
             service.Url);
+    }
+
+    private static IEnumerable<string> GetAddress(OpenReferralServiceAtLocationDto? serviceAtLocation)
+    {
+        var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
+
+        return RemoveEmpty(
+            serviceAtLocation?.Location.Name,
+            address?.Address_1,
+            address?.City,
+            address?.State_province,
+            address?.Postal_code);
     }
 
     private static IEnumerable<string> GetWhen(OpenReferralServiceAtLocationDto? serviceAtLocation)
