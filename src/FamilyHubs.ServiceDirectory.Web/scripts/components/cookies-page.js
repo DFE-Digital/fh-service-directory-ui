@@ -18,11 +18,11 @@ CookiesPage.prototype.init = function () {
 
     nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
         this.showUserPreference($cookieFormFieldset, getConsentCookie())
-        $cookieFormFieldset.removeAttribute('hidden')
+/*        $cookieFormFieldset.removeAttribute('hidden')*/
     }.bind(this))
 
     // Show submit button
-    this.$cookieForm.querySelector('.js-cookies-form-button').removeAttribute('hidden')
+    //this.$cookieForm.querySelector('.js-cookies-form-button').removeAttribute('hidden')
 
     this.$cookieForm.addEventListener('submit', this.savePreferences.bind(this))
 }

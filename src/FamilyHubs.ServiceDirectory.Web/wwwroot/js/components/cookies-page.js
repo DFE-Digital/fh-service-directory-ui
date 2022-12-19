@@ -13,10 +13,10 @@ CookiesPage.prototype.init = function () {
     this.$successNotification = this.$cookiePage.querySelector('.js-cookies-page-success');
     nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
         this.showUserPreference($cookieFormFieldset, getConsentCookie());
-        $cookieFormFieldset.removeAttribute('hidden');
+        /*        $cookieFormFieldset.removeAttribute('hidden')*/
     }.bind(this));
     // Show submit button
-    this.$cookieForm.querySelector('.js-cookies-form-button').removeAttribute('hidden');
+    //this.$cookieForm.querySelector('.js-cookies-form-button').removeAttribute('hidden')
     this.$cookieForm.addEventListener('submit', this.savePreferences.bind(this));
 };
 CookiesPage.prototype.savePreferences = function (event) {

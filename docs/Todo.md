@@ -2,6 +2,8 @@
 
 * google analytics: make sure all GA_TODO done (not just GA_TODO stuff though!)
 
+* use stringvalues for multi-params?
+
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
 * cost : api needs to add new field and use that for the every {new_field} bit
