@@ -18,6 +18,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
         IEnumerable<string> Cost,
         IEnumerable<string> Where,
         IEnumerable<string> When,
+        string? Category = null,
         string? RunBy = null,
         string? AgeRange = null,
         string? Phone = null,

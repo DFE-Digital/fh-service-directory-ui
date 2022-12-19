@@ -28,7 +28,7 @@ public class ServiceFilterModel : PageModel
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         Filters = FilterDefinitions.Filters;
-        TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter;
+        TypeOfSupportFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         CurrentPage = 1;
@@ -74,7 +74,7 @@ public class ServiceFilterModel : PageModel
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
+        TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
 
         //todo: have page in querystring for bookmarking?
         if (!string.IsNullOrWhiteSpace(pageNum))

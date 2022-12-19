@@ -18,6 +18,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="scripts\components\analytics.js" />
+    <Content Include="scripts\components\cookie-banner.js" />
+    <Content Include="scripts\components\cookie-functions.js" />
+    <Content Include="scripts\components\cookies-page.js" />
+    <Content Include="scripts\components\helpers.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
