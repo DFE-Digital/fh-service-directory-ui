@@ -10,7 +10,7 @@
 
             <div class="govuk-notification-banner govuk-notification-banner--success js-cookies-page-success" role="alert"
                  aria-labelledby="govuk-notification-banner-title"
-                 data-module="govuk-notification-banner" hidden="true">
+                 data-module="govuk-notification-banner" @(Model.ShowSuccessBanner ? "":"hidden")>
                 <div class="govuk-notification-banner__header">
                     <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title" >
                         Success

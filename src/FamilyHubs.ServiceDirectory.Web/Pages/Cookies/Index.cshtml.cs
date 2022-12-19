@@ -1,64 +1,15 @@
 using System.Globalization;
+using FamilyHubs.ServiceDirectory.Core.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
-//todo: show success banner when set with no js
-
-public static class RawCookieExtensions
-{
-    /// <summary>
-    /// Add a new cookie without HTML form URL encoding the value (as Response.Cookies.Append insists on).
-    /// Only tested for Path, SameSite, Expires and Secure options.
-    /// If there's an issue with any of the other options, take it up with chatgpt ;-)
-    /// </summary>
-    public static void AppendRawCookieDough(this HttpResponse response, string key, string value, CookieOptions? options = null)
-    {
-        if (options == null)
-        {
-            response.Headers.Append("Set-Cookie", key + "=" + value + "; path=/");
-            return;
-        }
-
-        var cookieValue = new StringBuilder($"{key}={value}");
-
-        if (options.Expires.HasValue)
-        {
-            cookieValue.Append($"; Expires={options.Expires.Value.ToString("R")}");
-        }
-
-        if (!string.IsNullOrEmpty(options.Path))
-        {
-            cookieValue.Append($"; Path={options.Path}");
-        }
-
-        if (!string.IsNullOrEmpty(options.Domain))
-        {
-            cookieValue.Append($"; Domain={options.Domain}");
-        }
-
-        if (options.Secure)
-        {
-            cookieValue.Append("; Secure");
-        }
-
-        if (options.HttpOnly)
-        {
-            cookieValue.Append("; HttpOnly");
-        }
-
-        if (options.SameSite != SameSiteMode.Unspecified)
-        {
-            cookieValue.Append($"; SameSite={options.SameSite.ToString().ToLowerInvariant()}");
-        }
-
-        response.Headers.Add("Set-Cookie", cookieValue.ToString());
-    }
-}
+//todo: use post redirect get?
 
 public class IndexModel : PageModel
 {
+    public bool ShowSuccessBanner { get; set; }
+
     // GDS says (Option 3) If you set non-essential cookies, but only on the client
     // You can choose to make your banner only work with JavaScript
     // Does that hold for the cookie page too?
@@ -68,6 +19,7 @@ public class IndexModel : PageModel
     {
         SetConsentCookie(analytics);
         ResetCookies();
+        ShowSuccessBanner = true;
     }
 
     // ideally, these would be part of a base model and passed through to _Layout.cshtml
@@ -93,7 +45,7 @@ public class IndexModel : PageModel
             cookieOptions.Secure = true;
         }
 
-        Response.AppendRawCookieDough(CONSENT_COOKIE_NAME,
+        Response.AppendRawCookie(CONSENT_COOKIE_NAME,
             $$"""{"analytics": {{analyticsAllowed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()}}, "version": {{GDS_CONSENT_COOKIE_VERSION}}}""", cookieOptions);
     }
 
