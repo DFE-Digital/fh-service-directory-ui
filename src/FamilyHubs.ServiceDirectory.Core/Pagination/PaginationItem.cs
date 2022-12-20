@@ -44,7 +44,7 @@ public class PaginationItem
             }
 
             lastPageNumber = uniquePage;
-            yield return new PaginationItem(uniquePage-1);
+            yield return new PaginationItem(uniquePage);
         }
     }
 }

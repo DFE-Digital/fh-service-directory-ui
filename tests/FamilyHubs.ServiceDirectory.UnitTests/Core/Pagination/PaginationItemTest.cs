@@ -25,7 +25,8 @@ public class PaginationItemTests
             new object[] {3, 2, GenerateExpected(1, 2, 3)},
             new object[] {3, 3, GenerateExpected(1, 2, 3)},
             new object[] {4, 1, GenerateExpected(1, 2, null, 4)},
-            new object[] {7, 4, GenerateExpected(1, null, 3, 4, 5, null, 7)}
+            new object[] {7, 4, GenerateExpected(1, null, 3, 4, 5, null, 7)},
+            new object[] {42, 20, GenerateExpected(1, null, 19, 20, 21, null, 42)}
         };
 
     public static IEnumerable<PaginationItem> GenerateExpected(params int?[] pages)
