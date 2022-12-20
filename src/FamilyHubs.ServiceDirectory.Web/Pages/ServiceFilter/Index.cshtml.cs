@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.Pagination;
+using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;

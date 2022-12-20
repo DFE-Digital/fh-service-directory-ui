@@ -1,13 +1,6 @@
-﻿
-namespace FamilyHubs.ServiceDirectory.Core.Pagination;
+﻿using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
 
-public interface IPagination
-{
-    IEnumerable<PaginationItem> PaginationItems { get; }
-    bool Show { get; }
-    int? PreviousPage { get; }
-    int? NextPage { get; }
-}
+namespace FamilyHubs.ServiceDirectory.Core.Pagination;
 
 public class LargeSetPagination : IPagination
 {
