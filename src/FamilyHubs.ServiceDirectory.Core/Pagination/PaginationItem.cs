@@ -1,34 +1,35 @@
 ﻿
 namespace FamilyHubs.ServiceDirectory.Core.Pagination;
 
-public class PaginationItem<T>
+public class PaginationItem
 {
-    public T? Item { get; }
+    public int? Page { get; }
 
     // skip (ellipses)
     public PaginationItem()
     {
     }
 
-    public PaginationItem(T item)
+    public PaginationItem(int page)
     {
-        Item = item;
+        Page = page;
     }
 
-    public bool SkippedPages => Item == null;
+    public bool SkippedPages => Page == null;
 
-    public static IEnumerable<PaginationItem<T>> GetForLargeSet(IEnumerable<T> items, int currentItem)
+    //todo: current page & next & previous
+
+    public static IEnumerable<PaginationItem> GetForLargeSet(int totalPages, int currentPage)
     {
-        var itemArray = items as T[] ?? items.ToArray();
-        return Get(itemArray, 1, currentItem - 1, currentItem, currentItem + 1, itemArray.Length);
+        return Get(totalPages, 1, currentPage - 1, currentPage, currentPage + 1, totalPages);
     }
 
-    public static IEnumerable<PaginationItem<T>> Get(T[] items, params int[] pages)
+    public static IEnumerable<PaginationItem> Get(int totalPages, params int[] pages)
     {
         var uniquePageNumbers = new HashSet<int>();
         foreach (int page in pages)
         {
-            if (page > 0 && page <= items.Length)
+            if (page > 0 && page <= totalPages)
             {
                 uniquePageNumbers.Add(page);
             }
@@ -39,11 +40,11 @@ public class PaginationItem<T>
         {
             if (uniquePage > lastPageNumber + 1)
             {
-                yield return new PaginationItem<T>();
+                yield return new PaginationItem();
             }
 
             lastPageNumber = uniquePage;
-            yield return new PaginationItem<T>(items[uniquePage-1]);
+            yield return new PaginationItem(uniquePage-1);
         }
     }
 }
