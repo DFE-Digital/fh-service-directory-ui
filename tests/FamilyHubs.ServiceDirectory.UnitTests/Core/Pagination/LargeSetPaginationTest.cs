@@ -6,9 +6,10 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Core.Pagination;
 public class PaginationItemTests
 {
     [Theory, MemberData(nameof(Data))]
-    public void Get(int count, int current, IEnumerable<PaginationItem> expected)
+    public void Ctor_ItemsGeneratedCorrectly(int count, int current, IEnumerable<PaginationItem> expected)
     {
-        var actual = PaginationItem.GetForLargeSet(count, current);
+        var pagination = new LargeSetPagination(count, current);
+        var actual = pagination.PaginationItems;
 
         actual.Should().BeEquivalentTo(expected);
     }
@@ -31,6 +32,6 @@ public class PaginationItemTests
 
     public static IEnumerable<PaginationItem> GenerateExpected(params int?[] pages)
     {
-        return pages.Select(p => p == null ? new PaginationItem() : new PaginationItem(p.Value));
+        return pages.Select(p => p == null ? new PaginationItem() : new PaginationItem(p.Value, false));
     }
 }

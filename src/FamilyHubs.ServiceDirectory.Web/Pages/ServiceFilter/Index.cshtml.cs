@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.ServiceDirectory.Core.Distance;
+using FamilyHubs.ServiceDirectory.Core.Pagination;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
@@ -19,7 +20,7 @@ public class ServiceFilterModel : PageModel
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
     public int CurrentPage { get; set; }
-    public int MaxPages { get; set; }
+    public IPagination? Pagination { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private const int PageSize = 10;
@@ -57,7 +58,7 @@ public class ServiceFilterModel : PageModel
         IsGet = true;
         Postcode = postcode;
 
-        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
+        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
     }
 
     public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
@@ -80,10 +81,10 @@ public class ServiceFilterModel : PageModel
         if (!string.IsNullOrWhiteSpace(pageNum))
             CurrentPage = int.Parse(pageNum);
 
-        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
+        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
     }
 
-    private async Task<(IEnumerable<Service>, int)> GetServicesAndMaxPages(string adminDistrict, float latitude, float longitude)
+    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
     {
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
@@ -139,6 +140,8 @@ public class ServiceFilterModel : PageModel
             CurrentPage,
             PageSize);
 
-        return (ServiceMapper.ToViewModel(services.Items), services.TotalPages);
+        var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
+
+        return (ServiceMapper.ToViewModel(services.Items), pagination);
     }
 }
