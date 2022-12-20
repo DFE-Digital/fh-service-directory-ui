@@ -2,6 +2,8 @@
 
 * google analytics: make sure all GA_TODO done (not just GA_TODO stuff though!)
 
+* use pagination for large number of pages & add page number in the title, see https://design-system.service.gov.uk/components/pagination/
+
 * use stringvalues for multi-params?
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
