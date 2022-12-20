@@ -5,12 +5,17 @@ public class PaginationItem<T>
 {
     public T? Item { get; }
 
-    public PaginationItem(T? item)
+    // skip (ellipses)
+    public PaginationItem()
+    {
+    }
+
+    public PaginationItem(T item)
     {
         Item = item;
     }
 
-    public bool SkippedPages => Item != null;
+    public bool SkippedPages => Item == null;
 
     public static IEnumerable<PaginationItem<T>> GetForLargeSet(IEnumerable<T> items, int currentItem)
     {
@@ -34,11 +39,11 @@ public class PaginationItem<T>
         {
             if (uniquePage > lastPageNumber + 1)
             {
-                yield return new PaginationItem<T>(default);
+                yield return new PaginationItem<T>();
             }
 
             lastPageNumber = uniquePage;
-            yield return new PaginationItem<T>(items[uniquePage]);
+            yield return new PaginationItem<T>(items[uniquePage-1]);
         }
     }
 }
