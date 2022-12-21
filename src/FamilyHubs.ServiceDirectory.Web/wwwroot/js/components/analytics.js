@@ -13,7 +13,7 @@ export default function loadAnalytics() {
         //        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; var n = d.querySelector('[nonce]'); n && j.setAttribute('nonce', n.nonce || n.getAttribute('nonce'));
         //        f.parentNode.insertBefore(j, f);
         //    }
-        //    )(window, document, 'script', 'dataLayer', 'G-30G6ZFTEJE');
+        //    )(window, document, 'script', 'dataLayer', 'GTM-WZCJSJN');
         // get vanilla working first
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];
@@ -23,7 +23,7 @@ export default function loadAnalytics() {
             j.src =
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-XXXXXX');
+        })(window, document, 'script', 'dataLayer', 'GTM-WZCJSJN');
     }
     //if (!window.ga || !window.ga.loaded) {
     //    // Load gtm script
