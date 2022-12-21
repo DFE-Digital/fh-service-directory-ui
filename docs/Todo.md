@@ -1,19 +1,10 @@
 # Todo
 
-* check organisations are loaded correctly (displaying service as family hub)...
-select * from "OpenReferralServices" where "Name" ='Tiny Tots Stay & Play'
-select * from "OpenReferralOrganisations" where "OpenReferralOrganisations"."Id" ='f4b715af-b5c9-46fa-a477-61080d74bfe6'
-
 * google analytics: make sure all GA_TODO done (not just GA_TODO stuff though!)
-
-* use pagination for large number of pages & add page number in the title, see https://design-system.service.gov.uk/components/pagination/
 
 * use stringvalues for multi-params?
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
-
-* cost : api needs to add new field and use that for the every {new_field} bit
-  and also display cost description on line below if there is one
 
 * filtering by free is returning services with a cost with the new data import set
 
