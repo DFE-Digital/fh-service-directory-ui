@@ -113,13 +113,7 @@ public static class ServiceMapper
         var cost = new List<string>();
         var firstCost = service.Cost_options!.First();
 
-        // imported services are not going to have cost options with a 0 amount,
-        // so we _could_ remove this check, but it might come later on, so leave it in
-        if (firstCost.Amount == decimal.Zero)
-        {
-            cost.Add(free);
-        }
-        else
+        if (firstCost.Amount != decimal.Zero)
         {
             string amount = firstCost.Amount.ToString(firstCost.Amount == (int)firstCost.Amount ? "C0" : "C", UkNumberFormat);
             cost.Add($"{amount} every {firstCost.Amount_description.ToLowerInvariant()}");
