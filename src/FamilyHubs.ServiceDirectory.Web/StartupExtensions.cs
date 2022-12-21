@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
+using FamilyHubs.ServiceDirectory.Web.Security;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
@@ -40,6 +41,8 @@ public static class StartupExtensions
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+
+        app.UseAppSecurityHeaders();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
