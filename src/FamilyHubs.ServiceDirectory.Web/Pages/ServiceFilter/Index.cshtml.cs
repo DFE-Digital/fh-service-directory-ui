@@ -21,7 +21,7 @@ public class ServiceFilterModel : PageModel
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
     public int CurrentPage { get; set; }
-    public IPagination? Pagination { get; set; }
+    public IPagination Pagination { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private const int PageSize = 10;
@@ -34,6 +34,7 @@ public class ServiceFilterModel : PageModel
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         CurrentPage = 1;
+        Pagination = new DontShowPagination();
     }
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
