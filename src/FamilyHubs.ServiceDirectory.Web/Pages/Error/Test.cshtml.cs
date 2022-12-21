@@ -6,8 +6,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.Error
     {
         public void OnGet()
         {
-#pragma warning disable
-            throw new Exception("Test exception");
+#pragma warning disable S112
+            throw new Exception("Fault injected exception");
+#pragma warning restore S112
         }
     }
 }
