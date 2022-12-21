@@ -30,14 +30,7 @@ public class LargeSetPagination : IPagination
 
     public static IEnumerable<PaginationItem> GetPaginationItems(int totalPages, int currentPage, params int[] pages)
     {
-        var uniquePageNumbers = new HashSet<int>();
-        foreach (int page in pages)
-        {
-            if (page > 0 && page <= totalPages)
-            {
-                uniquePageNumbers.Add(page);
-            }
-        }
+        var uniquePageNumbers = pages.Distinct().Where(p => p > 0 && p <= totalPages);
 
         int lastPageNumber = 1;
         foreach (var uniquePage in uniquePageNumbers)
