@@ -65,9 +65,11 @@ public static class ServiceMapper
 
         string? category = service.Service_taxonomys?.FirstOrDefault()?.Taxonomy?.Name;
 
+        string name = service.Name;
+
         return new Service(
             isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
-            service.Name,
+            name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
             GetAddress(serviceAtLocation),
@@ -77,7 +79,7 @@ public static class ServiceMapper
             ageRange,
             service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
             service.Email,
-            service.Name,
+            name,
             service.Url);
     }
 
@@ -103,23 +105,25 @@ public static class ServiceMapper
 
     private static IEnumerable<string> GetCost(OpenReferralServiceDto service)
     {
-        IEnumerable<string> cost;
+        const string free = "Free";
+
         if (service.Cost_options?.Any() == false)
         {
-            cost = new[] {"Free"};
+            return new[] { free };
         }
-        else
-        {
-            cost = service.Cost_options!.Select(co =>
-            {
-                // imported services are not going to have cost options with a 0 amount,
-                // so we _could_ remove this check, but it might come later on, so leave it in
-                if (co.Amount == decimal.Zero)
-                    return "Free";
 
-                string amount = co.Amount.ToString(co.Amount == (int) co.Amount ? "C0" : "C", UkNumberFormat);
-                return $"{amount} every {co.Amount_description.ToLowerInvariant()}";
-            });
+        var cost = new List<string>();
+        var firstCost = service.Cost_options!.First();
+
+        if (firstCost.Amount != decimal.Zero)
+        {
+            string amount = firstCost.Amount.ToString(firstCost.Amount == (int)firstCost.Amount ? "C0" : "C", UkNumberFormat);
+            cost.Add($"{amount} every {firstCost.Amount_description.ToLowerInvariant()}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(firstCost.Option))
+        {
+            cost.Add(firstCost.Option);
         }
 
         return cost;

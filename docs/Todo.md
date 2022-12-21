@@ -6,9 +6,6 @@
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
-* cost : api needs to add new field and use that for the every {new_field} bit
-  and also display cost description on line below if there is one
-
 * filtering by free is returning services with a cost with the new data import set
 
 * sass: pick up sass exe from .bin folder?

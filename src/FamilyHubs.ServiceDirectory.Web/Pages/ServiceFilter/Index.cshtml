@@ -1,7 +1,14 @@
 ﻿@page
 @model ServiceFilterModel
 @{
-    ViewData["Title"] = "Your local family hubs, services and activities";
+    if (Model.Pagination.Show)
+    {
+        ViewData["Title"] = $"Your local family hubs, services and activities (page {Model.Pagination.CurrentPage} of {Model.Pagination.TotalPages})";
+    }
+    else
+    {
+        ViewData["Title"] = "Your local family hubs, services and activities";
+    }
 }
 
 @section Back {
@@ -135,7 +142,7 @@ else {
                         <partial name="_Service" model='service'/>
                     }
 
-                    <partial name="_Pagination" model='Model'/>
+                    <partial name="_Pagination" model='Model.Pagination'/>
                 }
             </div>
         </div>
