@@ -7,6 +7,8 @@ public class LargeSetPagination : IPagination
     public IEnumerable<PaginationItem> PaginationItems { get; }
 
     public bool Show { get; }
+    public int? TotalPages { get; }
+    public int? CurrentPage { get; }
     public int? PreviousPage { get; }
     public int? NextPage { get; }
 
@@ -20,6 +22,8 @@ public class LargeSetPagination : IPagination
         }
 
         PaginationItems = GetPaginationItems(totalPages, currentPage, 1, currentPage - 1, currentPage, currentPage + 1, totalPages);
+        TotalPages = totalPages;
+        CurrentPage = currentPage;
         PreviousPage = currentPage > 1 ? currentPage-1 : null;
         NextPage = currentPage < totalPages ? currentPage + 1 : null;
     }

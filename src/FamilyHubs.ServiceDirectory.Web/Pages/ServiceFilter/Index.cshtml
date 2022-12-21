@@ -1,7 +1,15 @@
 ﻿@page
 @model ServiceFilterModel
 @{
-    ViewData["Title"] = "Your local family hubs, services and activities";
+    //todo: non nullable
+    if (Model.Pagination!.Show)
+    {
+        ViewData["Title"] = $"Your local family hubs, services and activities (page {Model.Pagination!.CurrentPage} of {Model.Pagination!.TotalPages})";
+    }
+    else
+    {
+        ViewData["Title"] = "Your local family hubs, services and activities";
+    }
 }
 
 @section Back {
