@@ -79,7 +79,7 @@ public static class ServiceMapper
             ageRange,
             service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
             service.Email,
-            service.Name,
+            name,
             service.Url);
     }
 
