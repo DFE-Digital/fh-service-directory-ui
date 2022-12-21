@@ -65,7 +65,7 @@ public static class ServiceMapper
 
         string? category = service.Service_taxonomys?.FirstOrDefault()?.Taxonomy?.Name;
 
-        string? name = (isFamilyHub ? serviceAtLocation?.Location.Name : service.Name) ?? "";
+        string name = service.Name;
 
         return new Service(
             isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
