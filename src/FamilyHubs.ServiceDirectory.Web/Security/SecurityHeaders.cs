@@ -116,13 +116,12 @@ public static class SecurityHeaders
 
                     if (app.Environment.IsDevelopment())
                     {
-                        //todo: update for latest browserlink (violations are being reported)
                         // open up for browserlink
                         defaultSrc.From(new[] { "http://localhost:*", "ws://localhost:*" });
 
                         scriptSrc.From("http://localhost:*");
 
-                        connectSrc.From(new[] { "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
+                        connectSrc.From(new[] { "http://localhost:*", "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
                     }
                 })
                 .AddCustomHeader("X-Permitted-Cross-Domain-Policies", "none")
