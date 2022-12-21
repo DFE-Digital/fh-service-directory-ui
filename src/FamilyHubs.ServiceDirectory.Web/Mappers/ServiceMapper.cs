@@ -65,9 +65,11 @@ public static class ServiceMapper
 
         string? category = service.Service_taxonomys?.FirstOrDefault()?.Taxonomy?.Name;
 
+        string? name = (isFamilyHub ? serviceAtLocation?.Location.Name : service.Name) ?? "";
+
         return new Service(
             isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
-            service.Name,
+            name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
             GetAddress(serviceAtLocation),
