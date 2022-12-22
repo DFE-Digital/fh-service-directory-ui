@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
+//todo: delete _ga_ cookie in javascript
+//todo: link in success banner
 //todo: use post redirect get?
 
 public class IndexModel : PageModel
 {
 #pragma warning disable
-    // private const string GtmContainerId = "GTM-WZCJSJN";
+    // private const string GtmContainerId = "GTM-W6QMSGQ";
 
     // ideally, these would be part of a base model and passed through to _Layout.cshtml
     // but at least (for now) name them exactly the same as it is in the js, so a find search will find it
@@ -18,6 +20,7 @@ public class IndexModel : PageModel
     private const string CONSENT_COOKIE_NAME = "service_directory_cookies_policy";
 
     public bool ShowSuccessBanner { get; set; }
+    public string? LastPage { get; set; }
 
     public void OnPost(bool analytics)
     {
@@ -27,7 +30,10 @@ public class IndexModel : PageModel
             ResetAnalyticCookies();
         }
 
+        //System.Diagnostics.Debugger.Break();
         ShowSuccessBanner = true;
+        //var refererUri = new Uri(Request.Headers.Referer);
+        LastPage = Request.Headers.Referer;
     }
 
     /// <summary>

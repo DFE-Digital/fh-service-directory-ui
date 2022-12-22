@@ -19,7 +19,7 @@ var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy'
 
 /* Google Analytics tracking IDs for preview and live environments. */
 var TRACKING_PREVIEW_ID = 'GA_TODO:STICKITHERE'
-var TRACKING_LIVE_ID = 'GTM-WZCJSJN'
+var TRACKING_LIVE_ID = 'GTM-W6QMSGQ'
 
 /* Users can (dis)allow different groups of cookies. */
 var COOKIE_CATEGORIES = {
