@@ -8,7 +8,8 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
 public class IndexModel : PageModel
 {
-    private const string GtmContainerId = "GTM-WZCJSJN";
+#pragma warning disable
+    // private const string GtmContainerId = "GTM-WZCJSJN";
 
     // ideally, these would be part of a base model and passed through to _Layout.cshtml
     // but at least (for now) name them exactly the same as it is in the js, so a find search will find it
@@ -23,7 +24,7 @@ public class IndexModel : PageModel
         SetConsentCookie(analytics);
         if (!analytics)
         {
-            ResetCookies("_ga", "_gid", $"_gat_UA-{GtmContainerId}");
+            ResetAnalyticCookies();
         }
 
         ShowSuccessBanner = true;
@@ -34,6 +35,7 @@ public class IndexModel : PageModel
     /// </summary>
     private void SetConsentCookie(bool analyticsAllowed)
     {
+        //todo: Response.Cookies has a static EnableCookieNameEncoding - can we use that and switch to Append??
         var cookieOptions = new CookieOptions
         {
             Expires = DateTime.Now.AddDays(365),
@@ -50,13 +52,24 @@ public class IndexModel : PageModel
             $$"""{"analytics": {{analyticsAllowed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()}}, "version": {{GDS_CONSENT_COOKIE_VERSION}}}""", cookieOptions);
     }
 
+    private void ResetAnalyticCookies()
+    {
+        foreach (var uaCookie in Request.Cookies.Where(c => c.Key.StartsWith("_ga")))
+        {
+            DeleteCookies(uaCookie.Key);
+        }
+
+        DeleteCookies("_gid");
+    }
+
     /// <summary>
     /// Asks the browser to deletes the supplied cookies.
     /// </summary>
-    private void ResetCookies(params string[] cookies)
+    private void DeleteCookies(params string[] cookies)
     {
         foreach (var cookie in cookies)
         {
+            //todo: cookieoptions for domain?
             Response.Cookies.Delete(cookie);
         }
     }
