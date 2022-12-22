@@ -15,11 +15,14 @@ import Analytics from './analytics.js';
 /* Name of the cookie to save users cookie preferences to. */
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 /* Google Analytics tracking IDs for preview and live environments. */
-var TRACKING_PREVIEW_ID = 'GA_TODO:STICKITHERE';
-var TRACKING_LIVE_ID = 'GTM-W6QMSGQ';
+/*measurement ids or tag ids*/
+/*Fatayi is going to link the existing ga (this id) into gtm (as a tag), then we can check the disabling*/
+//var TRACKING_PREVIEW_ID = 'GA_TODO:STICKITHERE'
+var TRACKING_LIVE_ID = 'G-30G6ZFTEJE';
 /* Users can (dis)allow different groups of cookies. */
 var COOKIE_CATEGORIES = {
-    analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_PREVIEW_ID, '_gat_UA-' + TRACKING_LIVE_ID],
+    //analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_PREVIEW_ID, '_gat_UA-' + TRACKING_LIVE_ID],
+    analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_LIVE_ID],
     /* Essential cookies
      *
      * Essential cookies cannot be deselected, but we want our cookie code to
@@ -137,15 +140,33 @@ export function resetCookies() {
             continue;
         }
         // Initialise analytics if allowed
+        //todo: is this relevant for gtm anymore?
+        //if so, where do you get the id from??
+        // see https://developers.google.com/tag-platform/devguides/privacy#disable_analytics_and_advertising_features
+        //window.dataLayer = window.dataLayer || [];
         if (cookieType === 'analytics' && options[cookieType]) {
             // Enable GA if allowed
-            window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = false;
+            //todo: there seems to be quite a few ways to enable/disable gtm/ga/ga4
+            //which do we need to use?
+            // this page says don't use this... https://developers.google.com/tag-platform/devguides/consent#tag-manager
+            // (the same page that gives the below as an example!)
+            // says use setDefaultConsentState and updateConsentState instead
+            // see, https://www.simoahava.com/analytics/consent-settings-google-tag-manager/
+            //gtag('consent', 'update', {
+            //    'analytics_storage': 'granted'
+            //});
+            //window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = false
             window['ga-disable-UA-' + TRACKING_LIVE_ID] = false;
             Analytics();
         }
         else {
             // Disable GA if not allowed
-            window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = true;
+            //gtag('consent', 'default', {
+            //    'analytics_storage': 'denied'
+            //});
+            // or this??? google analytics 4
+            // gtag('config', 'TAG_ID', { 'allow_google_signals': false });
+            //    window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = true
             window['ga-disable-UA-' + TRACKING_LIVE_ID] = true;
         }
         if (!options[cookieType]) {
@@ -158,6 +179,9 @@ export function resetCookies() {
         }
     }
 }
+//todo: where should this live?
+//does datalayer exist?
+//function gtag() { dataLayer.push(arguments); }
 function userAllowsCookieCategory(cookieCategory, cookiePreferences) {
     // Essential cookies are always allowed
     if (cookieCategory === 'essential') {
