@@ -8,9 +8,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 //todo: link in success banner
 //todo: use post redirect get?
 
+#pragma warning disable S125
 public class IndexModel : PageModel
 {
-#pragma warning disable
     // private const string GtmContainerId = "GTM-W6QMSGQ";
 
     // ideally, these would be part of a base model and passed through to _Layout.cshtml
@@ -20,6 +20,7 @@ public class IndexModel : PageModel
     private const string CONSENT_COOKIE_NAME = "service_directory_cookies_policy";
 
     public bool ShowSuccessBanner { get; set; }
+    public bool ShowPreviousPageLink { get; set; }
     public string? LastPage { get; set; }
 
     public void OnPost(bool analytics)
@@ -30,11 +31,25 @@ public class IndexModel : PageModel
             ResetAnalyticCookies();
         }
 
-        //System.Diagnostics.Debugger.Break();
         ShowSuccessBanner = true;
-        //var refererUri = new Uri(Request.Headers.Referer);
-        LastPage = Request.Headers.Referer;
+
+        // user doesn't see the cookie banner if javascript is disabled, so there'll never be a page to go back to
+        //SetPreviousPageLink();
     }
+
+    //private void SetPreviousPageLink()
+    //{
+    //    var refererUri = new Uri(Request.Headers.Referer);
+    //    if (refererUri.LocalPath != Request.Path)
+    //    {
+    //        LastPage = refererUri.LocalPath;
+    //        ShowPreviousPageLink = true;
+    //    }
+    //    else
+    //    {
+    //        ShowPreviousPageLink = false;
+    //    }
+    //}
 
     /// <summary>
     /// Note: this needs to be compatible with our javascript cookie code, such as cookie-functions.js
@@ -80,3 +95,4 @@ public class IndexModel : PageModel
         }
     }
 }
+#pragma warning restore S125
