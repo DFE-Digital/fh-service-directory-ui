@@ -11,6 +11,7 @@ CookiesPage.prototype.init = function () {
     this.$cookieForm = this.$cookiePage.querySelector('.js-cookies-page-form');
     this.$cookieFormFieldsets = this.$cookieForm.querySelectorAll('.js-cookies-page-form-fieldset');
     this.$successNotification = this.$cookiePage.querySelector('.js-cookies-page-success');
+    this.$successLink = this.$cookiePage.querySelector('.js-cookies-page-success-link');
     nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
         this.showUserPreference($cookieFormFieldset, getConsentCookie());
         /*        $cookieFormFieldset.removeAttribute('hidden')*/
@@ -48,6 +49,15 @@ CookiesPage.prototype.showUserPreference = function ($cookieFormFieldset, prefer
 };
 CookiesPage.prototype.showSuccessNotification = function () {
     this.$successNotification.removeAttribute('hidden');
+    // if the user's come to the cookies page through the link in the cookie banner, show a link to take them back to the page they came from
+    var referrer = document.referrer ? new URL(document.referrer).pathname : false;
+    if (referrer && referrer !== document.location.pathname) {
+        this.$successLink.href = referrer;
+        this.$successLink.removeAttribute('hidden');
+    }
+    else {
+        this.$successLink.setAttribute('hidden', 'true');
+    }
     // Set tabindex to -1 to make the element focusable with JavaScript.
     // GOV.UK Frontend will remove the tabindex on blur as the component doesn't
     // need to be focusable after the user has read the text.
