@@ -63,8 +63,6 @@ public static class ServiceMapper
 
         bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == ServiceDirectoryConstants.OrganisationTypeIdFamilyHub;
 
-        string? category = service.Service_taxonomys?.FirstOrDefault()?.Taxonomy?.Name;
-
         string name = service.Name;
 
         return new Service(
@@ -74,13 +72,25 @@ public static class ServiceMapper
             GetCost(service),
             GetAddress(serviceAtLocation),
             GetWhen(serviceAtLocation),
-            category,
+            GetCategories(service),
             serviceWithOrganisation.Organisation.Name,
             ageRange,
             service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
             service.Email,
             name,
             service.Url);
+    }
+
+    private static IEnumerable<string> GetCategories(OpenReferralServiceDto service)
+    {
+        var serviceTaxonomies = service.Service_taxonomys;
+        if (serviceTaxonomies == null)
+        {
+            return Enumerable.Empty<string>();
+        }
+
+        return serviceTaxonomies.Where(st => st.Taxonomy != null)
+            .Select(st => st.Taxonomy!.Name);
     }
 
     private static IEnumerable<string> GetAddress(OpenReferralServiceAtLocationDto? serviceAtLocation)
