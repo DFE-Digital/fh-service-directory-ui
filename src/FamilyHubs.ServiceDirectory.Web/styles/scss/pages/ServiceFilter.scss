@@ -97,3 +97,13 @@ li.govuk-pagination__item--current {
         }
     }
 }
+
+.moj-filter__tag {
+    &:after {
+        background-image: none;
+    }
+
+    &:hover:after {
+        background-image: none;
+    }
+}
