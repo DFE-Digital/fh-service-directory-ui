@@ -9,13 +9,24 @@ export default function loadAnalytics() {
     //@* https://dev.to/matijamrkaic/using-google-tag-manager-with-a-content-security-policy-9ai*@
     //<script id="gtmScript" data-nonce="@Context.GetNonce()" asp-add-nonce>
 
-    //todo: consent: https://developers.google.com/tag-platform/devguides/consent#tag-manager
+     //todo: consent: https://developers.google.com/tag-platform/devguides/consent#tag-manager
 
 
 
 
     //todo: check if loaded : https://stackoverflow.com/questions/1954910/javascript-detect-if-google-analytics-is-loaded-yet
     if (!window.ga || !window.ga.loaded) {
+
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-W6QMSGQ');
+
+    // nonce enabled version (if we decide to enable nonces)
     //    (function (w, d, s, l, i) {
     //        w[l] = w[l] || [];
     //        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
@@ -24,32 +35,5 @@ export default function loadAnalytics() {
     //        f.parentNode.insertBefore(j, f);
     //    }
     //    )(window, document, 'script', 'dataLayer', 'GTM-W6QMSGQ');
-
-        // get vanilla working first
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-W6QMSGQ');
     }
-
-
-    //if (!window.ga || !window.ga.loaded) {
-    //    // Load gtm script
-    //    // Script based on snippet at https://developers.google.com/tag-manager/quickstart
-    //    (function (w, d, s, l, i) {
-    //        w[l] = w[l] || []
-    //        w[l].push({
-    //            'gtm.start': new Date().getTime(),
-    //            'event': 'gtm.js'
-    //        })
-
-    //        var j = d.createElement(s)
-    //        var dl = l !== 'dataLayer' ? '&l=' + l : ''
-
-    //        j.async = true
-    //        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
-    //        document.head.appendChild(j)
-    //    })(window, document, 'script', 'dataLayer', 'GTM-53XG2JT')
-    //}
 }
