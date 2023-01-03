@@ -4,8 +4,7 @@
 // @ts-nocheck
 export default function loadAnalytics() {
     // should we set up consent?: https://developers.google.com/tag-platform/devguides/consent#tag-manager
-    //todo: check if loaded : https://stackoverflow.com/questions/1954910/javascript-detect-if-google-analytics-is-loaded-yet
-    if (!window.ga || !window.ga.loaded) {
+    if (!window.dataLayer) {
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
