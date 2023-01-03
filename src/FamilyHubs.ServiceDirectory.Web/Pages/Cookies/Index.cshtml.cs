@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
 //todo: delete _ga_ cookie in javascript
-//todo: link in success banner
 //todo: use post redirect get?
 
 #pragma warning disable S125
