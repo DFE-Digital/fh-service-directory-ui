@@ -3,9 +3,7 @@
 // so switch off javascript compilation for this file...
 // @ts-nocheck
 export default function loadAnalytics() {
-    //@* https://dev.to/matijamrkaic/using-google-tag-manager-with-a-content-security-policy-9ai*@
-    //<script id="gtmScript" data-nonce="@Context.GetNonce()" asp-add-nonce>
-    //todo: consent: https://developers.google.com/tag-platform/devguides/consent#tag-manager
+    // should we set up consent?: https://developers.google.com/tag-platform/devguides/consent#tag-manager
     //todo: check if loaded : https://stackoverflow.com/questions/1954910/javascript-detect-if-google-analytics-is-loaded-yet
     if (!window.ga || !window.ga.loaded) {
         (function (w, d, s, l, i) {
@@ -20,6 +18,10 @@ export default function loadAnalytics() {
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-W6QMSGQ');
         // nonce enabled version (if we decide to enable nonces)
+        //
+        // see: https://dev.to/matijamrkaic/using-google-tag-manager-with-a-content-security-policy-9ai
+        // <script id="gtmScript" data-nonce="@Context.GetNonce()" asp-add-nonce>
+        //
         //    (function (w, d, s, l, i) {
         //        w[l] = w[l] || [];
         //        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
