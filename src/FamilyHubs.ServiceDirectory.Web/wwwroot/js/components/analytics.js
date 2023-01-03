@@ -3,6 +3,7 @@
 // so switch off javascript compilation for this file...
 // @ts-nocheck
 export default function loadAnalytics() {
+    // ga side: https://www.youtube.com/watch?v=28d60ejfk3s
     // should we set up consent?: https://developers.google.com/tag-platform/devguides/consent#tag-manager
     if (!window.dataLayer) {
         (function (w, d, s, l, i) {

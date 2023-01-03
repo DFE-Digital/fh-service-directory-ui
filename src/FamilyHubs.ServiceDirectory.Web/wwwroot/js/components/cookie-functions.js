@@ -21,8 +21,7 @@ var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 var TRACKING_LIVE_ID = 'G-30G6ZFTEJE';
 /* Users can (dis)allow different groups of cookies. */
 var COOKIE_CATEGORIES = {
-    //analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_PREVIEW_ID, '_gat_UA-' + TRACKING_LIVE_ID],
-    analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_LIVE_ID],
+    analytics: ['_ga', '_ga_' + TRACKING_LIVE_ID],
     /* Essential cookies
      *
      * Essential cookies cannot be deselected, but we want our cookie code to
@@ -155,8 +154,9 @@ export function resetCookies() {
             //gtag('consent', 'update', {
             //    'analytics_storage': 'granted'
             //});
-            //window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = false
-            window['ga-disable-UA-' + TRACKING_LIVE_ID] = false;
+            //window['ga-disable-' + TRACKING_PREVIEW_ID] = false
+            window['ga-disable-' + TRACKING_LIVE_ID] = false;
+            //todo: do we need to not have the already loaded (dataLayer) check when switching it back on??
             Analytics();
         }
         else {
@@ -166,8 +166,8 @@ export function resetCookies() {
             //});
             // or this??? google analytics 4
             // gtag('config', 'TAG_ID', { 'allow_google_signals': false });
-            //    window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = true
-            window['ga-disable-UA-' + TRACKING_LIVE_ID] = true;
+            //    window['ga-disable-' + TRACKING_PREVIEW_ID] = true
+            window['ga-disable-' + TRACKING_LIVE_ID] = true;
         }
         if (!options[cookieType]) {
             // Fetch the cookies in that category
