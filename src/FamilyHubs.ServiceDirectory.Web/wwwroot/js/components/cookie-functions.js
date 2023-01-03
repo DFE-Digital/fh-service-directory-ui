@@ -15,11 +15,13 @@ import Analytics from './analytics.js';
 /* Name of the cookie to save users cookie preferences to. */
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 /* Google Analytics tracking IDs for preview and live environments. */
-var TRACKING_PREVIEW_ID = 'GA_TODO:STICKITHERE';
-var TRACKING_LIVE_ID = 'GA_TODO:STICKITHERE';
+/*measurement ids or tag ids*/
+/*Fatayi is going to link the existing ga (this id) into gtm (as a tag), then we can check the disabling*/
+//var TRACKING_PREVIEW_ID = 'GA_TODO:STICKITHERE'
+var TRACKING_LIVE_ID = 'G-30G6ZFTEJE';
 /* Users can (dis)allow different groups of cookies. */
 var COOKIE_CATEGORIES = {
-    analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_PREVIEW_ID, '_gat_UA-' + TRACKING_LIVE_ID],
+    analytics: ['_ga', '_ga_' + TRACKING_LIVE_ID],
     /* Essential cookies
      *
      * Essential cookies cannot be deselected, but we want our cookie code to
@@ -139,14 +141,12 @@ export function resetCookies() {
         // Initialise analytics if allowed
         if (cookieType === 'analytics' && options[cookieType]) {
             // Enable GA if allowed
-            window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = false;
-            window['ga-disable-UA-' + TRACKING_LIVE_ID] = false;
+            window['ga-disable-' + TRACKING_LIVE_ID] = false;
             Analytics();
         }
         else {
             // Disable GA if not allowed
-            window['ga-disable-UA-' + TRACKING_PREVIEW_ID] = true;
-            window['ga-disable-UA-' + TRACKING_LIVE_ID] = true;
+            window['ga-disable-' + TRACKING_LIVE_ID] = true;
         }
         if (!options[cookieType]) {
             // Fetch the cookies in that category

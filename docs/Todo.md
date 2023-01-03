@@ -1,5 +1,9 @@
 # Todo
 
+* *e1 5jy : first page family hub 3 miles away, search by family hub and a nearer family hub shows up
+
+* why do we display a cost free for family hub? its a location
+
 * google analytics: make sure all GA_TODO done (not just GA_TODO stuff though!)
 
 * use stringvalues for multi-params?

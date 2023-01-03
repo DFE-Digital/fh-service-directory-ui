@@ -5,19 +5,22 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
         <div data-module="app-cookies-page">
 
             <div class="govuk-notification-banner govuk-notification-banner--success js-cookies-page-success" role="alert"
                  aria-labelledby="govuk-notification-banner-title"
-                 data-module="govuk-notification-banner" @(Model.ShowSuccessBanner ? "":"hidden")>
+                 data-module="govuk-notification-banner" @(Model.ShowSuccessBanner ? "" : "hidden")>
+
                 <div class="govuk-notification-banner__header">
-                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title" >
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
                         Success
                     </h2>
                 </div>
                 <div class="govuk-notification-banner__content">
-                    <p class="govuk-notification-banner__heading">You’ve set your cookie preferences.</p>
+                    <p class="govuk-notification-banner__heading">
+                        You’ve set your cookie preferences. <a class="govuk-notification-banner__link js-cookies-page-success-link" href="@Model.LastPage" @(Model.ShowPreviousPageLink?"":"hidden")>Go back to the page you were looking at</a>
+                    </p>
                 </div>
             </div>
 
@@ -38,17 +41,27 @@
             <table class="govuk-table">
                 <caption class="govuk-table__caption">Essential cookies we use</caption>
                 <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Name</th>
-                    <th scope="col" class="govuk-table__header">Purpose</th>
-                    <th scope="col" class="govuk-table__header">Expires</th>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Name</th>
+                        <th scope="col" class="govuk-table__header">Purpose</th>
+                        <th scope="col" class="govuk-table__header">Expires</th>
+                    </tr>
                 </thead>
                 <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">service_directory_cookies_policy</td>
+                        <td class="govuk-table__cell">Saves your cookie consent settings</td>
+                        <td class="govuk-table__cell">1 year</td>
+                    </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">service_directory_cookies_policy</td>
-                    <td class="govuk-table__cell">Saves your cookie consent settings</td>
-                    <td class="govuk-table__cell">1 year</td>
+                    <td class="govuk-table__cell">ai_user</td>
+                    <td class="govuk-table__cell">Used by Microsoft Application Insights software to collect statistical usage and telemetry information. The cookie stores a unique identifier to recognise users on returning visits over time</td>
+                    <td class="govuk-table__cell">1 month</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">.AspNetCore.Antiforgery.[random number]</td>
+                    <td class="govuk-table__cell">Used to make the site more secure by preventing Cross-Site Request Forgery attacks</td>
+                    <td class="govuk-table__cell">With the session</td>
                 </tr>
                 </tbody>
             </table>
@@ -93,6 +106,17 @@
                 </tr>
                 <tr>
                     <td class="govuk-table__cell">
+                        _ga_[random number]
+                    </td>
+                    <td class="govuk-table__cell">
+                        Used by Google Analytics to persist session state
+                    </td>
+                    <td class="govuk-table__cell">
+                        2 years
+                    </td>
+                </tr>
+                    @*                <tr>
+                    <td class="govuk-table__cell">
                         _gat
                     </td>
                     <td class="govuk-table__cell">
@@ -124,6 +148,7 @@
                         1 minute
                     </td>
                 </tr>
+*@
                 </tbody>
             </table>
 

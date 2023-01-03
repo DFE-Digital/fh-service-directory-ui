@@ -4,23 +4,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
+//todo: delete _ga_ cookie in javascript
 //todo: use post redirect get?
 
+#pragma warning disable S125
 public class IndexModel : PageModel
 {
-    public bool ShowSuccessBanner { get; set; }
-
-    // GDS says (Option 3) If you set non-essential cookies, but only on the client
-    // You can choose to make your banner only work with JavaScript
-    // Does that hold for the cookie page too?
-    // probably not, the cookie page is probably the fallback to get the banner removed if the user doesn't have js
-    // https://design-system.service.gov.uk/components/cookie-banner/
-    public void OnPost(bool analytics)
-    {
-        SetConsentCookie(analytics);
-        ResetCookies();
-        ShowSuccessBanner = true;
-    }
+    // private const string GtmContainerId = "GTM-W6QMSGQ";
 
     // ideally, these would be part of a base model and passed through to _Layout.cshtml
     // but at least (for now) name them exactly the same as it is in the js, so a find search will find it
@@ -28,11 +18,44 @@ public class IndexModel : PageModel
     private const int GDS_CONSENT_COOKIE_VERSION = 1;
     private const string CONSENT_COOKIE_NAME = "service_directory_cookies_policy";
 
+    public bool ShowSuccessBanner { get; set; }
+    public bool ShowPreviousPageLink { get; set; }
+    public string? LastPage { get; set; }
+
+    public void OnPost(bool analytics)
+    {
+        SetConsentCookie(analytics);
+        if (!analytics)
+        {
+            ResetAnalyticCookies();
+        }
+
+        ShowSuccessBanner = true;
+
+        // user doesn't see the cookie banner if javascript is disabled, so there'll never be a page to go back to
+        //SetPreviousPageLink();
+    }
+
+    //private void SetPreviousPageLink()
+    //{
+    //    var refererUri = new Uri(Request.Headers.Referer);
+    //    if (refererUri.LocalPath != Request.Path)
+    //    {
+    //        LastPage = refererUri.LocalPath;
+    //        ShowPreviousPageLink = true;
+    //    }
+    //    else
+    //    {
+    //        ShowPreviousPageLink = false;
+    //    }
+    //}
+
     /// <summary>
     /// Note: this needs to be compatible with our javascript cookie code, such as cookie-functions.js
     /// </summary>
     private void SetConsentCookie(bool analyticsAllowed)
     {
+        //todo: Response.Cookies has a static EnableCookieNameEncoding - can we use that and switch to Append??
         var cookieOptions = new CookieOptions
         {
             Expires = DateTime.Now.AddDays(365),
@@ -49,12 +72,26 @@ public class IndexModel : PageModel
             $$"""{"analytics": {{analyticsAllowed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()}}, "version": {{GDS_CONSENT_COOKIE_VERSION}}}""", cookieOptions);
     }
 
-    /// <summary>
-    /// Deletes any cookies the user has not consented to.
-    /// </summary>
-    private void ResetCookies()
+    private void ResetAnalyticCookies()
     {
-        //todo: GA_TODO delete ga cookies
-        //analytics: ['_ga', '_gid', '_gat_UA-' + TRACKING_PREVIEW_ID, '_gat_UA-' + TRACKING_LIVE_ID],
+        foreach (var uaCookie in Request.Cookies.Where(c => c.Key.StartsWith("_ga")))
+        {
+            DeleteCookies(uaCookie.Key);
+        }
+
+        DeleteCookies("_gid");
+    }
+
+    /// <summary>
+    /// Asks the browser to deletes the supplied cookies.
+    /// </summary>
+    private void DeleteCookies(params string[] cookies)
+    {
+        foreach (var cookie in cookies)
+        {
+            //todo: cookieoptions for domain?
+            Response.Cookies.Delete(cookie);
+        }
     }
 }
+#pragma warning restore S125

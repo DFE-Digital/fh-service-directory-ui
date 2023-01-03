@@ -7213,7 +7213,7 @@ p + .govuk-heading-s,
   border: 0;
 }
 .moj-filter__legend button::after {
-  background-image: url(/lib/moj/assets/imagesicon-toggle-plus-minus.svg);
+  background-image: url(/lib/moj/assets/images/icon-toggle-plus-minus.svg);
   background-position: 0 0;
   content: "";
   display: block;
@@ -7255,7 +7255,7 @@ p + .govuk-heading-s,
   border: 0;
 }
 .moj-filter__close::before {
-  background-image: url(/lib/moj/assets/imagesicon-close-cross-black.svg);
+  background-image: url(/lib/moj/assets/images/icon-close-cross-black.svg);
   content: "";
   display: inline-block;
   height: 14px;
@@ -7404,7 +7404,7 @@ p + .govuk-heading-s,
   color: #ffffff;
 }
 .moj-filter__tag:after {
-  background-image: url(/lib/moj/assets/imagesicon-tag-remove-cross.svg);
+  background-image: url(/lib/moj/assets/images/icon-tag-remove-cross.svg);
   content: "";
   display: inline-block;
   font-weight: bold;
@@ -7414,7 +7414,7 @@ p + .govuk-heading-s,
   width: 10px;
 }
 .moj-filter__tag:hover:after {
-  background-image: url(/lib/moj/assets/imagesicon-tag-remove-cross-white.svg);
+  background-image: url(/lib/moj/assets/images/icon-tag-remove-cross-white.svg);
 }
 
 .moj-filter__options {
@@ -7640,6 +7640,13 @@ li.govuk-pagination__item--current .app-button-link {
 }
 .govuk-pagination__item .app-button-link:active:hover, .govuk-pagination__next .app-button-link:active:hover, .govuk-pagination__prev .app-button-link:active:hover {
   text-decoration: none;
+}
+
+.moj-filter__tag:after {
+  background-image: none;
+}
+.moj-filter__tag:hover:after {
+  background-image: none;
 }
 
 /*# sourceMappingURL=application.css.map */
