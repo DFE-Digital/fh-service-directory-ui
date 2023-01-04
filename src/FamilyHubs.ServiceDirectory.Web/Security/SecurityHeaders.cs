@@ -124,6 +124,50 @@ public static class SecurityHeaders
                         connectSrc.From(new[] { "http://localhost:*", "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
                     }
                 })
+                .AddPermissionsPolicy(builder =>
+                    {
+                        builder.AddAccelerometer()
+                            .None();
+                        //Edge => Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+                        builder.AddAmbientLightSensor()
+                            .None();
+                        builder.AddAutoplay()
+                            .None();
+                        builder.AddAutoplay()
+                            .None();
+                        builder.AddCamera()
+                            .None();
+                        builder.AddEncryptedMedia()
+                            .None();
+                        builder.AddFullscreen()
+                            .None();
+                        //required for GA?
+                        builder.AddGeolocation()
+                            .None();
+                        builder.AddGyroscope()
+                            .None();
+                        builder.AddMagnetometer()
+                            .None();
+                        builder.AddMicrophone()
+                            .None();
+                        builder.AddMidi()
+                            .None();
+                        builder.AddPayment()
+                            .None();
+                        builder.AddPictureInPicture()
+                            .None();
+                        // Edge => Error with Permissions-Policy header: Unrecognized feature: 'speaker'.
+                        builder.AddSpeaker()
+                            .None();
+                        builder.AddSyncXHR()
+                            .None();
+                        builder.AddUsb()
+                            .None();
+                        // Edge => Error with Permissions-Policy header: Unrecognized feature: 'vr'.
+                        builder.AddVR()
+                            .None();
+                    }
+                )
                 .AddCustomHeader("X-Permitted-Cross-Domain-Policies", "none")
                 // this is called in AddDefaultSecurityHeaders(), but without this, we get AddXssProtectionDisabled() instead
                 .AddXssProtectionBlock());
