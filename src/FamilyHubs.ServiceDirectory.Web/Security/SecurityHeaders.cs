@@ -132,8 +132,6 @@ public static class SecurityHeaders
                             .None();
                         builder.AddAutoplay()
                             .None();
-                        builder.AddAutoplay()
-                            .None();
                         builder.AddCamera()
                             .None();
                         builder.AddEncryptedMedia()
@@ -156,8 +154,9 @@ public static class SecurityHeaders
                             .None();
                         builder.AddSpeaker()
                             .None();
+                        // don't need it yet, but we probably will when we enable js filtering, and we don't want to set a trap
                         builder.AddSyncXHR()
-                            .None();
+                            .Self();
                         builder.AddUsb()
                             .None();
                         builder.AddVR()
