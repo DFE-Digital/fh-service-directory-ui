@@ -65,6 +65,8 @@ public static class ServiceMapper
 
         string name = service.Name;
 
+        string? websiteUrl = GetWebsiteUrl(service.Url);
+
         return new Service(
             isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
             name,
@@ -78,7 +80,19 @@ public static class ServiceMapper
             service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
             service.Email,
             name,
-            service.Url);
+            websiteUrl);
+    }
+
+    private static string? GetWebsiteUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return default;
+
+        if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            return url;
+
+        // assume http! (UriBuilder interprets a single string as a host and insists on adding a '/' on the end, which doesn't work if the url contains query params)
+        return $"http://{url}";
     }
 
     private static IEnumerable<string> GetCategories(OpenReferralServiceDto service)

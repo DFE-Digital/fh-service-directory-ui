@@ -124,6 +124,45 @@ public static class SecurityHeaders
                         connectSrc.From(new[] { "http://localhost:*", "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
                     }
                 })
+                .AddPermissionsPolicy(builder =>
+                    {
+                        builder.AddAccelerometer()
+                            .None();
+                        builder.AddAmbientLightSensor()
+                            .None();
+                        builder.AddAutoplay()
+                            .None();
+                        builder.AddCamera()
+                            .None();
+                        builder.AddEncryptedMedia()
+                            .None();
+                        builder.AddFullscreen()
+                            .None();
+                        builder.AddGeolocation()
+                            .None();
+                        builder.AddGyroscope()
+                            .None();
+                        builder.AddMagnetometer()
+                            .None();
+                        builder.AddMicrophone()
+                            .None();
+                        builder.AddMidi()
+                            .None();
+                        builder.AddPayment()
+                            .None();
+                        builder.AddPictureInPicture()
+                            .None();
+                        builder.AddSpeaker()
+                            .None();
+                        // don't need it yet, but we probably will when we enable js filtering, and we don't want to set a trap
+                        builder.AddSyncXHR()
+                            .Self();
+                        builder.AddUsb()
+                            .None();
+                        builder.AddVR()
+                            .None();
+                    }
+                )
                 .AddCustomHeader("X-Permitted-Cross-Domain-Policies", "none")
                 // this is called in AddDefaultSecurityHeaders(), but without this, we get AddXssProtectionDisabled() instead
                 .AddXssProtectionBlock());
