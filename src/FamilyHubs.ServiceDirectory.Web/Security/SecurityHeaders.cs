@@ -140,7 +140,6 @@ public static class SecurityHeaders
                             .None();
                         builder.AddFullscreen()
                             .None();
-                        //required for GA?
                         builder.AddGeolocation()
                             .None();
                         builder.AddGyroscope()
