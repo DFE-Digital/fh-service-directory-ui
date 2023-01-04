@@ -20,8 +20,6 @@ public static class Program
 
             builder.ConfigureHost();
 
-            builder.WebHost.UseKestrel(o => o.AddServerHeader = false);
-
             builder.Services.ConfigureServices(builder.Configuration);
 
             var app = builder.Build();
