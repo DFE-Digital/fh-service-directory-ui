@@ -128,7 +128,6 @@ public static class SecurityHeaders
                     {
                         builder.AddAccelerometer()
                             .None();
-                        //Edge => Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
                         builder.AddAmbientLightSensor()
                             .None();
                         builder.AddAutoplay()
@@ -156,14 +155,12 @@ public static class SecurityHeaders
                             .None();
                         builder.AddPictureInPicture()
                             .None();
-                        // Edge => Error with Permissions-Policy header: Unrecognized feature: 'speaker'.
                         builder.AddSpeaker()
                             .None();
                         builder.AddSyncXHR()
                             .None();
                         builder.AddUsb()
                             .None();
-                        // Edge => Error with Permissions-Policy header: Unrecognized feature: 'vr'.
                         builder.AddVR()
                             .None();
                     }
