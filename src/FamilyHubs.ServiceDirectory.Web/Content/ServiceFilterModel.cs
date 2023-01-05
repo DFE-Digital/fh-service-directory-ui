@@ -41,7 +41,6 @@ public static class FilterDefinitions
             new FilterAspect("family-support--110ba031-18e8-4e7c-8b91-70a5b3504d0f", "Separating and separated parent support"),
             new FilterAspect("family-support--6bca5e3d-ad93-4083-b721-31d89c9e357d", "Stopping smoking"),
             new FilterAspect("family-support--8fc58423-2f78-41f8-8211-947318940c50", "Substance misuse (including alcohol and drug)"),
-            new FilterAspect("family-support--005b3184-6ffb-414a-a1e3-6d5674dc0e63", "Support with parenting"),
             new FilterAspect("family-support--8a74745f-b95e-4c57-be27-f3cc4e24ddd6", "Targeted youth support"),
             new FilterAspect("family-support--be1de9a2-a833-498b-95d3-9e525d4d9951", "Youth justice services")
         }),
