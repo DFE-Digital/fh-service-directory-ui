@@ -7506,6 +7506,13 @@ p + .govuk-heading-s,
   border-bottom: none;
 }
 
+.app-service {
+  border-bottom: 1px solid #b1b4b6;
+}
+.app-service:last-of-type {
+  border-bottom: none;
+}
+
 .app-family-hub {
   background-color: rgba(29, 112, 184, 0.1);
   /*note: we can't use "all" and "top", as that doesn't produce the correct css*/

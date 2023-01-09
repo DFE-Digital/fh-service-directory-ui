@@ -16,6 +16,14 @@
     }
 }
 
+.app-service {
+    border-bottom: 1px solid $govuk-border-colour;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+}
+
 .app-family-hub {
     background-color: rgba($govuk-brand-colour, 0.1);
     /*note: we can't use "all" and "top", as that doesn't produce the correct css*/
