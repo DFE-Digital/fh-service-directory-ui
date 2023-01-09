@@ -12,4 +12,14 @@ public static class DictionaryForQueryParamsExtension
 
         return queryParams;
     }
+
+    public static Dictionary<string, string?> AddOptionalQueryParams(this Dictionary<string, string?> queryParams, string key, IEnumerable<string>? values)
+    {
+        if (values?.Any() == true)
+        {
+            queryParams.Add(key, string.Join(',', values));
+        }
+
+        return queryParams;
+    }
 }

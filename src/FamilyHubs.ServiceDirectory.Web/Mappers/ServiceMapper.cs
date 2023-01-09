@@ -61,7 +61,7 @@ public static class ServiceMapper
         var eligibility = service.Eligibilities?.FirstOrDefault();
         string? ageRange = eligibility == null ? null : $"{AgeToString(eligibility.Minimum_age)} to {AgeToString(eligibility.Maximum_age)}";
 
-        bool isFamilyHub = serviceWithOrganisation.Organisation.OrganisationType.Id == ServiceDirectoryConstants.OrganisationTypeIdFamilyHub;
+        bool isFamilyHub = IsFamilyHub(serviceAtLocation);
 
         string name = service.Name;
 
@@ -81,6 +81,13 @@ public static class ServiceMapper
             service.Email,
             name,
             websiteUrl);
+    }
+
+    private static bool IsFamilyHub(OpenReferralServiceAtLocationDto? serviceAtLocation)
+    {
+        //todo: const
+        return (serviceAtLocation?.Location.LinkTaxonomies
+                   ?.Any(lt => lt.Taxonomy is { Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869" })) == true;
     }
 
     private static string? GetWebsiteUrl(string? url)
