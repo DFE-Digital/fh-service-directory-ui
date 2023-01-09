@@ -46,11 +46,16 @@ public static class ServiceMapper
             GetCategories(service),
             serviceWithOrganisation.Organisation.Name,
             ageRange,
-            //todo: do we have to filter out textphone? but data has id and number (and id seems different every time??) https://github.com/DFE-Digital/fh-service-directory-admin-ui/blob/11c4d11ccf1341e998af02b875b2674bdc61517b/src/FamilyHubs.ServiceDirectoryAdminUi.Ui/Services/ViewModelToApiModelHelper.cs
-            service.Contacts?.FirstOrDefault()?.Phones?.FirstOrDefault()?.Number,
+            GetPhone(service),
             service.Email,
             name,
             websiteUrl);
+    }
+
+    private static string? GetPhone(OpenReferralServiceDto service)
+    {
+        //todo: do we have to filter out textphone? but data has id and number (and id seems different every time??) https://github.com/DFE-Digital/fh-service-directory-admin-ui/blob/11c4d11ccf1341e998af02b875b2674bdc61517b/src/FamilyHubs.ServiceDirectoryAdminUi.Ui/Services/ViewModelToApiModelHelper.cs
+        return service.ContactLinks?.FirstOrDefault()?.Contact.Phones?.FirstOrDefault()?.Number;
     }
 
     private static bool IsFamilyHub(OpenReferralServiceAtLocationDto? serviceAtLocation)
