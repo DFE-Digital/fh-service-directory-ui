@@ -5,6 +5,7 @@ using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Constants;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -54,9 +55,8 @@ public static class ServiceMapper
 
     private static bool IsFamilyHub(OpenReferralServiceAtLocationDto? serviceAtLocation)
     {
-        //todo: const
-        return (serviceAtLocation?.Location.LinkTaxonomies
-                   ?.Any(lt => lt.Taxonomy is { Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869" })) == true;
+        return serviceAtLocation?.Location.LinkTaxonomies
+                   ?.Any(lt => lt.Taxonomy is { Id: OpenReferralTaxonomyDtoIds.FamilyHub }) == true;
     }
 
     private static string? GetWebsiteUrl(string? url)
