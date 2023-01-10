@@ -7502,11 +7502,17 @@ p + .govuk-heading-s,
 .app-filter-group {
   border-bottom: 1px solid #b1b4b6;
   padding-bottom: 15px;
+  /*    .govuk-checkboxes__input {
+      accent-color: govuk-colour("white");
+  }*/
 }
 @media (min-width: 40.0625em) {
   .app-filter-group {
     padding-bottom: 25px;
   }
+}
+.app-filter-group .govuk-checkboxes__label::before, .app-filter-group .govuk-radios__label::before {
+  background-color: #ffffff;
 }
 .app-filter-group:last-child {
   border-bottom: none;

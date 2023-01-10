@@ -12,6 +12,14 @@
     border-bottom: 1px solid $govuk-border-colour;
     @include govuk-responsive-padding(5, "bottom");
 
+    /*    .govuk-checkboxes__input {
+        accent-color: govuk-colour("white");
+    }*/
+
+    .govuk-checkboxes__label::before, .govuk-radios__label::before {
+        background-color: govuk-colour("white");
+    }
+
     &:last-child {
         border-bottom: none;
     }
