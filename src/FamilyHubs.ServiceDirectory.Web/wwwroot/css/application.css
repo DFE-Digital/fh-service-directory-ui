@@ -7515,6 +7515,9 @@ p + .govuk-heading-s,
 .app-service {
   border-bottom: 1px solid #b1b4b6;
 }
+.app-service .govuk-summary-list__row {
+  border-bottom: none;
+}
 .app-service:last-of-type {
   border-bottom: none;
 }
