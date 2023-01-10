@@ -7501,6 +7501,12 @@ p + .govuk-heading-s,
 
 .app-filter-group {
   border-bottom: 1px solid #b1b4b6;
+  padding-bottom: 15px;
+}
+@media (min-width: 40.0625em) {
+  .app-filter-group {
+    padding-bottom: 25px;
+  }
 }
 .app-filter-group:last-child {
   border-bottom: none;
