@@ -104,7 +104,7 @@ public class ServiceFilterModel : PageModel
             isPaidFor = costFilter.Values.First() == "pay-to-use";
         }
 
-        IEnumerable<string>? showOrganisationType = null;
+        bool? familyHubFilter = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
         switch (showFilter.Values.Count())
         {
@@ -112,7 +112,7 @@ public class ServiceFilterModel : PageModel
                 OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
-                showOrganisationType = showFilter.Values;
+                familyHubFilter = bool.Parse(showFilter.Values.First());
                 break;
             //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
@@ -137,7 +137,7 @@ public class ServiceFilterModel : PageModel
             givenAge,
             isPaidFor,
             OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
-            showOrganisationType,
+            familyHubFilter,
             TypeOfSupportFilter.Values,
             CurrentPage,
             PageSize);

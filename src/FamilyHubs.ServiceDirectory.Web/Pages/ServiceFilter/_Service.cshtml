@@ -24,13 +24,12 @@
     <partial name="_SummaryListLink" model='("Email", Model.Email, LinkType.Email, default(string?))' />
     <partial name="_SummaryListLink" model='("Website", Model.WebsiteUrl, LinkType.Normal, Model.WebsiteName)' />
 
-    @*not in build prototype (not mvp)*@
-    @*Open Referral: attending_access on service*@
-@*    <partial name="_SummaryListRow" model='("Availability", Model.Availability)' />*@
-
     @if (Model.Type == ServiceType.FamilyHub)
     {
         <partial name="_SummaryListRows" model='("Opening hours", Model.When)' />
     }
-    <partial name="_SummaryListRows" model='("Cost", Model.Cost)' />
+    else
+    {
+        <partial name="_SummaryListRows" model='("Cost", Model.Cost)' />
+    }
 </dl>
