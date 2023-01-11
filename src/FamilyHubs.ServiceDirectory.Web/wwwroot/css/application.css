@@ -7518,6 +7518,12 @@ p + .govuk-heading-s,
   border-bottom: none;
 }
 
+@media (min-width: 40.0625em) {
+  #results > .app-service:first-of-type {
+    margin-top: -25px;
+  }
+}
+
 .app-service {
   border-bottom: 1px solid #b1b4b6;
 }
