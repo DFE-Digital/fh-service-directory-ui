@@ -33,14 +33,14 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? givenAge = null,
         bool? isPaidFor = null,
         int? maxFamilyHubs = null,
-        IEnumerable<string>? showOrganisationTypeIds = null,
+        bool? familyHub = null,
         IEnumerable<string>? taxonomyIds = null,
         int? pageNumber = null,
         int? pageSize = null,
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, showOrganisationTypeIds, taxonomyIds, pageNumber, pageSize, cancellationToken);
+            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, familyHub, taxonomyIds, pageNumber, pageSize, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -62,7 +62,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         int? givenAge = null,
         bool? isPaidFor = null,
         int? maxFamilyHubs = null,
-        IEnumerable<string>? showOrganisationTypeIds = null,
+        bool? familyHub = null,
         IEnumerable<string>? taxonomyIds = null,
         int? pageNumber = null,
         int? pageSize = null,
@@ -85,30 +85,9 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
             .AddOptionalQueryParams("isPaidFor", isPaidFor)
             .AddOptionalQueryParams("pageNumber", pageNumber)
             .AddOptionalQueryParams("pageSize", pageSize)
-            .AddOptionalQueryParams("maxFamilyHubs", maxFamilyHubs);
-
-        if (showOrganisationTypeIds != null)
-        {
-            switch (showOrganisationTypeIds.Count())
-            {
-                case 0:
-                    break;
-                case 1:
-                    var showOrgTypeId = showOrganisationTypeIds.First();
-                    queryParams.Add("isFamilyHub", (showOrgTypeId == ServiceDirectoryConstants.OrganisationTypeIdFamilyHub).ToString());
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        if (taxonomyIds != null && taxonomyIds.Any())
-        {
-            queryParams.Add("taxonmyIds", string.Join(',', taxonomyIds));
-        }
-
-        //todo: age range doesn't match ranges in api's : api to be updated to combine ranges
-        //todo: SEND as a param in api? needs investigation
+            .AddOptionalQueryParams("isFamilyHub", familyHub)
+            .AddOptionalQueryParams("maxFamilyHubs", maxFamilyHubs)
+            .AddOptionalQueryParams("taxonmyIds", taxonomyIds);
 
         string getServicesUri = QueryHelpers.AddQueryString(GetServicesBaseUri, queryParams);
 
