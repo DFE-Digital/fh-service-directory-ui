@@ -10,8 +10,35 @@
 
 .app-filter-group {
     border-bottom: 1px solid $govuk-border-colour;
+    @include govuk-responsive-padding(5, "bottom");
+
+    /*    .govuk-checkboxes__input {
+        accent-color: govuk-colour("white");
+    }*/
+
+    .govuk-checkboxes__label::before, .govuk-radios__label::before {
+        background-color: govuk-colour("white");
+    }
 
     &:last-child {
+        border-bottom: none;
+    }
+}
+
+#results > .app-service:first-of-type {
+    @include govuk-media-query($from: tablet) {
+        margin-top: -25px;
+    }
+}
+
+.app-service {
+    border-bottom: 1px solid $govuk-border-colour;
+
+    .govuk-summary-list__row {
+        border-bottom: none;
+    }
+
+    &:last-of-type {
         border-bottom: none;
     }
 }
@@ -106,4 +133,8 @@ li.govuk-pagination__item--current {
     &:hover:after {
         background-image: none;
     }
+}
+
+.moj-filter__options {
+    background-color: govuk-colour("light-grey");
 }
