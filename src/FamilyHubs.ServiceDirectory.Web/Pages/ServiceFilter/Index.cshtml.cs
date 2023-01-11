@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.ServiceDirectory.Core.Distance;
+using FamilyHubs.ServiceDirectory.Core.Pagination;
+using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
@@ -19,7 +21,7 @@ public class ServiceFilterModel : PageModel
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
     public int CurrentPage { get; set; }
-    public int MaxPages { get; set; }
+    public IPagination Pagination { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private const int PageSize = 10;
@@ -28,10 +30,11 @@ public class ServiceFilterModel : PageModel
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         Filters = FilterDefinitions.Filters;
-        TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter;
+        TypeOfSupportFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         CurrentPage = 1;
+        Pagination = new DontShowPagination();
     }
 
     public Task OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -57,7 +60,7 @@ public class ServiceFilterModel : PageModel
         IsGet = true;
         Postcode = postcode;
 
-        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
+        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
     }
 
     public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
@@ -74,16 +77,16 @@ public class ServiceFilterModel : PageModel
         Postcode = postcode;
 
         Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        TypeOfSupportFilter = FilterDefinitions.TypeOfSupportFilter.ToPostFilter(Request.Form, remove);
+        TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
 
         //todo: have page in querystring for bookmarking?
         if (!string.IsNullOrWhiteSpace(pageNum))
             CurrentPage = int.Parse(pageNum);
 
-        (Services, MaxPages) = await GetServicesAndMaxPages(adminDistrict, latitude, longitude);
+        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
     }
 
-    private async Task<(IEnumerable<Service>, int)> GetServicesAndMaxPages(string adminDistrict, float latitude, float longitude)
+    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
     {
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         int? searchWithinMeters = null;
@@ -101,7 +104,7 @@ public class ServiceFilterModel : PageModel
             isPaidFor = costFilter.Values.First() == "pay-to-use";
         }
 
-        IEnumerable<string>? showOrganisationType = null;
+        bool? familyHubFilter = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
         switch (showFilter.Values.Count())
         {
@@ -109,7 +112,7 @@ public class ServiceFilterModel : PageModel
                 OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
-                showOrganisationType = showFilter.Values;
+                familyHubFilter = bool.Parse(showFilter.Values.First());
                 break;
             //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
@@ -134,11 +137,13 @@ public class ServiceFilterModel : PageModel
             givenAge,
             isPaidFor,
             OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
-            showOrganisationType,
+            familyHubFilter,
             TypeOfSupportFilter.Values,
             CurrentPage,
             PageSize);
 
-        return (ServiceMapper.ToViewModel(services.Items), services.TotalPages);
+        var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
+
+        return (ServiceMapper.ToViewModel(services.Items), pagination);
     }
 }

@@ -1,5 +1,11 @@
 # Todo
 
+* use stringvalues for multi-params?
+
+* add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
+
+* filtering by free is returning services with a cost with the new data import set
+
 * sass: pick up sass exe from .bin folder?
 
 * now that the API filters by organisation type, we could pass back the organisation (or what we need from the org), rather than fetching the service's org

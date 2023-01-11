@@ -5,8 +5,10 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es5",
-    "outDir": "wwwroot/js"
+    "target": "es6",
+    "outDir": "wwwroot/js",
+    "allowJs": true,
+    "checkJs":  true
   },
   "include": [
     "scripts/**/*"
