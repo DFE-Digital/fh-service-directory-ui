@@ -56,7 +56,7 @@ public static class ServiceMapper
     private static bool IsFamilyHub(OpenReferralServiceAtLocationDto? serviceAtLocation)
     {
         return serviceAtLocation?.Location.LinkTaxonomies
-                   ?.Any(lt => lt.Taxonomy is { Id: OpenReferralTaxonomyDtoIds.FamilyHub }) == true;
+            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
     }
 
     private static string? GetWebsiteUrl(string? url)
