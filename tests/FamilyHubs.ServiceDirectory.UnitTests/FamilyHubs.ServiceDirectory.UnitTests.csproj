@@ -24,12 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Web\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj" />
     <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectory.Web\FamilyHubs.ServiceDirectory.Web.csproj" />
   </ItemGroup>
 
 </Project>
