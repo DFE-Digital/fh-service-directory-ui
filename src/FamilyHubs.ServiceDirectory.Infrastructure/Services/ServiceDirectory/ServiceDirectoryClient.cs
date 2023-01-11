@@ -176,4 +176,66 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
 
         return organisation;
     }
+
+    public Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(id);
+
+        return GetOrganisationTryCache(id, cancellationToken);
+    }
+
+    //todo: priority for a (multi-threaded) unit test
+    // based on code from https://sahansera.dev/in-memory-caching-aspcore-dotnet/
+    private async Task<OpenReferralOrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
+    {
+        var semaphore = new SemaphoreSlim(1, 1);
+
+        if (_memoryCache.TryGetValue(id, out OpenReferralOrganisationDto? organisation))
+            return organisation!;
+
+        try
+        {
+            await semaphore.WaitAsync(cancellationToken);
+
+            // recheck to make sure it didn't populate before entering semaphore
+            if (_memoryCache.TryGetValue(id, out organisation))
+                return organisation!;
+
+            organisation = await GetOrganisationFromApi(id, cancellationToken);
+            _memoryCache.Set(id, organisation, TimeSpan.FromHours(1));
+        }
+        finally
+        {
+            semaphore.Release();
+        }
+        return organisation;
+    }
+
+    private async Task<OpenReferralOrganisationDto> GetOrganisationFromApi(string id, CancellationToken cancellationToken)
+    {
+        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        var response = await httpClient.GetAsync($"api/organizations/{id}", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+
+        var organisation = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationDto>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            cancellationToken);
+
+        if (organisation is null)
+        {
+            // the only time it'll be null, is if the API returns "null"
+            // (see https://stackoverflow.com/questions/71162382/why-are-the-return-types-of-nets-system-text-json-jsonserializer-deserialize-m)
+            // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
+            // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
+            throw new ServiceDirectoryClientException(response, "null");
+        }
+
+        return organisation;
+    }
 }
