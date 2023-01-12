@@ -28,6 +28,7 @@ new CookiesPage($cookiesPage).init()
 
 const button = document.getElementById('open-close-filters');
 button?.addEventListener('click', function handleClick(event) {
+    //todo: update to ts 2?
     const filterButton = document.getElementById("filters") as HTMLDivElement | null;
     if (filterButton.style.display === "none") {
         filterButton.style.display = "block";

@@ -2,7 +2,8 @@
 
 public enum LinkType
 {
-    Normal,
+    WebPage,
+    WebPageInNewTab,
     Phone,
     Email
 }
