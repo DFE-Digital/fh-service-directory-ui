@@ -23,7 +23,7 @@
         @*todo: default not nice*@
         <partial name="_SummaryListLink" model='("Phone", Model.Phone, LinkType.Phone, default(string?))' />
         <partial name="_SummaryListLink" model='("Email", Model.Email, LinkType.Email, default(string?))' />
-        <partial name="_SummaryListLink" model='("Website", Model.WebsiteUrl, LinkType.Normal, Model.WebsiteName)' />
+        <partial name="_SummaryListLink" model='("Website", Model.WebsiteUrl, LinkType.WebPageInNewTab, Model.WebsiteName)' />
 
         @if (Model.Type == ServiceType.FamilyHub)
         {

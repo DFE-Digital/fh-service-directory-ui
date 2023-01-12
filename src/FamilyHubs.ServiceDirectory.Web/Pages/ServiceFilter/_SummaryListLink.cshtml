@@ -9,10 +9,16 @@
         {
             @switch (Model.LinkType)
             {
-                case LinkType.Normal:
+                case LinkType.WebPage:
                     @if (!string.IsNullOrEmpty(Model.Value))
                     {
                         <a href="@(Model.Value)">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description)</a>
+                    }
+                    break;
+                case LinkType.WebPageInNewTab:
+                    @if (!string.IsNullOrEmpty(Model.Value))
+                    {
+                        <a href="@(Model.Value)" rel="noreferrer noopener" target="_blank">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description) (opens in new tab)</a>
                     }
                     break;
                 case LinkType.Email:
