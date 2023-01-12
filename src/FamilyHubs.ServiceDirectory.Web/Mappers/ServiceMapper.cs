@@ -127,7 +127,8 @@ public static class ServiceMapper
 
         if (!string.IsNullOrWhiteSpace(firstCost.Option))
         {
-            cost.Add(firstCost.Option);
+            var splitCostOptions = firstCost.Option.Split("\n");
+            cost.AddRange(splitCostOptions);
         }
 
         return cost;
