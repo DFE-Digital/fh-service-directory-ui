@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Constants;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -25,19 +26,13 @@ public static class ServiceMapper
 
         Debug.Assert(service.ServiceType.Name == "Family Experience");
 
-        //todo: check got one. always the first??
         var serviceAtLocation = service.Service_at_locations?.FirstOrDefault();
         var eligibility = service.Eligibilities?.FirstOrDefault();
-        string? ageRange = eligibility == null ? null : $"{AgeToString(eligibility.Minimum_age)} to {AgeToString(eligibility.Maximum_age)}";
-
-        bool isFamilyHub = IsFamilyHub(serviceAtLocation);
 
         string name = service.Name;
 
-        string? websiteUrl = GetWebsiteUrl(service.Url);
-
         return new Service(
-            isFamilyHub ? ServiceType.FamilyHub : ServiceType.Service,
+            IsFamilyHub(serviceAtLocation) ? ServiceType.FamilyHub : ServiceType.Service,
             name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
@@ -45,11 +40,16 @@ public static class ServiceMapper
             GetWhen(serviceAtLocation),
             GetCategories(service),
             serviceWithOrganisation.Organisation.Name,
-            ageRange,
+            GetAgeRange(eligibility),
             GetPhone(service),
             service.Email,
             name,
-            websiteUrl);
+            GetWebsiteUrl(service.Url));
+    }
+
+    private static string? GetAgeRange(OpenReferralEligibilityDto? eligibility)
+    {
+        return eligibility == null ? null : $"{AgeToString(eligibility.Minimum_age)} to {AgeToString(eligibility.Maximum_age)}";
     }
 
     private static string? GetPhone(OpenReferralServiceDto service)
@@ -92,12 +92,11 @@ public static class ServiceMapper
     {
         var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
 
-        return RemoveEmpty(
-            serviceAtLocation?.Location.Name,
-            address?.Address_1,
-            address?.City,
-            address?.State_province,
-            address?.Postal_code);
+        var splitAddress1 = address?.Address_1.Split('|');
+
+        return RemoveEmpty(serviceAtLocation?.Location.Name)
+            .Concat(RemoveEmpty(splitAddress1 ?? Array.Empty<string>()))
+            .Concat(RemoveEmpty(address?.City, address?.State_province, address?.Postal_code));
     }
 
     private static IEnumerable<string> GetWhen(OpenReferralServiceAtLocationDto? serviceAtLocation)
