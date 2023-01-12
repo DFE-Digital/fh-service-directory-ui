@@ -26,12 +26,12 @@ if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
 var $cookiesPage = document.querySelector('[data-module="app-cookies-page"]')
 new CookiesPage($cookiesPage).init()
 
-/*todo: don't use onclick??*/
-function toggleFilters() {
+const button = document.getElementById('open-close-filters');
+button?.addEventListener('click', function handleClick(event) {
     const filterButton = document.getElementById("filters") as HTMLDivElement | null;
     if (filterButton.style.display === "none") {
         filterButton.style.display = "block";
     } else {
         filterButton.style.display = "none";
     }
-  }
+});
