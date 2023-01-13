@@ -16,10 +16,11 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Filtering
             var filter = new Mock<IFilter>();
             var form = new Mock<IFormCollection>();
             var remove = "remove";
+
             // act
             var postFilter = new PostFilter(filter.Object, form.Object, remove);
+
             // assert
-            //Assert.Equal(filter.Object, postFilter.Filter);
             Assert.Equal(filter.Object.Name, postFilter.Name);
             Assert.Equal(filter.Object.Description, postFilter.Description);
             Assert.Equal(filter.Object.FilterType, postFilter.FilterType);
@@ -36,10 +37,11 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Filtering
             var filter = new Mock<IFilter>();
             var form = new Mock<IFormCollection>();
             string? remove = null;
+
             // act
             var postFilter = new PostFilter(filter.Object, form.Object, remove);
+
             // assert
-            //Assert.Equal(filter.Object, postFilter.Filter);
             Assert.Equal(filter.Object.Name, postFilter.Name);
             Assert.Equal(filter.Object.Description, postFilter.Description);
             Assert.Equal(filter.Object.FilterType, postFilter.FilterType);
@@ -56,10 +58,11 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Filtering
             var filter = new Mock<IFilter>();
             var form = new Mock<IFormCollection>();
             var remove = string.Empty;
+
             // act
             var postFilter = new PostFilter(filter.Object, form.Object, remove);
+
             // assert
-            //Assert.Equal(filter.Object, postFilter.Filter);
             Assert.Equal(filter.Object.Name, postFilter.Name);
             Assert.Equal(filter.Object.Description, postFilter.Description);
             Assert.Equal(filter.Object.FilterType, postFilter.FilterType);
