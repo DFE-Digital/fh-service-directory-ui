@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Security;
 using HealthChecks.UI.Client;
@@ -40,7 +41,7 @@ public static class StartupExtensions
         //todo: get uri's from clients
         //todo: move into extension
         services.AddHealthChecks()
-            .AddUrlGroup(new Uri("https://api.postcodes.io/postcodes/SW1A2AA"), "PostcodesIo",
+            .AddUrlGroup(PostcodesIoLookup.HealthUrl(configuration), "PostcodesIo",
                 tags: new[] {"ExternalAPI"})
             //todo: add health check to API with DbContext probe
             .AddUrlGroup(new Uri("https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/info"), "ServiceDirectoryAPI",
