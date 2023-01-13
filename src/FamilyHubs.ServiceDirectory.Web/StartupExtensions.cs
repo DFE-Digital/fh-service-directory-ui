@@ -1,7 +1,12 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Security;
+using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
 
@@ -34,6 +39,11 @@ public static class StartupExtensions
 
         // Add services to the container.
         services.AddRazorPages();
+
+        // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
+        services.AddHealthChecks()
+            .AddUrlGroup(PostcodesIoLookup.HealthUrl(configuration), "PostcodesIo", HealthStatus.Degraded, new[] {"ExternalAPI"})
+            .AddUrlGroup(ServiceDirectoryClient.HealthUrl(configuration), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] { "InternalAPI" });
 
         // enable strict-transport-security header on localhost
 #if hsts_localhost
@@ -69,6 +79,12 @@ public static class StartupExtensions
         app.UseAuthorization();
 
         app.MapRazorPages();
+
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         return app.Services;
     }

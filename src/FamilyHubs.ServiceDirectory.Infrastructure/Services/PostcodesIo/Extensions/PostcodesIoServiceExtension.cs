@@ -23,8 +23,6 @@ public static class PostcodesIoServiceCollectionExtension
     /// </remarks>
     public static void AddPostcodesIoClient(this IServiceCollection services, IConfiguration configuration)
     {
-        const string endpointConfigKey = "PostcodesIo:Endpoint";
-
         var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(10);
 
         //todo: do we really want to retry talking to postcodes.io???
@@ -34,8 +32,7 @@ public static class PostcodesIoServiceCollectionExtension
 
         services.AddHttpClient(PostcodesIoLookup.HttpClientName, client =>
             {
-                string endpoint = ConfigurationException.ThrowIfNotUrl(endpointConfigKey, configuration[endpointConfigKey], "The postcodesio URL", "https://api.postcodes.io/postcodes/");
-                client.BaseAddress = new Uri(endpoint);
+                client.BaseAddress = new Uri(PostcodesIoLookup.GetEndpoint(configuration));
             })
             .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
                 .HandleTransientHttpError()

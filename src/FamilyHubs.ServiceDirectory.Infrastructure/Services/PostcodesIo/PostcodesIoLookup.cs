@@ -1,11 +1,15 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
+using FamilyHubs.ServiceDirectory.Infrastructure.HealthCheck;
+using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
-public class PostcodesIoLookup : IPostcodeLookup
+public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private static string? _endpoint;
     internal const string HttpClientName = "postcodesio";
 
     public PostcodesIoLookup(IHttpClientFactory httpClientFactory)
@@ -61,5 +65,21 @@ public class PostcodesIoLookup : IPostcodeLookup
         }
 
         return (postcodeError, postcodesIoResponse.PostcodeInfo);
+    }
+
+    internal static string GetEndpoint(IConfiguration configuration)
+    {
+        const string endpointConfigKey = "PostcodesIo:Endpoint";
+
+        // as long as the config isn't changed, the worst that can happen is we fetch more than once
+        return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
+            endpointConfigKey,
+            configuration[endpointConfigKey],
+            "The postcodesio URL", "https://api.postcodes.io/postcodes/");
+    }
+
+    public static Uri HealthUrl(IConfiguration configuration)
+    {
+        return new Uri($"{GetEndpoint(configuration)}SW1A2AA");
     }
 }

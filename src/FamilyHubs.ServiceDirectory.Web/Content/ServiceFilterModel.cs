@@ -1,5 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
-using FamilyHubs.ServiceDirectory.Web.Filtering;
+﻿using FamilyHubs.ServiceDirectory.Web.Filtering;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Web.Content;
