@@ -72,7 +72,8 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
         const string endpointConfigKey = "PostcodesIo:Endpoint";
 
         // as long as the config isn't changed, the worst that can happen is we fetch more than once
-        return _endpoint ??= ConfigurationException.ThrowIfNotUrl(endpointConfigKey,
+        return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
+            endpointConfigKey,
             configuration[endpointConfigKey],
             "The postcodesio URL", "https://api.postcodes.io/postcodes/");
     }
