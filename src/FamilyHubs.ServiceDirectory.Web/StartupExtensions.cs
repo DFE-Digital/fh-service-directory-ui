@@ -1,7 +1,9 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Security;
+using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
 
@@ -34,8 +36,15 @@ public static class StartupExtensions
 
         // Add services to the container.
         services.AddRazorPages();
-
-        services.AddHealthChecks();
+#pragma warning disable 
+        //todo: get uri's from clients
+        //todo: move into extension
+        services.AddHealthChecks()
+            .AddUrlGroup(new Uri("https://api.postcodes.io/postcodes/SW1A2AA"), "PostcodesIo",
+                tags: new[] {"ExternalAPI"})
+            //todo: add health check to API with DbContext probe
+            .AddUrlGroup(new Uri("https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/info"), "ServiceDirectoryAPI",
+                tags: new[] { "InternalAPI" });
 
         // enable strict-transport-security header on localhost
 #if hsts_localhost
@@ -72,7 +81,11 @@ public static class StartupExtensions
 
         app.MapRazorPages();
 
-        app.MapHealthChecks("/health");
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         return app.Services;
     }
