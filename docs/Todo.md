@@ -4,14 +4,6 @@
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
-* filtering by free is returning services with a cost with the new data import set
-
-* sass: pick up sass exe from .bin folder?
-
-* now that the API filters by organisation type, we could pass back the organisation (or what we need from the org), rather than fetching the service's org
-
-* add category as data-attribute to services to help front end tests
-
 * we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
  (reuse old service to update data on the fly)
 
@@ -26,16 +18,10 @@ if so, initialize individual component, https://design-patterns.service.justice.
 * gap between h1 and back seems large (although seems to match at least some other gov.uk sites).
  prototype has a custom 1em padding-top, perhaps we should duplicate the prototype
 
-* cookie consent : which version to use?
-
-* app services doesn't support codeless app insights with .net 7
-add manually (Martin may have done something in shared)
-
 * optimse css and js
+* pick up jquery from one of the big cdn's (google/ms/jquery) with fallback to local copy (optimisation)
 
 * accessible autocomplete?
-
-* pick up jquery from one of the big cdn's (google/ms/jquery) with fallback to local copy (optimisation)
 
 * generate ie8 css using $govuk-is-ie8. & ie8 version of moj too (same https://design-patterns.service.justice.gov.uk/get-started/supporting-internet-explorer-8/)
  revert to non-js version of website for internet explorer (saves a lot of hassle), don't think html5shiv is required if we don't support js on ie.
@@ -43,15 +29,11 @@ add manually (Martin may have done something in shared)
 
 * improve sass integration
 
-current instructions:
-install sass _globally_, using
-`npm install -g sass`
+	pick up sass exe from .bin folder?
+	
+	or
 
-run
-`npm run-script scss`
-to generate the css from the sass (and watch for changes)
-
-better to use the version of sass installed to the project, using js, similar to...
+	use the version of sass installed to the project, using js, similar to...
 
 ```
 const sass = require('sass');
@@ -73,5 +55,3 @@ changes from fh-referral-ui
 swapped from node-sass (libsass) to sass (dart sass)
 see... https://frontend.design-system.service.gov.uk/installing-with-npm/#install-with-node-js-package-manager-npm
 `Do not use either LibSass or Ruby Sass, which are deprecated, for new projects.`
-
-* sonarscanner for .net vs SonarAnalyzer.CSharp? why 2? only latter supports .net 7 so stick with it for now
