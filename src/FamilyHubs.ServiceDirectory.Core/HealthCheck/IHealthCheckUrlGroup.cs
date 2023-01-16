@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace FamilyHubs.ServiceDirectory.Infrastructure.HealthCheck;
+namespace FamilyHubs.ServiceDirectory.Core.HealthCheck;
 
 public interface IHealthCheckUrlGroup
 {

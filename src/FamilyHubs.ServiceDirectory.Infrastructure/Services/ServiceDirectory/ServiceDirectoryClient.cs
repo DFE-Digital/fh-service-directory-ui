@@ -7,9 +7,9 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using Microsoft.Extensions.Caching.Memory;
-using FamilyHubs.ServiceDirectory.Infrastructure.HealthCheck;
 using Microsoft.Extensions.Configuration;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 

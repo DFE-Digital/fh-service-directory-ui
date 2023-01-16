@@ -1,7 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
-using FamilyHubs.ServiceDirectory.Infrastructure.HealthCheck;
 using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
