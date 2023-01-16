@@ -11,10 +11,6 @@
 
 * use razor page css isolation?
 
-* does moj js do anything with filter?
- if not, don't include
-if so, initialize individual component, https://design-patterns.service.justice.gov.uk/get-started/setting-up-javascript/
-
 * gap between h1 and back seems large (although seems to match at least some other gov.uk sites).
  prototype has a custom 1em padding-top, perhaps we should duplicate the prototype
 
