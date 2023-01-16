@@ -80,6 +80,6 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
 
     public static Uri HealthUrl(IConfiguration configuration)
     {
-        return new Uri($"{GetEndpoint(configuration)}SW1A2AA");
+        return new Uri(new Uri(GetEndpoint(configuration)), "SW1A2AA");
     }
 }

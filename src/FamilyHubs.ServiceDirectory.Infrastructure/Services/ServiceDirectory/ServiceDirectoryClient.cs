@@ -195,6 +195,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     public static Uri HealthUrl(IConfiguration configuration)
     {
         //todo: add health check to API with DbContext probe
-        return new Uri($"{GetEndpoint(configuration)}api/info");
+        return new Uri(new Uri(GetEndpoint(configuration)), "api/info");
     }
 }
