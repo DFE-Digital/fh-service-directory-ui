@@ -4,6 +4,12 @@
     ViewData["Title"] = "Cookies";
 }
 
+@section Back {
+    @*todo: javascript:window.history.back()*@
+    @*todo: no js?*@
+    <a asp-page="/Index" class="govuk-back-link">Back</a>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div data-module="app-cookies-page">
