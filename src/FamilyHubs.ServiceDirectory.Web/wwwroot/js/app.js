@@ -15,6 +15,12 @@ if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
 // Initialise cookie page
 var $cookiesPage = document.querySelector('[data-module="app-cookies-page"]');
 new CookiesPage($cookiesPage).init();
+const backLinks = document.querySelectorAll(".app-back-link");
+backLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+        window.history.back();
+    });
+});
 const button = document.getElementById('open-close-filters');
 button === null || button === void 0 ? void 0 : button.addEventListener('click', function handleClick(event) {
     //todo: update to ts 2?

@@ -26,6 +26,13 @@ if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
 var $cookiesPage = document.querySelector('[data-module="app-cookies-page"]')
 new CookiesPage($cookiesPage).init()
 
+const backLinks = document.querySelectorAll(".app-back-link");
+backLinks.forEach((link: HTMLAnchorElement) => {
+    link.addEventListener("click", () => {
+        window.history.back();
+    });
+});
+
 const button = document.getElementById('open-close-filters');
 button?.addEventListener('click', function handleClick(event) {
     //todo: update to ts 2?
