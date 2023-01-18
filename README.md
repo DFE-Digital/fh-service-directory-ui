@@ -3,6 +3,8 @@ A service directory for local authorities, voluntary, charitable and faith organ
 
 ## Regenerate the CSS
 
+todo: update once done
+
 Install Dart SASS _globally_, using
 
 `npm install -g sass`

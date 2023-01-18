@@ -14,5 +14,9 @@
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
     "sass": "^1.57.1"
+  },
+  "dependencies": {
+    "@ministryofjustice/frontend": "^1.6.4",
+    "govuk-frontend": "^4.4.1"
   }
 }
