@@ -1,4 +1,5 @@
-﻿"use strict";
+/// <binding ProjectOpened='js:watch' />
+"use strict";
 
 var gulp = require("gulp"),
     sass = require('gulp-sass')(require('sass')),
