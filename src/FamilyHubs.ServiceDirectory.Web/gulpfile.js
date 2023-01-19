@@ -4,8 +4,9 @@ var gulp = require("gulp"),
     sass = require('gulp-sass')(require('sass')),
     sourcemaps = require('gulp-sourcemaps'),
     csso = require('gulp-csso'),
-    //concat = require('gulp-concat')
-    ts = require("gulp-typescript");
+    concat = require('gulp-concat'),
+    ts = require("gulp-typescript"),
+    rollup = require('gulp-better-rollup');
 
 gulp.task('sass-to-min-css', async function () {
     return gulp.src('./styles/scss/application.scss')
@@ -29,9 +30,11 @@ gulp.task('sass-to-min-css:watch', function () {
 
 // https://www.meziantou.net/compiling-typescript-using-gulp-in-visual-studio.htm
 
+//todo: split into compile and bundle tasks, and have a task that series them?
+
 var tsProject;
 
-gulp.task("js", function () {
+gulp.task("transpile-ts", function () {
 
     if (!tsProject) {
         tsProject = ts.createProject("tsconfig.json");
@@ -43,6 +46,16 @@ gulp.task("js", function () {
         .pipe(tsProject(reporter));
 
     return tsResult.js
+        //.pipe(rollup({}, 'es'))
+        //.pipe(concat("all.min.js"))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest("./wwwroot/js"));
+        .pipe(gulp.dest("./tmp/js"));
+});
+
+//todo: sourcemap
+gulp.task('bundle-js', () => {
+    return gulp.src('./tmp/js/app.js')
+        .pipe(rollup({}, 'es'))
+        //.pipe(concat('bundle.js'))
+        .pipe(gulp.dest('./wwwroot/js'));
 });
