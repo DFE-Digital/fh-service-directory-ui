@@ -52,10 +52,11 @@ gulp.task("transpile-ts", function () {
         .pipe(gulp.dest("./tmp/js"));
 });
 
-//todo: sourcemap
 gulp.task('bundle-js', () => {
     return gulp.src('./tmp/js/app.js')
+        .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
-        //.pipe(concat('bundle.js'))
+        // inlining the sourcemap into the exported .js file
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('./wwwroot/js'));
 });
