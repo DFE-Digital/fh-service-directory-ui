@@ -20,7 +20,7 @@ gulp.task('sass-to-min-css', async function () {
 });
 
 gulp.task('sass-to-min-css:watch', function () {
-    gulp.watch('./wwwroot/scss/application.scss', gulp.series('sass-to-min-css'));
+    gulp.watch('./styles/**', gulp.series('sass-to-min-css'));
 });
 
 // https://www.meziantou.net/compiling-typescript-using-gulp-in-visual-studio.htm
@@ -73,3 +73,8 @@ gulp.task('clean', () => {
 });
 
 gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
+
+//todo: single source for source - change transpiler to specify src, rather than tsconfig and use const
+gulp.task('js:watch', function () {
+    gulp.watch('./scripts/**', gulp.series('js'));
+});
