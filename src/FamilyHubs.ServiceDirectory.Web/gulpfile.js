@@ -7,7 +7,8 @@ var gulp = require("gulp"),
     terser = require('gulp-terser'),
     ts = require("gulp-typescript"),
     rollup = require('gulp-better-rollup'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    del = require('del');
 
 gulp.task('sass-to-min-css', async function () {
     return gulp.src('./styles/scss/application.scss')
@@ -25,6 +26,9 @@ gulp.task('sass-to-min-css:watch', function () {
 // https://www.meziantou.net/compiling-typescript-using-gulp-in-visual-studio.htm
 
 //todo: split into compile and bundle tasks, and have a task that series them?
+//todo: clean to delete files in dest? & tmp folder
+//todo: watches / integration using task runner
+//todo: check maps ok by debugging in vs
 
 var tsProject;
 
@@ -45,12 +49,25 @@ gulp.task("transpile-ts", function () {
 });
 
 gulp.task('bundle-js', () => {
-    return gulp.src(['./tmp/js/app.js', './scripts/govuk-4.4.1.js'])
+    return gulp.src(['./tmp/js/app.js', './wwwroot/lib/govuk/assets/js/govuk-4.4.1.js'])
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
+        // inlining the sourcemap into the exported .js file
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./tmp/js'));
+});
+
+gulp.task('bundle-js2', () => {
+    return gulp.src('./tmp/js/bundle.js')
+        .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
         .pipe(terser())
         // inlining the sourcemap into the exported .js file
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./wwwroot/js'));
+});
+
+
+gulp.task('clean', () => {
+    return del('./tmp/**');
 });
