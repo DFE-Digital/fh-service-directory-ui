@@ -6,7 +6,8 @@ var gulp = require("gulp"),
     csso = require('gulp-csso'),
     terser = require('gulp-terser'),
     ts = require("gulp-typescript"),
-    rollup = require('gulp-better-rollup');
+    rollup = require('gulp-better-rollup'),
+    concat = require('gulp-concat');
 
 gulp.task('sass-to-min-css', async function () {
     return gulp.src('./styles/scss/application.scss')
@@ -20,13 +21,6 @@ gulp.task('sass-to-min-css', async function () {
 gulp.task('sass-to-min-css:watch', function () {
     gulp.watch('./wwwroot/scss/application.scss', gulp.series('sass-to-min-css'));
 });
-
-//gulp.task('scripts', function () {
-//    return gulp.src('./scripts/*.js')
-//        .pipe(concat('all.js'))
-//        .pipe(gulp.dest('./dist/'));
-//});
-
 
 // https://www.meziantou.net/compiling-typescript-using-gulp-in-visual-studio.htm
 
@@ -46,24 +40,17 @@ gulp.task("transpile-ts", function () {
         .pipe(tsProject(reporter));
 
     return tsResult.js
-        //.pipe(rollup({}, 'es'))
-        //.pipe(concat("all.min.js"))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest("./tmp/js"));
 });
 
 gulp.task('bundle-js', () => {
-    return gulp.src('./tmp/js/app.js')
+    return gulp.src(['./tmp/js/app.js', './scripts/govuk-4.4.1.js'])
         .pipe(sourcemaps.init())
+        .pipe(concat('bundle.js'))
         .pipe(rollup({}, 'es'))
         .pipe(terser())
         // inlining the sourcemap into the exported .js file
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./wwwroot/js'));
-});
-
-gulp.task('minify-js', () => {
-    return gulp.src('./wwwroot/js/app.js')
-        .pipe(terser())
-        .pipe(gulp.dest('./wwwroot/js/app.min.js'));
 });
