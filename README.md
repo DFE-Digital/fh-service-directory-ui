@@ -17,7 +17,7 @@ To manually transpile, bundle and minify the js files, run the `js` gulp task, o
 
 To debug the JavaScript in Visual Studio, set breakpoints in JavaScript files under the `Script documents` folder in the Solution Explorer when debugging.
 
-(Note, we might switch to environment-based bundling and minification at a later point.)
+(Note, we might switch to [environment-based bundling and minification at a later point](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-6.0).)
 
 ## Useful test data
 
