@@ -26,10 +26,7 @@ gulp.task('sass-to-min-css:watch', function () {
 
 // https://www.meziantou.net/compiling-typescript-using-gulp-in-visual-studio.htm
 
-//todo: split into compile and bundle tasks, and have a task that series them?
 //todo: clean to delete files in dest? & tmp folder
-//todo: watches / integration using task runner
-//todo: check maps ok by debugging in vs
 
 var tsProject;
 
