@@ -32,7 +32,7 @@ gulp.task('sass-to-min-css:watch', function () {
 
 var tsProject;
 
-gulp.task("transpile-ts", function () {
+gulp.task('transpile-ts', function () {
 
     if (!tsProject) {
         tsProject = ts.createProject("tsconfig.json");
@@ -48,7 +48,7 @@ gulp.task("transpile-ts", function () {
         .pipe(gulp.dest("./tmp/js"));
 });
 
-gulp.task('bundle-js', () => {
+gulp.task('naive-bundle-js', () => {
     return gulp.src(['./tmp/js/app.js', './wwwroot/lib/govuk/assets/js/govuk-4.4.1.js'])
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
@@ -57,7 +57,7 @@ gulp.task('bundle-js', () => {
         .pipe(gulp.dest('./tmp/js'));
 });
 
-gulp.task('bundle-js2', () => {
+gulp.task('bundle-and-minify-js', () => {
     return gulp.src('./tmp/js/bundle.js')
         .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
@@ -71,3 +71,5 @@ gulp.task('bundle-js2', () => {
 gulp.task('clean', () => {
     return del('./tmp/**');
 });
+
+gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
