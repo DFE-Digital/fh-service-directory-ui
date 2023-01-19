@@ -4,7 +4,7 @@ var gulp = require("gulp"),
     sass = require('gulp-sass')(require('sass')),
     sourcemaps = require('gulp-sourcemaps'),
     csso = require('gulp-csso'),
-    concat = require('gulp-concat'),
+    terser = require('gulp-terser'),
     ts = require("gulp-typescript"),
     rollup = require('gulp-better-rollup');
 
@@ -56,7 +56,14 @@ gulp.task('bundle-js', () => {
     return gulp.src('./tmp/js/app.js')
         .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
+        .pipe(terser())
         // inlining the sourcemap into the exported .js file
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./wwwroot/js'));
+});
+
+gulp.task('minify-js', () => {
+    return gulp.src('./wwwroot/js/app.js')
+        .pipe(terser())
+        .pipe(gulp.dest('./wwwroot/js/app.min.js'));
 });

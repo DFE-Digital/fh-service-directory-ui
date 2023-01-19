@@ -23,29 +23,6 @@
  revert to non-js version of website for internet explorer (saves a lot of hassle), don't think html5shiv is required if we don't support js on ie.
  see https://frontend.design-system.service.gov.uk/supporting-ie8/#support-internet-explorer-8
 
-* improve sass integration
-
-	pick up sass exe from .bin folder?
-	
-	or
-
-	use the version of sass installed to the project, using js, similar to...
-
-```
-const sass = require('sass');
-const fs = require('fs');
-
-const result = sass.compile('wwwroot/styles/site.scss');
-
-fs.writeFile('site.css', result, function (err) { });
-
-```
-
-or set up gulp or some other manager or built in vs management
-
-see https://www.npmjs.com/package/sass
-https://learn.microsoft.com/en-us/answers/questions/869707/converting-scss-to-css-and-using-in-aspnet-mvc-cor.html
-
 changes from fh-referral-ui
 
 swapped from node-sass (libsass) to sass (dart sass)

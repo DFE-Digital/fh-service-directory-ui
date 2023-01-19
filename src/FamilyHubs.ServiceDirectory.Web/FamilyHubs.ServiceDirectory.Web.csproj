@@ -24,6 +24,7 @@
     <Content Include="scripts\components\cookie-functions.js" />
     <Content Include="scripts\components\cookies-page.js" />
     <Content Include="scripts\components\helpers.js" />
+    <Content Include="scripts\govuk-4.4.1.js" />
   </ItemGroup>
 
   <ItemGroup>
