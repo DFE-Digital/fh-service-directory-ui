@@ -7,11 +7,15 @@ The CSS is generated from the SASS (.scss) files. Any changes to the SASS files 
 
 To manually generate and minify the CSS files, run the `sass-to-min-css` gulp task, or run the `sass-to-min-css:watch` gulp task to initiate a watcher that will automatically recompile the CSS files when the SASS files are changed.
 
+In Rider, follow these [instructions](https://www.jetbrains.com/help/rider/Using_Gulp_Task_Runner.html#ws_gulp_running_tasks_from_tasks_tree).
+
 ## Regenerate the JavaScript
 
 Any changes to the Typescript (or JavaScript) files, should automatically trigger the transpiling, bundling and minification of the Javascript files (at least in Visual Studio).
 
 To manually transpile, bundle and minify the js files, run the `js` gulp task, or run the `js:watch` gulp task to initiate a watcher that will automatically run the process when the ts/js files are changed.
+
+In Rider, follow these [instructions](https://www.jetbrains.com/help/rider/Using_Gulp_Task_Runner.html#ws_gulp_running_tasks_from_tasks_tree).
 
 ## Debugging the JavaScript in Visual Studio
 
