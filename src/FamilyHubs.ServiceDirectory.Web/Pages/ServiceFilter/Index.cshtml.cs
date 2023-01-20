@@ -46,27 +46,14 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public IActionResult OnGet() //string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    public IActionResult OnGet()
     {
-        //if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
-        //{
-            // handle cases:
-            // * when user goes filter page => cookie page => back link from success banner
-            // * user manually removes query parameters from url
-            // * user goes directly to page by typing it into the address bar, or from a bookmark
-            return RedirectToPage("/PostcodeSearch/Index");
-        //}
-
-        //return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+        // handle cases:
+        // * when user goes filter page => cookie page => back link from success banner
+        // * user manually removes query parameters from url
+        // * user goes directly to page by typing it into the address bar, or from a bookmark
+        return RedirectToPage("/PostcodeSearch/Index");
     }
-
-    //private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
-    //{
-    //    return string.IsNullOrEmpty(postcode)
-    //            || string.IsNullOrEmpty(adminDistrict)
-    //            || latitude == null
-    //            || longitude == null;
-    //}
 
     //    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
     private static void CheckParameters([NotNull] string? postcode)
@@ -76,16 +63,6 @@ public class ServiceFilterModel : PageModel
         //ArgumentNullException.ThrowIfNull(latitude);
         //ArgumentNullException.ThrowIfNull(longitude);
     }
-
-    //private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
-    //{
-    //    IsGet = true;
-    //    Postcode = postcode;
-
-    //    (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
-
-    //    return Page();
-    //}
 
     public Task<IActionResult> OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
