@@ -1,6 +1,8 @@
 /// <binding ProjectOpened='js:watch, sass-to-min-css:watch' />
 "use strict";
 
+var tsScriptsSrc = './scripts/**';
+
 var gulp = require("gulp"),
     sass = require('gulp-sass')(require('sass')),
     sourcemaps = require('gulp-sourcemaps'),
@@ -33,11 +35,19 @@ var tsProject;
 gulp.task('transpile-ts', function () {
 
     if (!tsProject) {
-        tsProject = ts.createProject("tsconfig.json");
+        tsProject = ts.createProject({
+            noImplicitAny: false,
+            noEmitOnError: true,
+            removeComments: false,
+            target: "es6",
+            allowJs: true,
+            checkJs: true
+        });
     }
 
     var reporter = ts.reporter.fullReporter();
-    var tsResult = tsProject.src()
+
+    var tsResult = gulp.src(tsScriptsSrc)
         .pipe(sourcemaps.init())
         .pipe(tsProject(reporter));
 
@@ -65,14 +75,12 @@ gulp.task('bundle-and-minify-js', () => {
         .pipe(gulp.dest('./wwwroot/js'));
 });
 
-
 gulp.task('clean', () => {
     return del('./tmp/**');
 });
 
 gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
 
-//todo: single source for source - change transpiler to specify src, rather than tsconfig and use const
 gulp.task('js:watch', function () {
-    gulp.watch('./scripts/**', gulp.series('js'));
+    gulp.watch(tsScriptsSrc, gulp.series('js'));
 });
