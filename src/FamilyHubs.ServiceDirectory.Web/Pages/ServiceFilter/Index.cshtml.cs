@@ -45,15 +45,16 @@ public class ServiceFilterModel : PageModel
 
     public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
-        if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
-        {
+        //if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
+        //{
             // handle cases:
             // * when user goes filter page => cookie page => back link from success banner
             // * user manually removes query parameters from url
+            // * user goes directly to page by typing it into the address bar, or from a bookmark
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
-        }
+        //}
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+        //return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
     }
 
     private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -73,15 +74,15 @@ public class ServiceFilterModel : PageModel
         //ArgumentNullException.ThrowIfNull(longitude);
     }
 
-    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
-    {
-        IsGet = true;
-        Postcode = postcode;
+    //private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
+    //{
+    //    IsGet = true;
+    //    Postcode = postcode;
 
-        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
+    //    (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
 
-        return Page();
-    }
+    //    return Page();
+    //}
 
     public Task<IActionResult> OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
@@ -90,6 +91,9 @@ public class ServiceFilterModel : PageModel
         return HandlePost(postcode, adminDistrict, latitude, longitude, remove, pageNum);
     }
 
+    //todo: input hidden for postcode etc. so don't keep getting
+    //todo: isget -> show no results when admindistrict is null?
+    //todo: default to 20 miles
     private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         IsGet = false;
@@ -107,9 +111,12 @@ public class ServiceFilterModel : PageModel
             latitude = postcodeInfo.Latitude;
             longitude = postcodeInfo.Longitude;
         }
-
-        Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
+        else
+        {
+            //todo: filter / postfilter no longer makes sense!
+            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
+            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
+        }
 
         //todo: have page in querystring for bookmarking?
         if (!string.IsNullOrWhiteSpace(pageNum))

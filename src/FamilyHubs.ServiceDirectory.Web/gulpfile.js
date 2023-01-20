@@ -70,8 +70,7 @@ gulp.task('bundle-and-minify-js', () => {
         .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
         .pipe(terser())
-        // inlining the sourcemap into the exported .js file
-        .pipe(sourcemaps.write())
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./wwwroot/js'));
 });
 
