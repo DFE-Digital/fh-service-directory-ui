@@ -1,5 +1,7 @@
 # Todo
 
+* pick up standard libraries such as jQuery from one of the big CDN's (Google/MS/jQuery) with fallback to fetching a local copy.
+
 * use stringvalues for multi-params?
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)

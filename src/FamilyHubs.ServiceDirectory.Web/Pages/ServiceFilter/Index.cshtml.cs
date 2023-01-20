@@ -21,6 +21,9 @@ public class ServiceFilterModel : PageModel
     //todo: into Filters (above)
     public IFilterSubGroups TypeOfSupportFilter { get; set; }
     public string? Postcode { get; set; }
+    public string? AdminDistrict { get; set; }
+    public float? Latitude { get; set; }
+    public float? Longitude { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool IsGet { get; set; }
@@ -43,7 +46,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    public IActionResult OnGet() //string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
         //if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
         //{
@@ -51,19 +54,19 @@ public class ServiceFilterModel : PageModel
             // * when user goes filter page => cookie page => back link from success banner
             // * user manually removes query parameters from url
             // * user goes directly to page by typing it into the address bar, or from a bookmark
-            return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
+            return RedirectToPage("/PostcodeSearch/Index");
         //}
 
         //return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
     }
 
-    private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
-    {
-        return string.IsNullOrEmpty(postcode)
-                || string.IsNullOrEmpty(adminDistrict)
-                || latitude == null
-                || longitude == null;
-    }
+    //private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    //{
+    //    return string.IsNullOrEmpty(postcode)
+    //            || string.IsNullOrEmpty(adminDistrict)
+    //            || latitude == null
+    //            || longitude == null;
+    //}
 
     //    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
     private static void CheckParameters([NotNull] string? postcode)
@@ -93,7 +96,8 @@ public class ServiceFilterModel : PageModel
 
     //todo: input hidden for postcode etc. so don't keep getting
     //todo: isget -> show no results when admindistrict is null?
-    //todo: default to 20 miles
+    //todo: test postcode error handling
+    //todo: 2 sep postcodes?
     private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         IsGet = false;
@@ -107,23 +111,27 @@ public class ServiceFilterModel : PageModel
             }
 
             Postcode = postcodeInfo!.Postcode;
-            adminDistrict = postcodeInfo.Codes.AdminDistrict;
-            latitude = postcodeInfo.Latitude;
-            longitude = postcodeInfo.Longitude;
+            AdminDistrict = postcodeInfo.Codes.AdminDistrict;
+            Latitude = postcodeInfo.Latitude;
+            Longitude = postcodeInfo.Longitude;
         }
         else
         {
+            Postcode = postcode;
+            AdminDistrict = adminDistrict;
+            Latitude = latitude;
+            Longitude = longitude;
+
             //todo: filter / postfilter no longer makes sense!
             Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
             TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
         }
 
-        //todo: have page in querystring for bookmarking?
         if (!string.IsNullOrWhiteSpace(pageNum))
             CurrentPage = int.Parse(pageNum);
 
         //todo: proper checks
-        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude.Value, longitude.Value);
+        (Services, Pagination) = await GetServicesAndPagination(AdminDistrict, Latitude.Value, Longitude.Value);
 
         return Page();
     }
