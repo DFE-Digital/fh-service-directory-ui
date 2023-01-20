@@ -11,6 +11,7 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,11 +30,6 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.5" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="6.0.3" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.9.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.18.0" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.51.0.59060">
       <PrivateAssets>all</PrivateAssets>
@@ -44,6 +40,10 @@
   <ItemGroup>
     <ProjectReference Include="..\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj" />
     <ProjectReference Include="..\FamilyHubs.ServiceDirectory.Infrastructure\FamilyHubs.ServiceDirectory.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\lib\govuk\assets\js\govuk-4.4.1.js" />
   </ItemGroup>
 
 </Project>
