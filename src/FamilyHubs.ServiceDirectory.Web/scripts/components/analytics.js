@@ -11,12 +11,7 @@ export default function loadAnalytics() {
 
     if (!window.dataLayer) {
 
-        // is this too early?
-        //ga('set', 'location', getPiiSafeLocation());
-        //gtag('config', 'GA_MEASUREMENT_ID', { 'page_path': getPiiSafeLocation() });
-
         //https://developers.google.com/tag-platform/tag-manager/web/datalayer
-
         window.dataLayer = window.dataLayer || [];
 
         //does ga side need to define the Custom Page Path data layer variable?
@@ -25,7 +20,7 @@ export default function loadAnalytics() {
             'event': 'config',
             'config': {
                 'GTM-W6QMSGQ': {
-                    'page_path': getPiiSafeLocation()
+                    'page_path': getPiiSafeRelativeUrl()
                 }
             }
         });
@@ -55,18 +50,12 @@ export default function loadAnalytics() {
     }
 }
 
-//export function removeAnalytics() {
-//    // remove the script tag
-//    var script = document.getElementById('gtmScript');
-//    script.parentNode.removeChild(script);
-//}
-
-function getPiiSafeLocation() {
+function getPiiSafeSafeRelativeUrl() {
     // if GTM has been set up to accept a relative path
-    var path = window.location.pathname;
-    var queryString = window.location.search;
+    const path = window.location.pathname;
+    const queryString = window.location.search;
 
-    var queryParams = new URLSearchParams(queryString);
+    const queryParams = new URLSearchParams(queryString);
 
     var postcode = queryParams.get("postcode");
     if (postcode == null) {
@@ -79,7 +68,6 @@ function getPiiSafeLocation() {
     queryParams.delete("longitude");
     // adminDistrict gets a pass
 
-    var newQueryParams = queryParams.toString();
-    var newUrl = path + "?" + newQueryParams;
-    return newUrl;
+    const newQueryParams = queryParams.toString();
+    return path + "?" + newQueryParams;
 }
