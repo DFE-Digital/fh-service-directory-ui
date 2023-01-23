@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\lib\govuk\assets\js\govuk-4.4.1.js" />
+    <Folder Include="wwwroot\lib\govuk\assets\js\" />
   </ItemGroup>
 
 </Project>
