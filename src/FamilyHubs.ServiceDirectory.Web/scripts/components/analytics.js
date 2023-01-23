@@ -62,13 +62,15 @@ export default function loadAnalytics() {
 //}
 
 function getPiiSafeLocation() {
-    var location = window.location.href;
-    var urlArray = location.split("?");
-    var queryParams = new URLSearchParams(urlArray[1]);
+    // if GTM has been set up to accept a relative path
+    var path = window.location.pathname;
+    var queryString = window.location.search;
+
+    var queryParams = new URLSearchParams(queryString);
 
     var postcode = queryParams.get("postcode");
     if (postcode == null) {
-        return location;
+        return path + queryString;
     }
     postcode = postcode.replace(/[a-zA-Z]+$/, "");
     queryParams.set("postcode", postcode);
@@ -78,6 +80,6 @@ function getPiiSafeLocation() {
     // adminDistrict gets a pass
 
     var newQueryParams = queryParams.toString();
-    var newUrl = urlArray[0] + "?" + newQueryParams;
+    var newUrl = path + "?" + newQueryParams;
     return newUrl;
 }
