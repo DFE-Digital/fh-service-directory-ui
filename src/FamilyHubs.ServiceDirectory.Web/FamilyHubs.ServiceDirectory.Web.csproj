@@ -46,4 +46,8 @@
     <None Include="wwwroot\lib\govuk\assets\js\govuk-4.4.1.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
 </Project>

@@ -57,7 +57,7 @@ gulp.task('transpile-ts', function () {
 });
 
 gulp.task('naive-bundle-js', () => {
-    return gulp.src(['./tmp/js/app.js', './wwwroot/lib/govuk/assets/js/govuk-4.4.1.js'])
+    return gulp.src(['./wwwroot/lib/govuk/assets/js/govuk-4.4.1.js', './tmp/js/app.js'])
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
         // inlining the sourcemap into the exported .js file

@@ -11,6 +11,9 @@ export default function loadAnalytics() {
 
     if (!window.dataLayer) {
 
+        // is this too early?
+        //ga('set', 'location', getPiiSafeLocation());
+
         (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
                 'gtm.start':
@@ -34,4 +37,21 @@ export default function loadAnalytics() {
     //    }
     //    )(window, document, 'script', 'dataLayer', 'GTM-W6QMSGQ');
     }
+}
+
+//export function removeAnalytics() {
+//    // remove the script tag
+//    var script = document.getElementById('gtmScript');
+//    script.parentNode.removeChild(script);
+//}
+
+function getPiiSafeLocation() {
+    var urlArray = window.location.href.split("?");
+    var queryParams = new URLSearchParams(urlArray[1]);
+    var postcode = queryParams.get("postcode");
+    postcode = postcode.replace(/[a-zA-Z]+$/, "");
+    queryParams.set("postcode", postcode);
+    var newQueryParams = queryParams.toString();
+    var newUrl = urlArray[0] + "?" + newQueryParams;
+    return newUrl;
 }
