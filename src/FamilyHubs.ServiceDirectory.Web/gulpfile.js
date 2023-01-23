@@ -56,17 +56,21 @@ gulp.task('transpile-ts', function () {
         .pipe(gulp.dest("./tmp/js"));
 });
 
-gulp.task('naive-bundle-js', () => {
-    return gulp.src(['./tmp/js/app.js', './wwwroot/lib/govuk/assets/js/govuk-4.4.1.js'])
-        .pipe(sourcemaps.init())
-        .pipe(concat('bundle.js'))
-        // inlining the sourcemap into the exported .js file
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./tmp/js'));
-});
+//todo: try rollup-plugin-preserve-modules to preserve the order of js files (if including govuk)
+//todo: any benefit of using rollup-plugin-terser?
+
+//gulp.task('naive-bundle-js', () => {
+//    return gulp.src(['./wwwroot/lib/govuk/assets/js/govuk-4.4.1.js', './tmp/js/app.js'])
+//        .pipe(sourcemaps.init())
+//        .pipe(concat('bundle.js'))
+//        // inlining the sourcemap into the exported .js file
+//        .pipe(sourcemaps.write())
+//        .pipe(gulp.dest('./tmp/js'));
+//});
 
 gulp.task('bundle-and-minify-js', () => {
-    return gulp.src('./tmp/js/bundle.js')
+//    return gulp.src('./tmp/js/bundle.js')
+    return gulp.src('./tmp/js/app.js')
         .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
         .pipe(terser())
@@ -78,7 +82,8 @@ gulp.task('clean', () => {
     return del('./tmp/**');
 });
 
-gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
+//gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
+gulp.task('js', gulp.series('clean', 'transpile-ts', 'bundle-and-minify-js'));
 
 gulp.task('js:watch', function () {
     gulp.watch(tsScriptsSrc, gulp.series('js'));
