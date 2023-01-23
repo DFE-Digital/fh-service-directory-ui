@@ -13,6 +13,22 @@ export default function loadAnalytics() {
 
         // is this too early?
         //ga('set', 'location', getPiiSafeLocation());
+        //gtag('config', 'GA_MEASUREMENT_ID', { 'page_path': getPiiSafeLocation() });
+
+        //https://developers.google.com/tag-platform/tag-manager/web/datalayer
+
+        window.dataLayer = window.dataLayer || [];
+
+        //does ga side need to define the Custom Page Path data layer variable?
+        //https://www.bounteous.com/insights/2018/03/30/single-page-applications-google-analytics
+        window['dataLayer'].push({
+            'event': 'config',
+            'config': {
+                'GTM-W6QMSGQ': {
+                    'page_path': getPiiSafeLocation()
+                }
+            }
+        });
 
         (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
@@ -46,11 +62,21 @@ export default function loadAnalytics() {
 //}
 
 function getPiiSafeLocation() {
-    var urlArray = window.location.href.split("?");
+    var location = window.location.href;
+    var urlArray = location.split("?");
     var queryParams = new URLSearchParams(urlArray[1]);
+
     var postcode = queryParams.get("postcode");
+    if (postcode == null) {
+        return location;
+    }
     postcode = postcode.replace(/[a-zA-Z]+$/, "");
     queryParams.set("postcode", postcode);
+
+    queryParams.delete("latitude");
+    queryParams.delete("longitude");
+    // adminDistrict gets a pass
+
     var newQueryParams = queryParams.toString();
     var newUrl = urlArray[0] + "?" + newQueryParams;
     return newUrl;
