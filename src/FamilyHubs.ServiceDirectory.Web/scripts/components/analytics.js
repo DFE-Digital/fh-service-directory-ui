@@ -20,7 +20,7 @@ export default function loadAnalytics() {
             'event': 'config',
             'config': {
                 'GTM-W6QMSGQ': {
-                    'page_path': getPiiSafeRelativeUrl()
+                    'page_path': getPiiSafeLocation()
                 }
             }
         });
@@ -50,7 +50,7 @@ export default function loadAnalytics() {
     }
 }
 
-function getPiiSafeSafeRelativeUrl() {
+function getPiiSafeLocation() {
     // if GTM has been set up to accept a relative path
     const path = window.location.pathname;
     const queryString = window.location.search;
