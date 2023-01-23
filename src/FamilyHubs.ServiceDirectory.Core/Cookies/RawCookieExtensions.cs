@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text;
+﻿using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace FamilyHubs.ServiceDirectory.Core.Cookies;
 
@@ -45,7 +45,7 @@ public static class RawCookieExtensions
             cookieValue.Append("; HttpOnly");
         }
 
-        if (options.SameSite != SameSiteMode.Unspecified)
+        if (options.SameSite != SameSiteMode.None)
         {
             cookieValue.Append($"; SameSite={options.SameSite.ToString().ToLowerInvariant()}");
         }

@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
@@ -33,9 +34,11 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
         if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NotFound)
             throw new PostcodesIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
 
-        var postcodesIoResponse = await JsonSerializer.DeserializeAsync<PostcodesIoResponse>(
-            await response.Content.ReadAsStreamAsync(cancellationToken),
-            cancellationToken: cancellationToken);
+        var content = await response.Content.ReadAsStringAsync();
+
+#pragma warning disable CS8603 // Possible null reference return.
+        var postcodesIoResponse = JsonConvert.DeserializeObject<PostcodesIoResponse>(content);
+#pragma warning restore CS8603 // Possible null reference return.
 
         if (postcodesIoResponse is null)
         {
@@ -64,7 +67,7 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
             }
         }
 
-        return (postcodeError, postcodesIoResponse.PostcodeInfo);
+        return (postcodeError, postcodesIoResponse.Result);
     }
 
     internal static string GetEndpoint(IConfiguration configuration)

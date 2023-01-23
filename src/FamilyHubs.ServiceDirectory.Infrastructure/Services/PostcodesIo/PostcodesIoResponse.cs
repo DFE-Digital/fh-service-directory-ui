@@ -1,9 +1,18 @@
 ﻿using System.Text.Json.Serialization;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
+using FamilyHubs.SharedKernel;
+using Newtonsoft.Json;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
-//todo: can we flatten the result during deserialization?
-public sealed record PostcodesIoResponse(
-    [property: JsonPropertyName("error")] string? Error,
-    [property: JsonPropertyName("result")] PostcodeInfo PostcodeInfo);
+public sealed class PostcodesIoResponse
+{
+    [JsonProperty("status")]
+    public int Status { get; set; }
+
+    [JsonProperty("error")]
+    public string? Error { get; set; }
+
+    [JsonProperty("result")]
+    public PostcodeInfo Result { get; set; } = default!;
+}
