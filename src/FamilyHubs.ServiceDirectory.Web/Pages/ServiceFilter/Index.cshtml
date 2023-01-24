@@ -29,7 +29,7 @@ else {
             </div>
         </div>
 
-        <button class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" onclick="toggleFilters()">
+        <button id="open-close-filters" class="govuk-button govuk-button--secondary app-open-close-filters" data-module="govuk-button" type="button">
             Open / close filters
         </button>
 
@@ -45,7 +45,7 @@ else {
                                 </div>
 
                                 <div class="moj-filter__heading-action">
-                                    <p><button type="submit" class="govuk-link app-button-link govuk-!-font-size-16" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
+                                    <p><button type="submit" class="app-button-link govuk-!-font-size-16" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
                                 </div>
                             </div>
                     

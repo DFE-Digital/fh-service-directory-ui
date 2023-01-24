@@ -7,13 +7,17 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
-public class ServiceDirectoryClient : IServiceDirectoryClient
+public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGroup
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IMemoryCache _memoryCache;
+    private static string? _endpoint;
     internal const string HttpClientName = "servicedirectory";
     private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience";
 
@@ -175,5 +179,22 @@ public class ServiceDirectoryClient : IServiceDirectoryClient
         }
 
         return organisation;
+    }
+
+    internal static string GetEndpoint(IConfiguration configuration)
+    {
+        const string endpointConfigKey = "ServiceDirectoryAPI:Endpoint";
+
+        // as long as the config isn't changed, the worst that can happen is we fetch more than once
+        return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
+            endpointConfigKey,
+            configuration[endpointConfigKey],
+            "The service directory URL");
+    }
+
+    public static Uri HealthUrl(IConfiguration configuration)
+    {
+        //todo: add health check to API with DbContext probe
+        return new Uri(new Uri(GetEndpoint(configuration)), "api/info");
     }
 }

@@ -26,12 +26,20 @@ if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
 var $cookiesPage = document.querySelector('[data-module="app-cookies-page"]')
 new CookiesPage($cookiesPage).init()
 
-/*todo: don't use onclick??*/
-function toggleFilters() {
+const backLinks = document.querySelectorAll(".app-back-link");
+backLinks.forEach((link: HTMLAnchorElement) => {
+    link.addEventListener("click", () => {
+        window.history.back();
+    });
+});
+
+const button = document.getElementById('open-close-filters');
+button?.addEventListener('click', function handleClick(event) {
+    //todo: update to ts 2?
     const filterButton = document.getElementById("filters") as HTMLDivElement | null;
     if (filterButton.style.display === "none") {
         filterButton.style.display = "block";
     } else {
         filterButton.style.display = "none";
     }
-  }
+});
