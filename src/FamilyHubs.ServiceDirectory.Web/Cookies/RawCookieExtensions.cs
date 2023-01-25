@@ -1,7 +1,6 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Http;
 
-namespace FamilyHubs.ServiceDirectory.Core.Cookies;
+namespace FamilyHubs.ServiceDirectory.Web.Cookies;
 
 public static class RawCookieExtensions
 {
@@ -45,7 +44,7 @@ public static class RawCookieExtensions
             cookieValue.Append("; HttpOnly");
         }
 
-        if (options.SameSite != SameSiteMode.None)
+        if (options.SameSite != SameSiteMode.Unspecified)
         {
             cookieValue.Append($"; SameSite={options.SameSite.ToString().ToLowerInvariant()}");
         }

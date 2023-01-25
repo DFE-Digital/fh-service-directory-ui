@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
@@ -34,10 +35,11 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
         if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NotFound)
             throw new PostcodesIoClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
 
-        var content = await response.Content.ReadAsStringAsync();
 
 #pragma warning disable CS8603 // Possible null reference return.
-        var postcodesIoResponse = JsonConvert.DeserializeObject<PostcodesIoResponse>(content);
+        var postcodesIoResponse = await JsonSerializer.DeserializeAsync<PostcodesIoResponse>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            cancellationToken: cancellationToken);
 #pragma warning restore CS8603 // Possible null reference return.
 
         if (postcodesIoResponse is null)
