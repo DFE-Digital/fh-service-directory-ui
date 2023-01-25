@@ -57,7 +57,7 @@ else {
                                 {
                                     @*todo: partial for this and above?*@
                                     <ul class="moj-filter-tags">
-                                        <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
+                                        <li><button type="submit" class="moj-filter__tag app-icon-cross" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
                                     </ul>
                                 }
                             }
@@ -71,7 +71,7 @@ else {
                                     @foreach (var selectedAspect in filter.SelectedAspects)
                                     {
                                         <ul class="moj-filter-tags">
-                                            <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                            <li><button type="submit" class="moj-filter__tag app-icon-cross" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
                                         </ul>
                                     }
                                 }
