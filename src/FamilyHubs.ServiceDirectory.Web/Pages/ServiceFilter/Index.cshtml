@@ -48,18 +48,17 @@ else {
                                     <p><button type="submit" class="app-button-link govuk-!-font-size-16" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
                                 </div>
                             </div>
-                    
+
                             @if (Model.TypeOfSupportFilter.SelectedAspects.Any())
                             {
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.TypeOfSupportFilter.Description</h3>
 
-                                @foreach (var selectedAspect in Model.TypeOfSupportFilter.SelectedAspects)
-                                {
-                                    @*todo: partial for this and above?*@
-                                    <ul class="moj-filter-tags">
+                                <ul class="moj-filter-tags">
+                                    @foreach (var selectedAspect in Model.TypeOfSupportFilter.SelectedAspects)
+                                    {
                                         <li><button type="submit" class="moj-filter__tag app-icon-cross" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
-                                    </ul>
-                                }
+                                    }
+                                </ul>
                             }
 
                             @foreach (var filter in Model.Filters)
