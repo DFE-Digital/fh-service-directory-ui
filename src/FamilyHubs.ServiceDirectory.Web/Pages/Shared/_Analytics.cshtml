@@ -1,0 +1,15 @@
+
+@{
+    var gtag = Environment.GetEnvironmentVariable("GTAG") ?? "G-TD99KTZEE1";
+    var googleAnalyticsUrl = string.Format("https://www.googletagmanager.com/gtag/js?id={0}", gtag);
+
+    <!-- Google tag (gtag.js) -->
+    <script async src='@googleAnalyticsUrl'></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-TD99KTZEE1');
+    </script>
+}
