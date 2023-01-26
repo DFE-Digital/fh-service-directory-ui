@@ -9,5 +9,5 @@ public sealed class PostcodesIoResponse
     public string? Error { get; set; }
 
     [JsonPropertyName("result")]
-    public PostcodeInfo Result { get; set; } = default!;
+    public PostcodeInfo PostcodeInfo { get; set; } = default!;
 }

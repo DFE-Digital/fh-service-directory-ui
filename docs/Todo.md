@@ -2,6 +2,8 @@
 
 * use stringvalues for multi-params?
 
+* fix extra whitespace in filter tag sometimes when text wraps
+
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
 * we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
