@@ -127,8 +127,13 @@ li.govuk-pagination__item--current {
     }
 
     &:after {
-        background-image: none;
+        all: unset;
     }
+
+/*    &:after {
+        background-image: none;
+        content: none;
+    }*/
 
     &:hover:after {
         background-image: none;
