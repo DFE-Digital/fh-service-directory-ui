@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
-using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
@@ -93,7 +92,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             .AddOptionalQueryParams("maxFamilyHubs", maxFamilyHubs)
             .AddOptionalQueryParams("taxonmyIds", taxonomyIds);
 
-        string getServicesUri = QueryHelpers.AddQueryString(GetServicesBaseUri, queryParams);
+        var getServicesUri = queryParams.CreateUriWithQueryString(GetServicesBaseUri);
 
         var response = await httpClient.GetAsync(getServicesUri, cancellationToken);
 

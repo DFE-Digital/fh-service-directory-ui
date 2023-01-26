@@ -1,3 +1,4 @@
+using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,9 @@ public class PostcodeSearchModel : PageModel
         return RedirectToPage("/ServiceFilter/Index", new
         {
             postcode = postcodeInfo!.Postcode,
-            adminDistrict = postcodeInfo.Codes.AdminDistrict,
-            latitude = postcodeInfo.Latitude.ToString(),
-            longitude = postcodeInfo.Longitude.ToString()
+            adminDistrict = postcodeInfo.AdminArea,
+            latitude = postcodeInfo.Latitude.ToString(CultureInfo.InvariantCulture),
+            longitude = postcodeInfo.Longitude.ToString(CultureInfo.InvariantCulture)
         });
     }
 }

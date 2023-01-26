@@ -3,7 +3,11 @@ using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
 
-//todo: can we flatten the result during deserialization?
-public sealed record PostcodesIoResponse(
-    [property: JsonPropertyName("error")] string? Error,
-    [property: JsonPropertyName("result")] PostcodeInfo PostcodeInfo);
+public sealed class PostcodesIoResponse
+{
+    [JsonPropertyName("error")]
+    public string? Error { get; set; }
+
+    [JsonPropertyName("result")]
+    public PostcodeInfo Result { get; set; } = default!;
+}
