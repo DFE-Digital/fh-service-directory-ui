@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text;
+﻿using System.Text;
 
-namespace FamilyHubs.ServiceDirectory.Core.Cookies;
+namespace FamilyHubs.ServiceDirectory.Web.Cookies;
 
 public static class RawCookieExtensions
 {

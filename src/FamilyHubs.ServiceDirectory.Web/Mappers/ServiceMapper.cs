@@ -54,8 +54,7 @@ public static class ServiceMapper
 
     private static string? GetPhone(OpenReferralServiceDto service)
     {
-        return service.Contacts?.FirstOrDefault(c => !string.Equals(c.Name, "Textphone", StringComparison.OrdinalIgnoreCase))?
-            .Phones?.FirstOrDefault()?.Number;
+        return service.Contacts?.FirstOrDefault(c => !string.Equals(c.Name, "Textphone", StringComparison.OrdinalIgnoreCase))?.Telephone;
     }
 
     private static bool IsFamilyHub(OpenReferralServiceAtLocationDto? serviceAtLocation)
