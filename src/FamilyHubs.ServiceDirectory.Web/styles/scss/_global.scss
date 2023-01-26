@@ -24,12 +24,12 @@
 }
 
 .govuk-header__container {
-    border-bottom: 10px solid #4c7aa8;
+    border-bottom: 10px solid #4c7aa8; //rgb(76, 122, 168, 0.99);
 }
 
 .govuk-header {
     background-color: #003a69;
-    border-bottom: 10px solid #4c7aa8;
+    border-bottom: 10px solid #4c7aa8; //rgb(76, 122, 168, 0.99);
 
     .govuk-header__container {
         @include govuk-responsive-padding(5, "top");

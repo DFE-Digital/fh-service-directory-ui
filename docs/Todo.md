@@ -3,6 +3,7 @@
 * use stringvalues for multi-params?
 
 * fix extra whitespace in filter tag sometimes when text wraps
+* fix incorrect colour of bottom border of header in chromium browsers
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
