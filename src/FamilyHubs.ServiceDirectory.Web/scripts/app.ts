@@ -18,7 +18,7 @@ new CookieBanner($cookieBanner).init()
 // Initialise analytics if consent is given
 var userConsent = getConsentCookie()
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-    Analytics()
+/*    Analytics()*/
 }
 
 //todo: move this into scripts section on cookie page
