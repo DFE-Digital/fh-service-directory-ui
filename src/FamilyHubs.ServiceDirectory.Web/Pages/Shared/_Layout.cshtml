@@ -1,15 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TD99KTZEE1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-TD99KTZEE1');
-    </script>
+    <partial name="_GoogleAnalytics.cshtml"/>
 
     <meta charset="utf-8"/>
     @* we'll use the standard GDS title pattern for now, but the title often ends up too long and gets flagged during accessibility testing, so we might have to cut it down later. see https://design.tax.service.gov.uk/hmrc-design-patterns/page-title/ *@

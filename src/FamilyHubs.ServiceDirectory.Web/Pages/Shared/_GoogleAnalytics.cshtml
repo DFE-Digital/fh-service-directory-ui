@@ -1,0 +1,17 @@
+﻿@{
+    //todo: just for now hardcode the id
+    string googleAnalyticsKey = Environment.GetEnvironmentVariable("GA_TAG") ?? "G-TD99KTZEE1"; //string.Empty;
+
+    if (googleAnalyticsKey != "")
+    {
+        var googleAnalyticsUrl = $"https://www.googletagmanager.com/gtag/js?id={googleAnalyticsKey}";
+
+        <script async src='@googleAnalyticsUrl'></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '@googleAnalyticsKey');
+        </script>
+    }
+}
