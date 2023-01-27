@@ -20,7 +20,7 @@ var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 /* Users can (dis)allow different groups of cookies. */
 /*todo: different set of cookies we'll need to delete for GA4*/
 var COOKIE_CATEGORIES = {
-    analytics: ['_ga', '_ga_' + global.GA_MEASUREMENT_ID], // do we also need '_gid' ?
+    analytics: ['_ga', '_ga_' + window.GA_MEASUREMENT_ID], // do we also need '_gid' ?
     /* Essential cookies
      *
      * Essential cookies cannot be deselected, but we want our cookie code to
@@ -151,14 +151,14 @@ export function resetCookies() {
             continue;
         }
 
+        //todo: enabling/disabling analytics doesn't belong in resetCookies
         /* if we don't enable/disable straight away, it means that analytics won't be enabled or disabled until the next page get/refresh */
         /* that's not a biggie when enabling analytics, but we really should stop gathering analytics as soon as possible if the user withdraws their permission */
 
         const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
-        //todo: create our own gtag.d.ts, or use something like @types/gtag.js npm package?
         // enable / disable analytics
-        gtag('config', global.GA_MEASUREMENT_ID, {
+        gtag('config', window.GA_MEASUREMENT_ID, {
             'send_page_view': analyticsAllowed
         });
 
@@ -167,7 +167,7 @@ export function resetCookies() {
         // gtag('set', { 'send_page_view': false });
 
         if (analyticsAllowed) {
-            Analytics(global.GA_MEASUREMENT_ID);
+            Analytics(window.GA_MEASUREMENT_ID);
         }
 
         if (!options[cookieType]) {
