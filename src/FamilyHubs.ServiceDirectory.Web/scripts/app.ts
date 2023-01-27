@@ -11,6 +11,8 @@ import { getConsentCookie, isValidConsentCookie } from './components/cookie-func
 import Analytics from './components/analytics.js'
 import CookiesPage from './components/cookies-page.js'
 
+(window as any).global = window;
+
 // Initialise cookie banner
 var $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]')
 new CookieBanner($cookieBanner).init()
