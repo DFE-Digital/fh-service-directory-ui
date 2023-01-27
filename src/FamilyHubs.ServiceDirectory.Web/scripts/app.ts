@@ -3,6 +3,7 @@
 declare global {
     interface Window {
         GDS_CONSENT_COOKIE_VERSION: any;
+        GA_MEASUREMENT_ID: string;
     }
 }
 
@@ -10,8 +11,6 @@ import CookieBanner from './components/cookie-banner.js'
 import { getConsentCookie, isValidConsentCookie } from './components/cookie-functions.js'
 import Analytics from './components/analytics.js'
 import CookiesPage from './components/cookies-page.js'
-
-(window as any).global = window;
 
 // Initialise cookie banner
 var $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]')
