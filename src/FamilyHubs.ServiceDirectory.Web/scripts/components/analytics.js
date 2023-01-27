@@ -9,12 +9,31 @@ export default function loadAnalytics(gaMeasurementId) {
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
+
+    // todo: disable pageview measurement and send the page_view event manually?
+    // https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior
+
+    //todo: if we keep this, will have to update cookie-function
     gtag('config', gaMeasurementId, {
-        'page_view': {
-            'page_path': getPiiSafePagePath(),
-            'page_location': getPiiSafePageLocation()
-        }
+        send_page_view: false
     });
+
+    gtag('event',
+        'page_view',
+        {
+            page_title: document.title,
+            page_location: getPiiSafePageLocation(),
+            page_path: getPiiSafePagePath(),
+            send_to: gaMeasurementId
+        });
+
+    // overriding config defaults:
+    //gtag('config', gaMeasurementId, {
+    //    'page_view': {
+    //        'page_path': getPiiSafePagePath(),
+    //        'page_location': getPiiSafePageLocation()
+    //    }
+    //});
 }
 
 /*todo: if keep, these prob don't belong here*/
