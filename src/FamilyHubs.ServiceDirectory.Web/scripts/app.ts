@@ -16,9 +16,9 @@ var $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]'
 new CookieBanner($cookieBanner).init()
 
 // Initialise analytics if consent is given
-var userConsent = getConsentCookie()
+var userConsent = getConsentCookie();
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-/*    Analytics()*/
+    Analytics(global.GA_MEASUREMENT_ID);
 }
 
 //todo: move this into scripts section on cookie page

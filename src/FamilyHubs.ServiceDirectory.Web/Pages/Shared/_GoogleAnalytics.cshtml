@@ -1,17 +1,15 @@
-﻿@{
-    //todo: just for now hardcode the id
-    string googleAnalyticsKey = Environment.GetEnvironmentVariable("GA_TAG") ?? "G-TD99KTZEE1"; //string.Empty;
+﻿@inject IConfiguration Configuration
 
-    if (googleAnalyticsKey != "")
+@{
+    string gaMeasurementId = Configuration.GetValue<string>("GA_MEASUREMENT_ID") ?? string.Empty;
+
+    if (gaMeasurementId != "")
     {
-        var googleAnalyticsUrl = $"https://www.googletagmanager.com/gtag/js?id={googleAnalyticsKey}";
+        var googleAnalyticsUrl = $"https://www.googletagmanager.com/gtag/js?id={gaMeasurementId}";
 
         <script async src='@googleAnalyticsUrl'></script>
         <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() { dataLayer.push(arguments); }
-            gtag('js', new Date());
-            gtag('config', '@googleAnalyticsKey');
+            const GA_MEASUREMENT_ID = '@gaMeasurementId';
         </script>
     }
 }
