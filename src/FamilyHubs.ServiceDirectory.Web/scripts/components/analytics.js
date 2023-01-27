@@ -9,42 +9,38 @@ export default function loadAnalytics(gaMeasurementId) {
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', gaMeasurementId,
-        {
-            'page_path': getPiiSafeLocation()
-        });
-
-
-//    if (!window.dataLayer) {
-
-//        //https://developers.google.com/tag-platform/tag-manager/web/datalayer
-//        window.dataLayer = window.dataLayer || [];
-
-//        //does ga side need to define the Custom Page Path data layer variable?
-//        //https://www.bounteous.com/insights/2018/03/30/single-page-applications-google-analytics
-//        window['dataLayer'].push({
-//            'event': 'config',
-//            'config': {
-//                'GTM-W6QMSGQ': {
-//                    'page_path': getPiiSafeLocation()
-//                }
-//            }
-//        });
-
-//        (function (w, d, s, l, i) {
-//            w[l] = w[l] || []; w[l].push({
-//                'gtm.start':
-//                    new Date().getTime(), event: 'gtm.js'
-//            }); var f = d.getElementsByTagName(s)[0],
-//                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-//                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-//        })(window, document, 'script', 'dataLayer', 'GTM-W6QMSGQ');
-//    }
+    gtag('config', gaMeasurementId, {
+        'page_view': {
+            'page_path': getPiiSafePagePath(),
+            'page_location': getPiiSafePageLocation()
+        }
+    });
 }
 
-/*todo: if keep, prob doesn't belong here*/
-function getPiiSafeLocation() {
-    // if GTM has been set up to accept a relative path
+/*todo: if keep, these prob don't belong here*/
+/*todo: also func to get both*/
+
+function getPiiSafePageLocation() {
+    var location = window.location.href;
+    var urlArray = location.split("?");
+    var queryParams = new URLSearchParams(urlArray[1]);
+
+    var postcode = queryParams.get("postcode");
+    if (postcode == null) {
+        return location;
+    }
+    postcode = postcode.replace(/[a-zA-Z]+$/, "");
+    queryParams.set("postcode", postcode);
+    queryParams.delete("latitude");
+    queryParams.delete("longitude");
+    // adminDistrict gets a pass
+
+    var newQueryParams = queryParams.toString();
+    var newUrl = urlArray[0] + "?" + newQueryParams;
+    return newUrl;
+}
+
+function getPiiSafePagePath() {
     const path = window.location.pathname;
     const queryString = window.location.search;
 

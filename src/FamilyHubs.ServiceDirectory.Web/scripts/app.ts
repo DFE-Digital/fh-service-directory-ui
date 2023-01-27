@@ -19,7 +19,7 @@ new CookieBanner($cookieBanner).init()
 // Initialise analytics if consent is given
 var userConsent = getConsentCookie();
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-    Analytics(global.GA_MEASUREMENT_ID);
+    Analytics(window.GA_MEASUREMENT_ID);
 }
 
 //todo: move this into scripts section on cookie page
