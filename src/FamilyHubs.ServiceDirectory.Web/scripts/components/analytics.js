@@ -17,8 +17,6 @@ export default function loadAnalytics(gaMeasurementId) {
     // form_destination can't be overriden in form_start & form_submit (without adding ga4 to gtm)
     // so instead disable auto form interactions and send them manually
 
-    //todo: send/override referer for page_views (check host, or just look for postcode?)
-
     const pageViewParams = getPiiSafePageView(gaMeasurementId);
 
     // set the config for auto generated events other than page_view
@@ -26,18 +24,14 @@ export default function loadAnalytics(gaMeasurementId) {
         send_page_view: false,
         page_path: pageViewParams.page_path,
         page_location: pageViewParams.page_location,
-        //referrer: pageViewParams.referrer
         page_referrer: pageViewParams.referrer
     });
 
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
 }
 
-/*todo: if keep, these prob don't belong here*/
-/*todo: test*/
 /*todo: move into ts - does the pageview object have a def?*/
-/*todo: make sure we have all the params for page_view - compare with the default, e.g. user_agent */
-/*todo: path & location for all auto sent events */
+/*todo: send events from the server for when js disabled??*/
 
 function getPiiSafePageView(gaMeasurementId) {
 
@@ -46,6 +40,7 @@ function getPiiSafePageView(gaMeasurementId) {
         send_to: gaMeasurementId
     };
 
+    //todo: set as referrer or page_referrer in pageView - does it matter? is it only picking it up from the config?
     //todo: get piisafe referrer function
     if (document.referrer === '') {
         pageView.referrer = '';
