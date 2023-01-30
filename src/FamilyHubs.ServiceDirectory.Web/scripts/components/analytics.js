@@ -4,30 +4,88 @@
 // so switch off javascript compilation for this file...
 // @ts-nocheck
 
+function gtag() { dataLayer.push(arguments); }
+
 export default function loadAnalytics(gaMeasurementId) {
 
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+//    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
-    // disable pageview measurement and send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
+    addFormInteractionGa4Events();
 
     //todo: if we keep this, will have to update cookie-function
-
-    // form_destination can't be overriden in form_start & form_submit (without adding ga4 to gtm)
-    // so instead disable auto form interactions and send them manually
 
     const pageViewParams = getPiiSafePageView(gaMeasurementId);
 
     // set the config for auto generated events other than page_view
     gtag('config', gaMeasurementId, {
-        send_page_view: false,
+        send_page_view: false, //disable auto page_view measurement
         page_path: pageViewParams.page_path,
         page_location: pageViewParams.page_location,
         page_referrer: pageViewParams.referrer
     });
 
+    // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
+}
+
+function addFormInteractionGa4Events(gaMeasurementId) {
+    // form_destination can't be overriden in form_start & form_submit (without adding ga4 to gtm)
+    // so instead disable auto form interactions and send them manually
+
+    const forms = document.querySelectorAll('form');
+    for (let i = 0; i < forms.length; ++i) {
+
+        const formId = forms[i].id || '';
+        const formName = forms[i].name || null;
+        let formDestination = forms[i].action || '';
+
+        const urlArray = formDestination.split("?");
+
+        const piiSafeDestinationQueryString = getPiiSafeQueryString(urlArray[1]);
+        if (piiSafeDestinationQueryString != null) {
+            formDestination = urlArray[0] + piiSafeDestinationQueryString;
+        }
+
+//todo: make match
+// manual:                        Processing GTAG command: ["event", "form_submit", {event_category: "form", form_type: "submit", event_label: "", form_id: "", form_name: "", form_destination: "https://localhost:7199/ServiceFilter?postcode=M27+8&adminDistrict=E08000006"}]
+// manual:                        Processing GTAG command: ["event", "form_submit", {form_id: "", form_name: "", form_destination: "https://localhost:7199/ServiceFilter?postcode=M27+8&adminDistrict=E08000006"}]
+// auto  : js?id=G-TD99KTZEE1:173 Processing GTAG command: ["event", "form_submit", {form_id: "", form_name: null, form_destination: "https://localhost:7199/ServiceFilter?postcode=M27%208SS&adminDistrict=E08000006&latitude=53.508885&longitude=-2.294605", form_length: 75, form_submit_text: undefined, event_callback: [function], send_to: "G-TD99KTZEE1"}]
+
+//todo: gtag is undefined
+
+/*        const formLength = event.target.elements.length;*/
+
+        forms[i].addEventListener('submit', (event) => {
+            gtag('event', 'form_submit', {
+                //'event_category': 'form',
+                //'form_type': 'submit',
+                //'event_label': formId,
+                'form_id': formId,
+                'form_name': formName,
+                'form_destination': formDestination,
+                //form_length: formLength,
+                send_to: gaMeasurementId
+            });
+        });
+
+        forms[i].addEventListener('focus', (event) => {
+
+            // js?id=G-TD99KTZEE1:173 Processing GTAG command: ["event", "form_start", {form_id: "", form_name: null, form_destination: "https://localhost:7199/ServiceFilter?postcode=M27%208SS&adminDistrict=E08000006&latitude=53.508885&longitude=-2.294605", form_length: 74, first_field_id: "children_and_young-option-selected", first_field_name: "children_and_young-option-selected", first_field_type: "checkbox", first_field_position: 53, send_to: "G-TD99KTZEE1"}]
+
+            gtag('event', 'form_start', {
+                //'event_category': 'form',
+                //'form_type': 'start',
+                //'event_label': formId,
+                'form_id': formId,
+                'form_name': formName,
+                'form_destination': formDestination,
+                //form_length: formLength,
+                send_to: gaMeasurementId
+            });
+        });
+    }
 }
 
 /*todo: move into ts - does the pageview object have a def?*/
