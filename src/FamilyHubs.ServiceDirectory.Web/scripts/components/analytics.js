@@ -13,8 +13,13 @@ export default function loadAnalytics(gaMeasurementId) {
     // disable pageview measurement and send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
 
     //todo: if we keep this, will have to update cookie-function
+
+    const pageViewParams = getPiiSafePageView(gaMeasurementId);
+
     gtag('config', gaMeasurementId, {
-        send_page_view: false
+        send_page_view: false,
+        page_path: pageViewParams.page_path,
+        page_location: pageViewParams.page_location
     });
 
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
@@ -23,6 +28,8 @@ export default function loadAnalytics(gaMeasurementId) {
 /*todo: if keep, these prob don't belong here*/
 /*todo: test*/
 /*todo: move into ts - does the pageview object have a def?*/
+/*todo: make sure we have all the params for page_view - compare with the default, e.g. user_agent */
+/*todo: path & location for all auto sent events */
 
 function getPiiSafePageView(gaMeasurementId) {
 
