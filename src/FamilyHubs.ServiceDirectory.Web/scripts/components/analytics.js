@@ -14,12 +14,20 @@ export default function loadAnalytics(gaMeasurementId) {
 
     //todo: if we keep this, will have to update cookie-function
 
+    // form_destination can't be overriden in form_start & form_submit (without adding ga4 to gtm)
+    // so instead disable auto form interactions and send them manually
+
+    //todo: send/override referer for page_views (check host, or just look for postcode?)
+
     const pageViewParams = getPiiSafePageView(gaMeasurementId);
 
+    // set the config for auto generated events other than page_view
     gtag('config', gaMeasurementId, {
         send_page_view: false,
         page_path: pageViewParams.page_path,
-        page_location: pageViewParams.page_location
+        page_location: pageViewParams.page_location,
+        //referrer: pageViewParams.referrer
+        page_referrer: pageViewParams.referrer
     });
 
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
@@ -38,15 +46,46 @@ function getPiiSafePageView(gaMeasurementId) {
         send_to: gaMeasurementId
     };
 
-    const queryString = window.location.search;
+    //todo: get piisafe referrer function
+    if (document.referrer === '') {
+        pageView.referrer = '';
+    } else {
+        const referrerUrl = new URL(document.referrer);
+        const piiSafeReferrerQueryString = getPiiSafeQueryString(referrerUrl.search);
+        if (piiSafeReferrerQueryString == null) {
+            pageView.referrer = document.referrer;
+        } else {
+            const urlArray = document.referrer.split("?");
+
+            pageView.referrer = urlArray[0] + piiSafeReferrerQueryString;
+        }
+    }
+
+    const piiSafeQueryString = getPiiSafeQueryString(window.location.search);
+
+    if (piiSafeQueryString == null) {
+        pageView.page_location = window.location.href;
+        pageView.page_path = window.location.pathname + window.location.search;
+
+        return pageView;
+    }
+
+    const urlArray = window.location.href.split("?");
+
+    pageView.page_location = urlArray[0] + piiSafeQueryString;
+    pageView.page_path = window.location.pathname + piiSafeQueryString;
+
+    return pageView;
+}
+
+function getPiiSafeQueryString(queryString) {
+
     const queryParams = new URLSearchParams(queryString);
 
     let postcode = queryParams.get("postcode");
     if (postcode == null) {
-        pageView.page_location = window.location.href;
-        pageView.page_path = window.location.pathname + queryString;
-
-        return pageView;
+        // null indicates original query params were already pii safe
+        return null;
     }
 
     postcode = postcode.replace(/[a-zA-Z]+$/, "");
@@ -54,14 +93,7 @@ function getPiiSafePageView(gaMeasurementId) {
     queryParams.delete("latitude");
     queryParams.delete("longitude");
 
-    const newQueryParams = '?' + queryParams.toString();
-
-    const urlArray = window.location.href.split("?");
-
-    pageView.page_location = urlArray[0] + newQueryParams;
-    pageView.page_path = window.location.pathname + newQueryParams;
-
-    return pageView;
+    return '?' + queryParams.toString();
 }
 
 //function getPiiSafePageLocation() {
