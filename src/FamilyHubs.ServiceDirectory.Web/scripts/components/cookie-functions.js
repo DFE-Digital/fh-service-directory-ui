@@ -17,15 +17,9 @@ import Analytics from './analytics.js'
 /* Name of the cookie to save users cookie preferences to. */
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 
-/* Google Analytics tracking IDs for preview and live environments. */
-/*measurement ids or tag ids*/
-/*Fatayi is going to link the existing ga (this id) into gtm (as a tag), then we can check the disabling*/
-//var TRACKING_PREVIEW_ID = 'GA_TODO:STICKITHERE'
-var TRACKING_LIVE_ID = 'G-30G6ZFTEJE';
-
 /* Users can (dis)allow different groups of cookies. */
 var COOKIE_CATEGORIES = {
-    analytics: ['_ga', '_ga_' + TRACKING_LIVE_ID], // do we also need '_gid' ?
+    analytics: ['_ga', '_ga_' + window.GA_CONTAINER_ID],
     /* Essential cookies
      *
      * Essential cookies cannot be deselected, but we want our cookie code to
@@ -156,15 +150,11 @@ export function resetCookies() {
             continue;
         }
 
-        // Initialise analytics if allowed
-        if (cookieType === 'analytics' && options[cookieType]) {
-            // Enable GA if allowed
-            window['ga-disable-' + TRACKING_LIVE_ID] = false;
+        //todo: enabling analytics doesn't belong in resetCookies
+        const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
-            Analytics();
-        } else {
-            // Disable GA if not allowed
-            window['ga-disable-' + TRACKING_LIVE_ID] = true;
+        if (analyticsAllowed) {
+            Analytics(window.GA_MEASUREMENT_ID, window.GA_MEASUREMENT_URL);
         }
 
         if (!options[cookieType]) {
