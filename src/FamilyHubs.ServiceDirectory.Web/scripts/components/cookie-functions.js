@@ -151,23 +151,11 @@ export function resetCookies() {
             continue;
         }
 
-        //todo: enabling/disabling analytics doesn't belong in resetCookies
-        /* if we don't enable/disable straight away, it means that analytics won't be enabled or disabled until the next page get/refresh */
-        /* that's not a biggie when enabling analytics, but we really should stop gathering analytics as soon as possible if the user withdraws their permission */
-
+        //todo: enabling analytics doesn't belong in resetCookies
         const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
-        // enable / disable analytics
-        //gtag('config', window.GA_MEASUREMENT_ID, {
-        //    'send_page_view': analyticsAllowed
-        //});
-
-        // todo: check we don't remove the pii safe page_path
-        // if we do, we can try just changing the setting, rather than reconfiguring the whole GA, e.g. 
-        // gtag('set', { 'send_page_view': false });
-
         if (analyticsAllowed) {
-            Analytics(window.GA_MEASUREMENT_ID);
+            Analytics(window.GA_MEASUREMENT_ID, window.GA_MEASUREMENT_URL);
         }
 
         if (!options[cookieType]) {

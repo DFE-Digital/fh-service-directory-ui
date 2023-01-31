@@ -1,15 +1,15 @@
 ﻿@inject IConfiguration Configuration
 
 @{
-    string googleAnalyticsKey = Configuration.GetValue<string>("GA_MEASUREMENT_ID") ?? string.Empty;
+    string gaMeasurementId = Configuration.GetValue<string>("GA_MEASUREMENT_ID") ?? string.Empty;
 
-    if (googleAnalyticsKey != "")
+    if (gaMeasurementId != "")
     {
-        var googleAnalyticsUrl = $"https://www.googletagmanager.com/gtag/js?id={googleAnalyticsKey}";
+        var gaMeasurementUrl = $"https://www.googletagmanager.com/gtag/js?id={gaMeasurementId}";
 
         <script>
-            window.GA_MEASUREMENT_ID = '@googleAnalyticsKey';
-            window.GA_MEASUREMENT_URL = '@googleAnalyticsUrl';
+            window.GA_MEASUREMENT_ID = '@gaMeasurementId';
+            window.GA_MEASUREMENT_URL = '@gaMeasurementUrl';
         </script>
     }
 }
