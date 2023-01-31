@@ -6,7 +6,9 @@
 
 function gtag() { dataLayer.push(arguments); }
 
-export default function loadAnalytics(gaMeasurementId) {
+export default function loadAnalytics(gaMeasurementId, gaMeasurementUrl) {
+
+    loadGaScript(gaMeasurementUrl);
 
     window.dataLayer = window.dataLayer || [];
 //    function gtag() { dataLayer.push(arguments); }
@@ -28,6 +30,15 @@ export default function loadAnalytics(gaMeasurementId) {
 
     // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
+}
+
+function loadGaScript(gaMeasurementUrl) {
+    var f = document.getElementsByTagName('script')[0];
+    var j = document.createElement('script');
+    j.async = true;
+    j.src = gaMeasurementUrl;
+    f.parentNode.insertBefore(j, f);
+
 }
 
 function addFormInteractionGa4Events(gaMeasurementId) {

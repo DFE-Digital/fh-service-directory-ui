@@ -9,16 +9,7 @@
 
         <script>
             window.GA_MEASUREMENT_ID = '@googleAnalyticsKey';
-            var f = document.getElementsByTagName('script')[0];
-            var j = document.createElement('script');
-            j.async = true;
-            j.src = '@googleAnalyticsUrl';
-            f.parentNode.insertBefore(j, f);
+            window.GA_MEASUREMENT_URL = '@googleAnalyticsUrl';
         </script>
-
-@*        <script async src='@googleAnalyticsUrl'></script>
-        <script>
-            window.GA_MEASUREMENT_ID = '@googleAnalyticsKey';
-        </script>*@
     }
 }

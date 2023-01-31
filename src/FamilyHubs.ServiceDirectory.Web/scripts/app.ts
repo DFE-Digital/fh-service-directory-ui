@@ -2,8 +2,9 @@
 
 declare global {
     interface Window {
-        GDS_CONSENT_COOKIE_VERSION: any;
+        GDS_CONSENT_COOKIE_VERSION: number;
         GA_MEASUREMENT_ID: string;
+        GA_MEASUREMENT_URL: string;
     }
 }
 
@@ -19,7 +20,7 @@ new CookieBanner($cookieBanner).init()
 // Initialise analytics if consent is given
 var userConsent = getConsentCookie();
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-    Analytics(window.GA_MEASUREMENT_ID);
+    Analytics(window.GA_MEASUREMENT_ID, window.GA_MEASUREMENT_URL);
 }
 
 //todo: move this into scripts section on cookie page
