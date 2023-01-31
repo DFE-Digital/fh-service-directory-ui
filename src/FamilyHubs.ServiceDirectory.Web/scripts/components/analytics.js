@@ -12,7 +12,7 @@ export default function loadAnalytics(gaMeasurementId) {
 //    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
-    addFormInteractionGa4Events();
+    //addFormInteractionGa4Events();
 
     //todo: if we keep this, will have to update cookie-function
 
