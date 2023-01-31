@@ -42,89 +42,88 @@ public static class SecurityHeaders
 #pragma warning disable S1075
         app.UseSecurityHeaders(policies =>
             policies.AddDefaultSecurityHeaders()
-#pragma warning disable S125
-                //.AddContentSecurityPolicy(builder =>
-                //{
-                //    builder.AddUpgradeInsecureRequests();
+                .AddContentSecurityPolicy(builder =>
+                {
+                    builder.AddUpgradeInsecureRequests();
 
-                //    var defaultSrc = builder.AddDefaultSrc()
-                //        .Self();
+                    var defaultSrc = builder.AddDefaultSrc()
+                        .Self();
 
-                //    var connectSrc = builder.AddConnectSrc()
-                //        .Self()
-                //        .From(new[]
-                //        {
-                //            "https://www.google-analytics.com",
-                //            /* application insights*/ "https://dc.services.visualstudio.com/v2/track", "rt.services.visualstudio.com/v2/track"
-                //        });
+                    var connectSrc = builder.AddConnectSrc()
+                        .Self()
+                        .From(new[]
+                        {
+                            "https://www.google-analytics.com",
+                            /* application insights*/ "https://dc.services.visualstudio.com/v2/track", "rt.services.visualstudio.com/v2/track"
+                        });
 
-                //    builder.AddFontSrc()
-                //        .Self()
-                //        .From(new[] { "https://fonts.gstatic.com" });
+                    builder.AddFontSrc()
+                        .Self()
+                        .From(new[] { "https://fonts.gstatic.com" });
 
-                //    builder.AddObjectSrc()
-                //        .None();
+                    builder.AddObjectSrc()
+                        .None();
 
-                //    builder.AddFormAction()
-                //        .Self();
+                    builder.AddFormAction()
+                        .Self();
 
-                //    builder.AddImgSrc()
-                //        .OverHttps()
-                //        .Self()
-                //        .From(new[] { "https://ssl.gstatic.com", "https://www.gstatic.com" });
+                    builder.AddImgSrc()
+                        .OverHttps()
+                        .Self()
+                        .From(new[] { "https://ssl.gstatic.com", "https://www.gstatic.com" });
 
-                //    var scriptSrc = builder.AddScriptSrc()
-                //        .Self()
-                //        .From(new[]
-                //        {
-                //            "https://tagmanager.google.com",
-                //            "https://www.google-analytics.com/",
-                //            "https://www.googletagmanager.com",
-                //            "https://www.googleadservices.com",
-                //            "https://googleads.g.doubleclick.net"
-                //        })
-                //        // this is needed for GTM
-                //        .UnsafeEval()
-                //        .UnsafeInline();
-                //    // if we wanted the nonce back, we'd add `.WithNonce();` here
+                    var scriptSrc = builder.AddScriptSrc()
+                        .Self()
+                        .From(new[]
+                        {
+                            "https://tagmanager.google.com",
+                            "https://www.google-analytics.com/",
+                            "https://www.googletagmanager.com",
+                            "https://www.googleadservices.com",
+                            "https://googleads.g.doubleclick.net"
+                        })
+                        // this is needed for GTM
+                        .UnsafeEval()
+                        .UnsafeInline();
+                    // if we wanted the nonce back, we'd add `.WithNonce();` here
 
-                //    builder.AddStyleSrc()
-                //        .Self()
-                //        .From(new[]
-                //        {
-                //            "https://www.googletagmanager.com",
-                //            "https://tagmanager.google.com",
-                //            "https://fonts.googleapis.com"
-                //        })
-                //        .StrictDynamic()
-                //        .UnsafeInline();
+                    builder.AddStyleSrc()
+                        .Self()
+                        .From(new[]
+                        {
+                            "https://www.googletagmanager.com",
+                            "https://tagmanager.google.com",
+                            "https://fonts.googleapis.com"
+                        })
+                        .StrictDynamic()
+                        .UnsafeInline();
 
-                //    builder.AddMediaSrc()
-                //        .None();
+                    builder.AddMediaSrc()
+                        .None();
 
-                //    builder.AddFrameAncestors()
-                //        .None();
+                    builder.AddFrameAncestors()
+                        .None();
 
-                //    builder.AddBaseUri()
-                //        .Self();
+                    builder.AddBaseUri()
+                        .Self();
 
-                //    builder.AddFrameSrc()
-                //        .From(new[]
-                //        {
-                //            "https://www.googletagmanager.com",
-                //            "https://2673654.fls.doubleclick.net"
-                //        });
+                    builder.AddFrameSrc()
+                        .From(new[]
+                        {
+                            "https://www.googletagmanager.com",
+                            "https://2673654.fls.doubleclick.net"
+                        });
 
-                //    if (app.Environment.IsDevelopment())
-                //    {
-                //        // open up for browserlink
-                //        defaultSrc.From(new[] { "http://localhost:*", "ws://localhost:*" });
+                    if (app.Environment.IsDevelopment())
+                    {
+                        // open up for browserlink
+                        defaultSrc.From(new[] { "http://localhost:*", "ws://localhost:*" });
 
-                //        scriptSrc.From("http://localhost:*");
+                        scriptSrc.From("http://localhost:*");
 
-                //        connectSrc.From(new[] { "http://localhost:*", "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
-                //    }
-                //})
+                        connectSrc.From(new[] { "http://localhost:*", "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
+                    }
+                })
                 .AddPermissionsPolicy(builder =>
                     {
                         builder.AddAccelerometer()
