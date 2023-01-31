@@ -158,9 +158,9 @@ export function resetCookies() {
         const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
         // enable / disable analytics
-        gtag('config', window.GA_MEASUREMENT_ID, {
-            'send_page_view': analyticsAllowed
-        });
+        //gtag('config', window.GA_MEASUREMENT_ID, {
+        //    'send_page_view': analyticsAllowed
+        //});
 
         // todo: check we don't remove the pii safe page_path
         // if we do, we can try just changing the setting, rather than reconfiguring the whole GA, e.g. 

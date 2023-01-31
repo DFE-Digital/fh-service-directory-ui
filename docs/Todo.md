@@ -1,5 +1,11 @@
 # Todo
 
+* always pass a proximity (max), so that ordering is performed even when there is no distance filter (or update the api instead)
+
+* js in tmp/components/components
+
+* environment tags for non-optimised js
+
 * what does https://www.npmjs.com/package/ga-gtag offer?
 
 * use stringvalues for multi-params?
