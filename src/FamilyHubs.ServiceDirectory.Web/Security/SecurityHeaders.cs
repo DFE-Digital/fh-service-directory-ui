@@ -40,6 +40,7 @@ public static class SecurityHeaders
     public static IApplicationBuilder UseAppSecurityHeaders(this WebApplication app)
     {
 #pragma warning disable S1075
+#pragma warning disable S125
         app.UseSecurityHeaders(policies =>
             policies.AddDefaultSecurityHeaders()
                 .AddContentSecurityPolicy(builder =>
@@ -53,13 +54,14 @@ public static class SecurityHeaders
                         .Self()
                         .From(new[]
                         {
-                            "https://www.google-analytics.com",
+                            "https://*.google-analytics.com",
+                            //todo: is this needed in prod?
                             /* application insights*/ "https://dc.services.visualstudio.com/v2/track", "rt.services.visualstudio.com/v2/track"
                         });
 
                     builder.AddFontSrc()
-                        .Self()
-                        .From(new[] { "https://fonts.gstatic.com" });
+                        .Self();
+                        //.From(new[] { "https://fonts.gstatic.com" });
 
                     builder.AddObjectSrc()
                         .None();
@@ -69,32 +71,36 @@ public static class SecurityHeaders
 
                     builder.AddImgSrc()
                         .OverHttps()
-                        .Self()
-                        .From(new[] { "https://ssl.gstatic.com", "https://www.gstatic.com" });
+                        .Self();
+                        //.From(new[] { "https://ssl.gstatic.com", "https://www.gstatic.com" });
+                        // no-js GA4
+                        //"https://*.google-analytics.com/",
+                        //"https://*.analytics.google.com"
 
                     var scriptSrc = builder.AddScriptSrc()
                         .Self()
                         .From(new[]
                         {
-                            "https://tagmanager.google.com",
-                            "https://www.google-analytics.com/",
-                            "https://www.googletagmanager.com",
-                            "https://www.googleadservices.com",
-                            "https://googleads.g.doubleclick.net"
+                            "https://*.google-analytics.com/",
+                            "https://*.analytics.google.com",
+                            "https://*.googletagmanager.com",
+                            //"https://tagmanager.google.com",
+                            //"https://*.googleadservices.com",
+                            //"https://googleads.g.doubleclick.net"
                         })
                         // this is needed for GTM
-                        .UnsafeEval()
+                        //.UnsafeEval()
                         .UnsafeInline();
                     // if we wanted the nonce back, we'd add `.WithNonce();` here
 
                     builder.AddStyleSrc()
                         .Self()
-                        .From(new[]
-                        {
-                            "https://www.googletagmanager.com",
-                            "https://tagmanager.google.com",
-                            "https://fonts.googleapis.com"
-                        })
+                        //.From(new[]
+                        //{
+                        //    "https://www.googletagmanager.com",
+                        //    "https://tagmanager.google.com",
+                        //    "https://fonts.googleapis.com"
+                        //})
                         .StrictDynamic()
                         .UnsafeInline();
 
@@ -107,12 +113,12 @@ public static class SecurityHeaders
                     builder.AddBaseUri()
                         .Self();
 
-                    builder.AddFrameSrc()
-                        .From(new[]
-                        {
-                            "https://www.googletagmanager.com",
-                            "https://2673654.fls.doubleclick.net"
-                        });
+                    //builder.AddFrameSrc()
+                    //    .From(new[]
+                    //    {
+                    //        "https://www.googletagmanager.com",
+                    //        "https://2673654.fls.doubleclick.net"
+                    //    });
 
                     if (app.Environment.IsDevelopment())
                     {
@@ -166,6 +172,7 @@ public static class SecurityHeaders
                 .AddCustomHeader("X-Permitted-Cross-Domain-Policies", "none")
                 // this is called in AddDefaultSecurityHeaders(), but without this, we get AddXssProtectionDisabled() instead
                 .AddXssProtectionBlock());
+#pragma warning restore S125
 #pragma warning restore S1075
 
         return app;
