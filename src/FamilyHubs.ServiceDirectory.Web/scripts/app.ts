@@ -4,6 +4,7 @@ declare global {
     interface Window {
         GDS_CONSENT_COOKIE_VERSION: number;
         GA_MEASUREMENT_ID: string;
+        GA_CONTAINER_ID: string;
         GA_MEASUREMENT_URL: string;
     }
 }

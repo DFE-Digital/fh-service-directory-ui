@@ -18,9 +18,8 @@ import Analytics from './analytics.js'
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 
 /* Users can (dis)allow different groups of cookies. */
-/*todo: different set of cookies we'll need to delete for GA4*/
 var COOKIE_CATEGORIES = {
-    analytics: ['_ga', '_ga_' + window.GA_MEASUREMENT_ID], // do we also need '_gid' ?
+    analytics: ['_ga', '_ga_' + window.GA_CONTAINER_ID],
     /* Essential cookies
      *
      * Essential cookies cannot be deselected, but we want our cookie code to
