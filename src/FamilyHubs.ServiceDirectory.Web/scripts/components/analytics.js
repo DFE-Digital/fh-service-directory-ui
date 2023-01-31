@@ -8,6 +8,11 @@ function gtag() { dataLayer.push(arguments); }
 
 export default function loadAnalytics(gaMeasurementId, gaMeasurementUrl) {
 
+    // if the environment doesn't have a measurement id, don't load analytics
+    if (!Boolean(gaMeasurementId)) {
+        return;
+    }
+
     loadGaScript(gaMeasurementUrl);
 
     window.dataLayer = window.dataLayer || [];
@@ -15,8 +20,6 @@ export default function loadAnalytics(gaMeasurementId, gaMeasurementUrl) {
     gtag('js', new Date());
 
     //addFormInteractionGa4Events();
-
-    //todo: if we keep this, will have to update cookie-function
 
     const pageViewParams = getPiiSafePageView(gaMeasurementId);
 
@@ -33,12 +36,11 @@ export default function loadAnalytics(gaMeasurementId, gaMeasurementUrl) {
 }
 
 function loadGaScript(gaMeasurementUrl) {
-    var f = document.getElementsByTagName('script')[0];
-    var j = document.createElement('script');
+    const f = document.getElementsByTagName('script')[0];
+    const j = document.createElement('script');
     j.async = true;
     j.src = gaMeasurementUrl;
     f.parentNode.insertBefore(j, f);
-
 }
 
 function addFormInteractionGa4Events(gaMeasurementId) {
@@ -100,7 +102,6 @@ function addFormInteractionGa4Events(gaMeasurementId) {
 }
 
 /*todo: move into ts - does the pageview object have a def?*/
-/*todo: send events from the server for when js disabled??*/
 
 function getPiiSafePageView(gaMeasurementId) {
 
