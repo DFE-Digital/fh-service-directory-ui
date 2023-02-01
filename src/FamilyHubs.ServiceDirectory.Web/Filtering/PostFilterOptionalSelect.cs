@@ -14,11 +14,10 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
     {
         OptionSelectedName = $"{filter.Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
 
-        //todo: const for remove param
-        string remove = query["remove"].ToString();
+        string remove = query[IFilter.RemoveKey].ToString();
 
         // assumes single selection (and only the selected item can be removed)
-        if (remove == IFilter.RemoveAll || remove.StartsWith(Filter.Name))
+        if (remove == IFilter.RemoveAllValue || remove.StartsWith(Filter.Name))
         {
             IsOptionSelected = false;
         }

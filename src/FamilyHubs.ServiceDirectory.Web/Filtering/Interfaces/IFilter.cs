@@ -2,7 +2,8 @@
 
 public interface IFilter
 {
-    public const string RemoveAll = "all";
+    public const string RemoveKey = "remove";
+    public const string RemoveAllValue = "all";
 
     string Name { get; }
     string Description { get; }

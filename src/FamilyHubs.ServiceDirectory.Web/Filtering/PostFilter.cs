@@ -21,9 +21,9 @@ public class PostFilter : IFilter
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
-        string remove = query["remove"].ToString();
+        string remove = query[IFilter.RemoveKey].ToString();
 
-        if (remove == IFilter.RemoveAll)
+        if (remove == IFilter.RemoveAllValue)
             return;
 
         string? fullValuesCsv = query[filter.Name];
