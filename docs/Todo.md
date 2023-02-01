@@ -1,5 +1,7 @@
 # Todo
 
+* resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared
+
 * js in tmp/components/components
 
 * environment tags for non-optimised js

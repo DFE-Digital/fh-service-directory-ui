@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
-//todo: delete _ga_ cookie in javascript
 //todo: use post redirect get?
 
-#pragma warning disable S125
 public class IndexModel : PageModel
 {
     // private const string GtmContainerId = "GTM-W6QMSGQ";
@@ -94,4 +92,3 @@ public class IndexModel : PageModel
         }
     }
 }
-#pragma warning restore S125

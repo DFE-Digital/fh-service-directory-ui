@@ -88,7 +88,8 @@ public class ServiceFilterModel : PageModel
             }
 
             Postcode = postcodeInfo!.Postcode;
-            AdminDistrict = postcodeInfo.Codes.AdminDistrict;
+            // todo: rename AdminDistrict
+            AdminDistrict = postcodeInfo.AdminArea;
             Latitude = postcodeInfo.Latitude;
             Longitude = postcodeInfo.Longitude;
         }
