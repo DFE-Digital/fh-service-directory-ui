@@ -9,13 +9,16 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
     public string SelectDescription => ((IFilterOptionalSelect)Filter).SelectDescription;
     public string OptionSelectedName { get; }
 
-    public PostFilterOptionalSelect(IFilterOptionalSelect filter, IQueryCollection query, string? remove)
-        : base(filter, query, remove)
+    public PostFilterOptionalSelect(IFilterOptionalSelect filter, IQueryCollection query)
+        : base(filter, query)
     {
         OptionSelectedName = $"{filter.Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
 
+        //todo: const for remove param
+        string remove = query["remove"].ToString();
+
         // assumes single selection (and only the selected item can be removed)
-        if (remove != null && (remove == IFilter.RemoveAll || remove.StartsWith(Filter.Name)))
+        if (remove == IFilter.RemoveAll || remove.StartsWith(Filter.Name))
         {
             IsOptionSelected = false;
         }

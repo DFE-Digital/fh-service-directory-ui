@@ -27,8 +27,8 @@ public class FilterOptionalSelect : Filter, IFilterOptionalSelect
         OptionSelectedName = $"{Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
     }
 
-    public override IFilterOptionalSelect ToPostFilter(IQueryCollection query, string? remove)
+    public override IFilterOptionalSelect ToPostFilter(IQueryCollection query)
     {
-        return new PostFilterOptionalSelect(this, query, remove);
+        return new PostFilterOptionalSelect(this, query);
     }
 }

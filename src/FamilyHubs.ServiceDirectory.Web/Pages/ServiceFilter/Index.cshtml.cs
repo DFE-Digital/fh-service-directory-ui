@@ -134,12 +134,12 @@ public class ServiceFilterModel : PageModel
         // otherwise, apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
-            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
-            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
+            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query));
+            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
         }
 
         string pageNum = Request.Query["pageNum"].ToString();
-        if (!string.IsNullOrWhiteSpace(pageNum))
+        if (pageNum != "")
             CurrentPage = int.Parse(pageNum);
 
         (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);

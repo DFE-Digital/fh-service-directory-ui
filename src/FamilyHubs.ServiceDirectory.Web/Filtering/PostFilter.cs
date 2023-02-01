@@ -14,14 +14,16 @@ public class PostFilter : IFilter
 
     protected readonly IFilter Filter;
 
-    public PostFilter(IFilter filter, IQueryCollection query, string? remove)
+    public PostFilter(IFilter filter, IQueryCollection query)
     {
         Filter = filter;
 
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
-        if (remove != null && remove == IFilter.RemoveAll)
+        string remove = query["remove"].ToString();
+
+        if (remove == IFilter.RemoveAll)
             return;
 
         string? fullValuesCsv = query[filter.Name];
@@ -31,7 +33,7 @@ public class PostFilter : IFilter
             //todo: helper for this?
             string[] fullValues = fullValuesCsv.Split(',');
 
-            if (remove?.StartsWith(filter.Name) == true)
+            if (remove.StartsWith(filter.Name))
             {
                 fullValues = fullValues
                     .Where(v => v != remove)
@@ -49,7 +51,7 @@ public class PostFilter : IFilter
         return SelectedAspects.Any(a => a.Id == aspect.Id);
     }
 
-    public IFilter ToPostFilter(IQueryCollection query, string? remove)
+    public IFilter ToPostFilter(IQueryCollection query)
     {
         Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
         return this;
