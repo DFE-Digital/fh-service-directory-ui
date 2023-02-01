@@ -46,67 +46,6 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum, bool? fromPostcodeSearch)
-    {
-        if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
-        {
-            // handle cases:
-            // * when user goes filter page => cookie page => back link from success banner
-            // * user manually removes query parameters from url
-            // * user goes directly to page by typing it into the address bar
-            return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
-        }
-
-        //todo: enumerate Request.Query: have filter params something like {subcat_disp_name}
-
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, fromPostcodeSearch);
-    }
-
-    private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
-    {
-        return string.IsNullOrEmpty(postcode)
-               || string.IsNullOrEmpty(adminDistrict)
-               || latitude == null
-               || longitude == null;
-    }
-
-    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, bool? fromPostcodeSearch)
-    {
-        //todo: rename to same
-        FromPostcodeSearch = fromPostcodeSearch == true;
-        Postcode = postcode;
-        AdminDistrict = adminDistrict;
-        Latitude = latitude;
-        Longitude = longitude;
-
-        //todo: check initial no results (isget, but rename to isInitial)
-        //todo: display friendly ids in url?
-
-        //todo: remove should be in request.query, so should be able to remove
-        //todo: only do if user has applied filters
-
-        // if we've just come from the postcode search, go with the configured default filter options
-        // otherwise, apply the filters from the query parameters
-        if (!FromPostcodeSearch)
-        {
-            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
-            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
-        }
-
-        string pageNum = Request.Query["pageNum"].ToString();
-        if (!string.IsNullOrWhiteSpace(pageNum))
-            CurrentPage = int.Parse(pageNum);
-
-        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
-
-        return Page();
-    }
-
-    private static void CheckParameters([NotNull] string? postcode)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(postcode);
-    }
-
     public Task<IActionResult> OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         CheckParameters(postcode);
@@ -154,6 +93,63 @@ public class ServiceFilterModel : PageModel
         }
 
         return RedirectToPage("/ServiceFilter/Index", routeValues);
+    }
+
+    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum, bool? fromPostcodeSearch)
+    {
+        if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
+        {
+            // handle cases:
+            //todo: check
+            // * when user goes filter page => cookie page => back link from success banner
+            // * user manually removes query parameters from url
+            // * user goes directly to page by typing it into the address bar
+            return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
+        }
+
+        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, fromPostcodeSearch);
+    }
+
+    private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    {
+        return string.IsNullOrEmpty(postcode)
+               || string.IsNullOrEmpty(adminDistrict)
+               || latitude == null
+               || longitude == null;
+    }
+
+    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, bool? fromPostcodeSearch)
+    {
+        FromPostcodeSearch = fromPostcodeSearch == true;
+        Postcode = postcode;
+        AdminDistrict = adminDistrict;
+        Latitude = latitude;
+        Longitude = longitude;
+
+        //todo: display friendly ids in url?
+
+        //todo: remove should be in request.query, so should be able to remove
+
+        // if we've just come from the postcode search, go with the configured default filter options
+        // otherwise, apply the filters from the query parameters
+        if (!FromPostcodeSearch)
+        {
+            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
+            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
+        }
+
+        string pageNum = Request.Query["pageNum"].ToString();
+        if (!string.IsNullOrWhiteSpace(pageNum))
+            CurrentPage = int.Parse(pageNum);
+
+        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
+
+        return Page();
+    }
+
+    private static void CheckParameters([NotNull] string? postcode)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(postcode);
     }
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
