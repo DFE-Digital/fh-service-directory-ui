@@ -20,7 +20,7 @@
     <partial name="_ServiceFilterNoResults" />
 }
 else {
-    <form method="post">
+    <form method="post" asp-page="/ServiceFilter/Index">
 
         <input type="hidden" asp-for="Postcode" value="@Model.Postcode" />
         <input type="hidden" asp-for="AdminDistrict" value="@Model.AdminDistrict" />

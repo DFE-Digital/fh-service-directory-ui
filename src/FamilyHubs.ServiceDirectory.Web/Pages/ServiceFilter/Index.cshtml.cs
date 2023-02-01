@@ -46,13 +46,41 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public IActionResult OnGet()
+    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
     {
-        // handle cases:
-        // * when user goes filter page => cookie page => back link from success banner
-        // * user manually removes query parameters from url
-        // * user goes directly to page by typing it into the address bar, or from a bookmark
-        return RedirectToPage("/PostcodeSearch/Index");
+        if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
+        {
+            // handle cases:
+            // * when user goes filter page => cookie page => back link from success banner
+            // * user manually removes query parameters from url
+            // * user goes directly to page by typing it into the address bar
+            return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
+        }
+
+        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+    }
+
+    private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    {
+        return string.IsNullOrEmpty(postcode)
+               || string.IsNullOrEmpty(adminDistrict)
+               || latitude == null
+               || longitude == null;
+    }
+
+    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
+    {
+        IsGet = true;
+        Postcode = postcode;
+        //todo: set admin, lat & long in hidden too
+
+        //todo: check initial no results (isget, but rename to isInitial)
+        //todo: pass filter params (add display friendly ids) to get
+        // if filter params present, ToAppliedFilters
+
+        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
+
+        return Page();
     }
 
     //    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
@@ -79,6 +107,8 @@ public class ServiceFilterModel : PageModel
     {
         IsGet = false;
 
+        var routeValues = default(object);
+
         if (adminDistrict == null)
         {
             var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postcode);
@@ -87,31 +117,47 @@ public class ServiceFilterModel : PageModel
                 return RedirectToPage("/PostcodeSearch/Index", new { postcodeError });
             }
 
-            Postcode = postcodeInfo!.Postcode;
-            // todo: rename AdminDistrict
-            AdminDistrict = postcodeInfo.AdminArea;
-            Latitude = postcodeInfo.Latitude;
-            Longitude = postcodeInfo.Longitude;
+            //Postcode = postcodeInfo!.Postcode;
+            //// todo: rename AdminDistrict
+            //AdminDistrict = postcodeInfo.AdminArea;
+            //Latitude = postcodeInfo.Latitude;
+            //Longitude = postcodeInfo.Longitude;
+
+            routeValues = new
+            {
+                postcode = postcodeInfo!.Postcode,
+                // todo: rename AdminDistrict
+                adminDistrict = postcodeInfo.AdminArea,
+                latitude = postcodeInfo.Latitude,
+                longitude = postcodeInfo.Longitude
+            };
         }
         else
         {
-            Postcode = postcode;
-            AdminDistrict = adminDistrict;
-            Latitude = latitude;
-            Longitude = longitude;
-
-            //todo: filter / postfilter no longer makes sense!
-            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
+            routeValues = new { postcode, adminDistrict, latitude, longitude };
         }
 
-        if (!string.IsNullOrWhiteSpace(pageNum))
-            CurrentPage = int.Parse(pageNum);
+        return RedirectToPage("/ServiceFilter/Index", routeValues);
 
-        //todo: proper checks
-        (Services, Pagination) = await GetServicesAndPagination(AdminDistrict, Latitude.Value, Longitude.Value);
+        //else
+        //{
+        //    Postcode = postcode;
+        //    AdminDistrict = adminDistrict;
+        //    Latitude = latitude;
+        //    Longitude = longitude;
 
-        return Page();
+        //    //todo: filter / postfilter no longer makes sense! ToAppliedFilters
+        //    Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
+        //    TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
+        //}
+
+        //if (!string.IsNullOrWhiteSpace(pageNum))
+        //    CurrentPage = int.Parse(pageNum);
+
+        ////todo: proper checks
+        //(Services, Pagination) = await GetServicesAndPagination(AdminDistrict, Latitude.Value, Longitude.Value);
+
+        //return Page();
     }
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
