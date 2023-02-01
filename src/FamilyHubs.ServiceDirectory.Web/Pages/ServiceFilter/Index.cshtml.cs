@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
-#pragma warning disable
 
 public class ServiceFilterModel : PageModel
 {
@@ -85,18 +84,14 @@ public class ServiceFilterModel : PageModel
         return Page();
     }
 
-    //    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
     private static void CheckParameters([NotNull] string? postcode)
     {
         ArgumentException.ThrowIfNullOrEmpty(postcode);
-        //ArgumentException.ThrowIfNullOrEmpty(adminDistrict);
-        //ArgumentNullException.ThrowIfNull(latitude);
-        //ArgumentNullException.ThrowIfNull(longitude);
     }
 
     public Task<IActionResult> OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
-        CheckParameters(postcode); //, adminDistrict, latitude, longitude);
+        CheckParameters(postcode);
 
         return HandlePost(postcode, adminDistrict, latitude, longitude, remove, pageNum);
     }
@@ -118,12 +113,6 @@ public class ServiceFilterModel : PageModel
             {
                 return RedirectToPage("/PostcodeSearch/Index", new { postcodeError });
             }
-
-            //Postcode = postcodeInfo!.Postcode;
-            //// todo: rename AdminDistrict
-            //AdminDistrict = postcodeInfo.AdminArea;
-            //Latitude = postcodeInfo.Latitude;
-            //Longitude = postcodeInfo.Longitude;
 
             routeValues = new
             {
@@ -200,10 +189,6 @@ public class ServiceFilterModel : PageModel
         {
             givenAge = int.Parse(childFilterValue);
         }
-
-        // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
-        // we could assume that they all share the same organisation
-        // leave it as-is for now though (as we handle the more generic case)
 
         var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
             adminDistrict,
