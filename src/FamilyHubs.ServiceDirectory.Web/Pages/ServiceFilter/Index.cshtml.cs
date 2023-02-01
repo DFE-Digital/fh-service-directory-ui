@@ -46,7 +46,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
+    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum, bool? fromPostcodeSearch)
     {
         if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
         {
@@ -59,7 +59,7 @@ public class ServiceFilterModel : PageModel
 
         //todo: enumerate Request.Query: have filter params something like {subcat_disp_name}
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, fromPostcodeSearch);
     }
 
     private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -70,9 +70,10 @@ public class ServiceFilterModel : PageModel
                || longitude == null;
     }
 
-    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
+    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, bool? fromPostcodeSearch)
     {
-        IsGet = true;
+        //todo: rename to same
+        IsGet = fromPostcodeSearch == true;
         Postcode = postcode;
         AdminDistrict = adminDistrict;
         Latitude = latitude;
@@ -83,8 +84,14 @@ public class ServiceFilterModel : PageModel
 
         //todo: remove should be in request.query, so should be able to remove
         //todo: only do if user has applied filters
-        Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
-        TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
+
+        // if we've just come from the postcode search, go with the configured default filter options
+        // otherwise, apply the filters from the query parameters
+        if (!IsGet)
+        {
+            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
+            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
+        }
 
         string pageNum = Request.Query["pageNum"].ToString();
         if (!string.IsNullOrWhiteSpace(pageNum))
@@ -134,17 +141,12 @@ public class ServiceFilterModel : PageModel
                 // todo: rename AdminDistrict
                 adminDistrict = postcodeInfo.AdminArea,
                 latitude = postcodeInfo.Latitude,
-                longitude = postcodeInfo.Longitude
+                longitude = postcodeInfo.Longitude,
+                fromPostcodeSearch = true
             };
         }
         else
         {
-            //routeValues = new
-            //{
-            //    //postcode, adminDistrict, latitude, longitude,
-            //    remove, pageNum
-            //};
-
             routeValues = new ExpandoObject();
 
             var routeValuesDictionary = (IDictionary<string, object>)routeValues;
@@ -155,26 +157,6 @@ public class ServiceFilterModel : PageModel
         }
 
         return RedirectToPage("/ServiceFilter/Index", routeValues);
-
-        //else
-        //{
-        //    Postcode = postcode;
-        //    AdminDistrict = adminDistrict;
-        //    Latitude = latitude;
-        //    Longitude = longitude;
-
-        //    //todo: filter / postfilter no longer makes sense! ToAppliedFilters
-        //    Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        //    TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
-        //}
-
-        //if (!string.IsNullOrWhiteSpace(pageNum))
-        //    CurrentPage = int.Parse(pageNum);
-
-        ////todo: proper checks
-        //(Services, Pagination) = await GetServicesAndPagination(AdminDistrict, Latitude.Value, Longitude.Value);
-
-        //return Page();
     }
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
