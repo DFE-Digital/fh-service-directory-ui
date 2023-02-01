@@ -9,8 +9,8 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
     public string SelectDescription => ((IFilterOptionalSelect)Filter).SelectDescription;
     public string OptionSelectedName { get; }
 
-    public PostFilterOptionalSelect(IFilterOptionalSelect filter, IFormCollection form, string? remove)
-        : base(filter, form, remove)
+    public PostFilterOptionalSelect(IFilterOptionalSelect filter, IQueryCollection query, string? remove)
+        : base(filter, query, remove)
     {
         OptionSelectedName = $"{filter.Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
 
@@ -21,7 +21,7 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
         }
         else
         {
-            var isOptionSelectedStr = form[OptionSelectedName];
+            var isOptionSelectedStr = query[OptionSelectedName];
             bool.TryParse(isOptionSelectedStr, out var isOptionSelected);
             IsOptionSelected = isOptionSelected;
         }

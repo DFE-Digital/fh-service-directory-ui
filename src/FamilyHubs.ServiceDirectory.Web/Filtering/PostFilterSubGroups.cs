@@ -14,16 +14,16 @@ public class PostFilterSubGroups : IFilterSubGroups
 
     private readonly FilterSubGroups _filterSubGroups;
 
-    public PostFilterSubGroups(FilterSubGroups filterSubGroups, IFormCollection form, string? remove)
+    public PostFilterSubGroups(FilterSubGroups filterSubGroups, IQueryCollection query, string? remove)
     {
         _filterSubGroups = filterSubGroups;
 
-        SubFilters = filterSubGroups.SubFilters.Select(f => new PostFilter(f, form, remove)).ToArray();
+        SubFilters = filterSubGroups.SubFilters.Select(f => new PostFilter(f, query, remove)).ToArray();
         Values = SubFilters.SelectMany(f => f.Values);
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
 
-    public IFilterSubGroups ToPostFilter(IFormCollection form, string? remove)
+    public IFilterSubGroups ToPostFilter(IQueryCollection query, string? remove)
     {
         Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
         return this;

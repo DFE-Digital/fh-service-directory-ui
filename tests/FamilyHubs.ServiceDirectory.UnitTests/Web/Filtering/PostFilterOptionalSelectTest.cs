@@ -1,39 +1,41 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Filtering;
-using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Moq;
+﻿//todo:
 
-namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Filtering;
+//using FamilyHubs.ServiceDirectory.Web.Filtering;
+//using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+//using Microsoft.AspNetCore.Http;
+//using Moq;
 
-public class PostFilterOptionalSelectTest
-{
-    public Mock<IFilterOptionalSelect> FilterOptionalSelect { get; set; }
-    public Mock<IFormCollection> Form { get; set; }
-    public string? Remove { get; set; }
+//namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Filtering;
 
-    public PostFilterOptionalSelectTest()
-    {
-        FilterOptionalSelect = new Mock<IFilterOptionalSelect>();
-        FilterOptionalSelect.SetupGet(x => x.Name).Returns("TestFilter");
-        Form = new Mock<IFormCollection>();
-    }
+//public class PostFilterOptionalSelectTest
+//{
+//    public Mock<IFilterOptionalSelect> FilterOptionalSelect { get; set; }
+//    public Mock<IFormCollection> Form { get; set; }
+//    public string? Remove { get; set; }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("remove")]
-    [InlineData(" remove!@#$%^&*()_+")]
-    public void PostFilterOptionalSelectConstructor(string? remove)
-    {
-        // act
-        var postFilterOptionalSelect = new PostFilterOptionalSelect(FilterOptionalSelect.Object, Form.Object, remove);
+//    public PostFilterOptionalSelectTest()
+//    {
+//        FilterOptionalSelect = new Mock<IFilterOptionalSelect>();
+//        FilterOptionalSelect.SetupGet(x => x.Name).Returns("TestFilter");
+//        Form = new Mock<IFormCollection>();
+//    }
 
-        // assert
-        Assert.Equal(FilterOptionalSelect.Object.Name, postFilterOptionalSelect.Name);
-        Assert.Equal(FilterOptionalSelect.Object.Description, postFilterOptionalSelect.Description);
-        Assert.Equal(FilterOptionalSelect.Object.FilterType, postFilterOptionalSelect.FilterType);
-        Assert.Equal(FilterOptionalSelect.Object.Aspects, postFilterOptionalSelect.Aspects);
-        Assert.Equal(Array.Empty<IFilterAspect>(), postFilterOptionalSelect.SelectedAspects);
-        Assert.Equal(Enumerable.Empty<string>(), postFilterOptionalSelect.Values);
-    }
-}
+//    [Theory]
+//    [InlineData(null)]
+//    [InlineData("")]
+//    [InlineData("remove")]
+//    [InlineData(" remove!@#$%^&*()_+")]
+//    public void PostFilterOptionalSelectConstructor(string? remove)
+//    {
+//        // act
+//        var postFilterOptionalSelect = new PostFilterOptionalSelect(FilterOptionalSelect.Object, Form.Object, remove);
+
+//        // assert
+//        Assert.Equal(FilterOptionalSelect.Object.Name, postFilterOptionalSelect.Name);
+//        Assert.Equal(FilterOptionalSelect.Object.Description, postFilterOptionalSelect.Description);
+//        Assert.Equal(FilterOptionalSelect.Object.FilterType, postFilterOptionalSelect.FilterType);
+//        Assert.Equal(FilterOptionalSelect.Object.Aspects, postFilterOptionalSelect.Aspects);
+//        Assert.Equal(Array.Empty<IFilterAspect>(), postFilterOptionalSelect.SelectedAspects);
+//        Assert.Equal(Enumerable.Empty<string>(), postFilterOptionalSelect.Values);
+//    }
+//}

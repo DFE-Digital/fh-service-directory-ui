@@ -14,7 +14,7 @@ public class PostFilter : IFilter
 
     protected readonly IFilter Filter;
 
-    public PostFilter(IFilter filter, IFormCollection form, string? remove)
+    public PostFilter(IFilter filter, IQueryCollection query, string? remove)
     {
         Filter = filter;
 
@@ -24,7 +24,7 @@ public class PostFilter : IFilter
         if (remove != null && remove == IFilter.RemoveAll)
             return;
 
-        string? fullValuesCsv = form[filter.Name];
+        string? fullValuesCsv = query[filter.Name];
         if (fullValuesCsv != null)
         {
             //todo: const on filter? 2 is for "--", or just store full values?
@@ -49,7 +49,7 @@ public class PostFilter : IFilter
         return SelectedAspects.Any(a => a.Id == aspect.Id);
     }
 
-    public IFilter ToPostFilter(IFormCollection form, string? remove)
+    public IFilter ToPostFilter(IQueryCollection query, string? remove)
     {
         Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
         return this;

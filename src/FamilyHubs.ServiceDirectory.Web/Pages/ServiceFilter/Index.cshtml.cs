@@ -57,7 +57,7 @@ public class ServiceFilterModel : PageModel
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
 
-        //todo: enumerate Request.Query: have filter params something like f_{cat_disp_name}_{subcat_disp_name}
+        //todo: enumerate Request.Query: have filter params something like {subcat_disp_name}
 
         return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
     }
@@ -79,8 +79,16 @@ public class ServiceFilterModel : PageModel
         Longitude = longitude;
 
         //todo: check initial no results (isget, but rename to isInitial)
-        //todo: pass filter params (add display friendly ids) to get
-        // if filter params present, ToAppliedFilters
+        //todo: display friendly ids in url?
+
+        //todo: remove should be in request.query, so should be able to remove
+        //todo: only do if user has applied filters
+        Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
+        TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
+
+        string pageNum = Request.Query["pageNum"].ToString();
+        if (!string.IsNullOrWhiteSpace(pageNum))
+            CurrentPage = int.Parse(pageNum);
 
         (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
 
@@ -110,8 +118,7 @@ public class ServiceFilterModel : PageModel
     {
         IsGet = false;
 
-        //var routeValues = default(object);
-        dynamic routeValues; // = new ExpandoObject();
+        dynamic routeValues;
 
         if (adminDistrict == null)
         {
@@ -132,7 +139,6 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            //todo: best way to programatically pass form?
             //routeValues = new
             //{
             //    //postcode, adminDistrict, latitude, longitude,
@@ -141,9 +147,8 @@ public class ServiceFilterModel : PageModel
 
             routeValues = new ExpandoObject();
 
-            //todo: where not __RequestVerificationToken
             var routeValuesDictionary = (IDictionary<string, object>)routeValues;
-            foreach (var keyValuePair in Request.Form)
+            foreach (var keyValuePair in Request.Form.Where(kvp => kvp.Key != "__RequestVerificationToken"))
             {
                 routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value;
             }
