@@ -1,8 +1,9 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head>
-    <meta charset="utf-8" />
+    <partial name="_GoogleAnalytics.cshtml"/>
+
+    <meta charset="utf-8"/>
     @* we'll use the standard GDS title pattern for now, but the title often ends up too long and gets flagged during accessibility testing, so we might have to cut it down later. see https://design.tax.service.gov.uk/hmrc-design-patterns/page-title/ *@
     <title>@ViewData["Title"] - Find support for your family - GOV.UK</title>
     <meta name="description" content="Find support for your family">
@@ -21,11 +22,10 @@
     <!-- Pending further research e.g. location. etc. -->
     <!-- <link href="/public/css/accessible-autocomplete.min.css" rel="stylesheet" type="text/css">-->
     <!--[if !IE 8]><!-->
-@*    <link href="~/css/govuk-frontend-4.4.0.min.css" rel="stylesheet">*@
-    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true"/>
     <!--<![endif]-->
     <!--[if IE 8]>
-      <link href="~/css/govuk-frontend-ie8-4.4.0.min.css" rel="stylesheet">
+        <link href="~/css/govuk-frontend-ie8-4.4.0.min.css" rel="stylesheet">
     <![endif]-->
 
     <meta property="og:image" content="~/lib/govuk/assets/images/govuk-opengraph-image.png">
@@ -33,11 +33,6 @@
 
 <body class="govuk-template__body">
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W6QMSGQ"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
     <partial name="_CookieBanner.cshtml"/>
 
@@ -67,7 +62,8 @@
     <partial name="_Footer.cshtml" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/bundle.js" asp-append-version="true"></script>
+    <script src="~/js/govuk-frontend-4.4.1.min.js"></script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
 
     <script>
         //todo: initialize just the components we use

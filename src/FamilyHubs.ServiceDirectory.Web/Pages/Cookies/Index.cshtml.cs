@@ -1,5 +1,5 @@
 using System.Globalization;
-using FamilyHubs.ServiceDirectory.Core.Cookies;
+using FamilyHubs.ServiceDirectory.Web.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;

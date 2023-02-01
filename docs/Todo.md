@@ -1,5 +1,9 @@
 # Todo
 
+* js in tmp/components/components
+
+* environment tags for non-optimised js
+
 * pick up standard libraries such as jQuery from one of the big CDN's (Google/MS/jQuery) with fallback to fetching a local copy.
 
 * use stringvalues for multi-params?
