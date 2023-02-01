@@ -6,14 +6,14 @@
 
 function gtag() { dataLayer.push(arguments); }
 
-export default function loadAnalytics(gaMeasurementId, gaMeasurementUrl) {
+export default function loadAnalytics(gaMeasurementId) {
 
     // if the environment doesn't have a measurement id, don't load analytics
     if (!Boolean(gaMeasurementId)) {
         return;
     }
 
-    loadGaScript(gaMeasurementUrl);
+    loadGaScript(gaMeasurementId);
 
     window.dataLayer = window.dataLayer || [];
 //    function gtag() { dataLayer.push(arguments); }
@@ -35,11 +35,11 @@ export default function loadAnalytics(gaMeasurementId, gaMeasurementUrl) {
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
 }
 
-function loadGaScript(gaMeasurementUrl) {
+function loadGaScript(gaMeasurementId) {
     const f = document.getElementsByTagName('script')[0];
     const j = document.createElement('script');
     j.async = true;
-    j.src = gaMeasurementUrl;
+    j.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaMeasurementId;
     f.parentNode.insertBefore(j, f);
 }
 
