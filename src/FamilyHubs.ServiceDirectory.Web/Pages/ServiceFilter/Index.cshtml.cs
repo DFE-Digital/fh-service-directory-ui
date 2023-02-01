@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Dynamic;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.Pagination;
 using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
@@ -45,7 +46,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
         {
@@ -55,6 +56,8 @@ public class ServiceFilterModel : PageModel
             // * user goes directly to page by typing it into the address bar
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
+
+        //todo: enumerate Request.Query: have filter params something like f_{cat_disp_name}_{subcat_disp_name}
 
         return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
     }
@@ -96,15 +99,19 @@ public class ServiceFilterModel : PageModel
         return HandlePost(postcode, adminDistrict, latitude, longitude, remove, pageNum);
     }
 
+    //todo: if get them generically from the form, remove lat, long etc
+#pragma warning disable S1172
     //todo: input hidden for postcode etc. so don't keep getting
     //todo: isget -> show no results when admindistrict is null?
     //todo: test postcode error handling
     //todo: 2 sep postcodes?
+    //    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
         IsGet = false;
 
-        var routeValues = default(object);
+        //var routeValues = default(object);
+        dynamic routeValues; // = new ExpandoObject();
 
         if (adminDistrict == null)
         {
@@ -125,7 +132,21 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            routeValues = new { postcode, adminDistrict, latitude, longitude };
+            //todo: best way to programatically pass form?
+            //routeValues = new
+            //{
+            //    //postcode, adminDistrict, latitude, longitude,
+            //    remove, pageNum
+            //};
+
+            routeValues = new ExpandoObject();
+
+            //todo: where not __RequestVerificationToken
+            var routeValuesDictionary = (IDictionary<string, object>)routeValues;
+            foreach (var keyValuePair in Request.Form)
+            {
+                routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value;
+            }
         }
 
         return RedirectToPage("/ServiceFilter/Index", routeValues);
