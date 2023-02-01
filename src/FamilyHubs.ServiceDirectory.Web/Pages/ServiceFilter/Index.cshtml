@@ -16,7 +16,7 @@
 }
 
 @*todo: doesn't let user unselect default 'within 20 miles'!*@
-@if (Model.IsGet && !Model.Services.Any()) {
+@if (Model.FromPostcodeSearch && !Model.Services.Any()) {
     <partial name="_ServiceFilterNoResults" />
 }
 else {

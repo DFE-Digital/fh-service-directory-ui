@@ -26,7 +26,7 @@ public class ServiceFilterModel : PageModel
     public float? Longitude { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
-    public bool IsGet { get; set; }
+    public bool FromPostcodeSearch { get; set; }
     public int CurrentPage { get; set; }
     public IPagination Pagination { get; set; }
 
@@ -73,7 +73,7 @@ public class ServiceFilterModel : PageModel
     private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, bool? fromPostcodeSearch)
     {
         //todo: rename to same
-        IsGet = fromPostcodeSearch == true;
+        FromPostcodeSearch = fromPostcodeSearch == true;
         Postcode = postcode;
         AdminDistrict = adminDistrict;
         Latitude = latitude;
@@ -87,7 +87,7 @@ public class ServiceFilterModel : PageModel
 
         // if we've just come from the postcode search, go with the configured default filter options
         // otherwise, apply the filters from the query parameters
-        if (!IsGet)
+        if (!FromPostcodeSearch)
         {
             Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query, Request.Query["remove"]));
             TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query, Request.Query["remove"]);
@@ -120,11 +120,8 @@ public class ServiceFilterModel : PageModel
     //todo: isget -> show no results when admindistrict is null?
     //todo: test postcode error handling
     //todo: 2 sep postcodes?
-    //    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
     {
-        IsGet = false;
-
         dynamic routeValues;
 
         if (adminDistrict == null)
