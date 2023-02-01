@@ -72,7 +72,9 @@ public class ServiceFilterModel : PageModel
     {
         IsGet = true;
         Postcode = postcode;
-        //todo: set admin, lat & long in hidden too
+        AdminDistrict = adminDistrict;
+        Latitude = latitude;
+        Longitude = longitude;
 
         //todo: check initial no results (isget, but rename to isInitial)
         //todo: pass filter params (add display friendly ids) to get
