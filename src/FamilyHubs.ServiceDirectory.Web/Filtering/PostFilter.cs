@@ -29,25 +29,25 @@ public class PostFilter : IFilter
         string? fullValuesCsv = query[filter.Name];
         if (fullValuesCsv != null)
         {
-            //todo: const on filter? 2 is for "--", or just store full values?
-            //todo: helper for this?
             string[] fullValues = fullValuesCsv.Split(',');
 
             if (remove.StartsWith(filter.Name))
             {
+                //todo: check works when different filters have the same id (should do)
+                string removeAspectId = remove[(filter.Name.Length + 2)..];
+
                 fullValues = fullValues
-                    .Where(v => v != remove)
+                    .Where(v => v != removeAspectId)
                     .ToArray();
             }
-            Values = fullValues.Select(v => v[(filter.Name.Length + 2)..]);
+
+            Values = fullValues;
             SelectedAspects = Filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
         }
     }
 
     public bool IsSelected(IFilterAspect aspect)
     {
-        Debug.Assert(aspect.Id.StartsWith(Name));
-
         return SelectedAspects.Any(a => a.Id == aspect.Id);
     }
 

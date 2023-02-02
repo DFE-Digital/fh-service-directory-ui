@@ -83,6 +83,10 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
+            //todo: if we remove filters here, it'll stop GA seeing the filter & the remove, which it should be able to handle, but would require work ga side
+            // e.g. instead of sending to get ...remove=activities--3c207700-dc08-43bc-94ab-80c3d36d2e12&activities=3c207700-dc08-43bc-94ab-80c3d36d2e12...
+            // just remove activities=[guid] here instead and don't send on the remove=[]
+
             routeValues = new ExpandoObject();
 
             var routeValuesDictionary = (IDictionary<string, object>)routeValues;

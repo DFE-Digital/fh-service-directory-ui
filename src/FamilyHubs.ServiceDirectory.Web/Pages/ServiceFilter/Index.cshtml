@@ -58,13 +58,15 @@ else {
                             {
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.TypeOfSupportFilter.Description</h3>
 
-                                @foreach (var selectedAspect in Model.TypeOfSupportFilter.SelectedAspects)
-                                {
-                                    @*todo: partial for this and above?*@
-                                    <ul class="moj-filter-tags">
-                                        <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="@IFilter.RemoveKey" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
-                                    </ul>
-                                }
+                                <ul class="moj-filter-tags">
+                                    @foreach (var subFilter in Model.TypeOfSupportFilter.SubFilters)
+                                    {
+                                        @foreach (var selectedAspect in subFilter.SelectedAspects)
+                                        {
+                                            <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="@IFilter.RemoveKey" value="@(subFilter.Name)--@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
+                                        }
+                                    }
+                                </ul>
                             }
 
                             @foreach (var filter in Model.Filters)
@@ -76,7 +78,7 @@ else {
                                     @foreach (var selectedAspect in filter.SelectedAspects)
                                     {
                                         <ul class="moj-filter-tags">
-                                            <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="@IFilter.RemoveKey" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                            <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="@IFilter.RemoveKey" value="@(filter.Name)--@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
                                         </ul>
                                     }
                                 }

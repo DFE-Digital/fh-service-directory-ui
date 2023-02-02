@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
@@ -22,7 +21,7 @@ public class Filter : IFilter
 
         _selectedFilterAspects = Aspects.Where(a => a.SelectedByDefault).ToArray();
 
-        Values = _selectedFilterAspects.Select(a => a.Id[(Name.Length + 2)..]);
+        Values = _selectedFilterAspects.Select(a => a.Id);
     }
 
     public virtual IFilter ToPostFilter(IQueryCollection query)
@@ -34,8 +33,6 @@ public class Filter : IFilter
 
     public bool IsSelected(IFilterAspect aspect)
     {
-        Debug.Assert(aspect.Id.StartsWith(Name));
-
         return aspect.SelectedByDefault;
     }
 }
