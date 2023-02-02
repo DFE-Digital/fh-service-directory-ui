@@ -46,20 +46,17 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
+    public Task<IActionResult> OnPost(string? postcode, string? adminDistrict)
     {
         CheckParameters(postcode);
 
-        return HandlePost(postcode, adminDistrict, latitude, longitude, remove, pageNum);
+        return HandlePost(postcode, adminDistrict);
     }
 
-    //todo: if get them generically from the form, remove lat, long etc
-#pragma warning disable S1172
     //todo: input hidden for postcode etc. so don't keep getting
-    //todo: isget -> show no results when admindistrict is null?
     //todo: test postcode error handling
-    //todo: 2 sep postcodes?
-    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? removeX, string? pageNum)
+    //todo: no need for the remaining 2 params
+    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict)
     {
         dynamic routeValues;
 
@@ -84,6 +81,7 @@ public class ServiceFilterModel : PageModel
         else
         {
             //todo: remove redundant remove handling in filters
+            //todo: move into method
 
             routeValues = new ExpandoObject();
 
