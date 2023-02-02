@@ -128,8 +128,6 @@ public class ServiceFilterModel : PageModel
 
         //todo: display friendly ids in url?
 
-        //todo: remove should be in request.query, so should be able to remove
-
         // if we've just come from the postcode search, go with the configured default filter options
         // otherwise, apply the filters from the query parameters
         if (!FromPostcodeSearch)
