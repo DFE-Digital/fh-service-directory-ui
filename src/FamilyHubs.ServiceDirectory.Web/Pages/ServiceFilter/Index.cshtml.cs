@@ -59,7 +59,7 @@ public class ServiceFilterModel : PageModel
     //todo: isget -> show no results when admindistrict is null?
     //todo: test postcode error handling
     //todo: 2 sep postcodes?
-    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
+    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict, float? latitude, float? longitude, string? removeX, string? pageNum)
     {
         dynamic routeValues;
 
@@ -83,14 +83,31 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            //todo: if we remove filters here, it'll stop GA seeing the filter & the remove, which it should be able to handle, but would require work ga side
-            // e.g. instead of sending to get ...remove=activities--3c207700-dc08-43bc-94ab-80c3d36d2e12&activities=3c207700-dc08-43bc-94ab-80c3d36d2e12...
-            // just remove activities=[guid] here instead and don't send on the remove=[]
+            //todo: remove redundant remove handling in filters
 
             routeValues = new ExpandoObject();
 
+            string? remove = Request.Form[IFilter.RemoveKey];
+            if (!string.IsNullOrEmpty(remove))
+            {
+                var filterNameEndPos = remove.IndexOf("--", StringComparison.Ordinal);
+                remove = remove[..filterNameEndPos];
+            }
+            else
+            {
+                remove = null;
+            }
+
             var routeValuesDictionary = (IDictionary<string, object>)routeValues;
-            foreach (var keyValuePair in Request.Form.Where(kvp => kvp.Key != "__RequestVerificationToken"))
+
+            //todo: test removing -option-selected
+            // key.StartsWith rather than '== remove' to also remove [key]-option-selected
+            var filteredForm = Request.Form
+                .Where(kvp => kvp.Key != "__RequestVerificationToken"
+                              && !kvp.Key.StartsWith(IFilter.RemoveKey)
+                              && (remove == null || !kvp.Key.StartsWith(remove)));
+
+            foreach (var keyValuePair in filteredForm)
             {
                 routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value;
             }
