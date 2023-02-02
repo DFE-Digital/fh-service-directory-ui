@@ -146,6 +146,8 @@ public class ServiceFilterModel : PageModel
         return new KeyValuePair<string, StringValues>(kvp.Key, new StringValues(values.ToArray()));
     }
 
+    //todo: cost=free&cost=pay-to-use & separate in remove filter tag list
+
     // simpler than asking all the filters to remove themselves
     private static HashSet<string> _parametersWhitelist = new()
     {

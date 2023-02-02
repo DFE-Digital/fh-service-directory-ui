@@ -14,19 +14,9 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
     {
         OptionSelectedName = $"{filter.Name}{IFilterOptionalSelect.OptionSelectedPostfix}";
 
-        string remove = query[IFilter.RemoveKey].ToString();
-
-        // assumes single selection (and only the selected item can be removed)
-        if (remove == IFilter.RemoveAllValue || remove.StartsWith(Filter.Name))
-        {
-            IsOptionSelected = false;
-        }
-        else
-        {
-            var isOptionSelectedStr = query[OptionSelectedName];
-            bool.TryParse(isOptionSelectedStr, out var isOptionSelected);
-            IsOptionSelected = isOptionSelected;
-        }
+        var isOptionSelectedStr = query[OptionSelectedName];
+        bool.TryParse(isOptionSelectedStr, out var isOptionSelected);
+        IsOptionSelected = isOptionSelected;
 
         // we _could_ remember the selection when the option isn't selected, but not have it as an active selection
         if (!IsOptionSelected)

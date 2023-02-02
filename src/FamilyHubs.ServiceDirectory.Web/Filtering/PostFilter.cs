@@ -21,25 +21,11 @@ public class PostFilter : IFilter
         Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
-        string remove = query[IFilter.RemoveKey].ToString();
-
-        if (remove == IFilter.RemoveAllValue)
-            return;
-
+        //todo: work directly with StringValues
         string? fullValuesCsv = query[filter.Name];
         if (fullValuesCsv != null)
         {
             string[] fullValues = fullValuesCsv.Split(',');
-
-            if (remove.StartsWith(filter.Name))
-            {
-                //todo: check works when different filters have the same id (should do)
-                string removeAspectId = remove[(filter.Name.Length + 2)..];
-
-                fullValues = fullValues
-                    .Where(v => v != removeAspectId)
-                    .ToArray();
-            }
 
             Values = fullValues;
             SelectedAspects = Filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
