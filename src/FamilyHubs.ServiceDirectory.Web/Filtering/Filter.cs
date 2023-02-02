@@ -26,6 +26,7 @@ public class Filter : IFilter
 
     public virtual IFilter ToPostFilter(IQueryCollection query)
     {
+        //todo: rename filter/postfilter, something like defaultfilter/appliedfilter??
         return new PostFilter(this, query);
     }
 

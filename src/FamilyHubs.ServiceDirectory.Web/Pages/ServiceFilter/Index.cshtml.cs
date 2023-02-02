@@ -12,6 +12,7 @@ using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
@@ -82,28 +83,48 @@ public class ServiceFilterModel : PageModel
         {
             //todo: remove redundant remove handling in filters
             //todo: move into method
+            //todo: remove all
+            //todo: remove all filters of type when multiple
+            //todo: remove all went back to postcode search (fromPostcodeSearch?)
 
-            routeValues = new ExpandoObject();
-
+            //todo: method to get key and value
             string? remove = Request.Form[IFilter.RemoveKey];
-            if (!string.IsNullOrEmpty(remove))
+            string? removeKey = null, removeValue = null;
+            if (remove != null)
             {
-                var filterNameEndPos = remove.IndexOf("--", StringComparison.Ordinal);
-                remove = remove[..filterNameEndPos];
-            }
-            else
-            {
-                remove = null;
+                if (remove == IFilter.RemoveAllValue)
+                {
+                    removeKey = IFilter.RemoveAllValue;
+                }
+                else
+                {
+                    int filterNameEndPos = remove.IndexOf("--", StringComparison.Ordinal);
+                    //todo: think through if this is the right way to handle -1
+                    if (filterNameEndPos != -1)
+                    {
+                        removeKey = remove[..filterNameEndPos];
+                        removeValue = remove[(filterNameEndPos + 2)..];
+                    }
+                }
             }
 
-            var routeValuesDictionary = (IDictionary<string, object>)routeValues;
+            //todo: remove pageNum when remove != null, to go back to page 1 when removing a/all filter
 
             //todo: test removing -option-selected
-            // key.StartsWith rather than '== remove' to also remove [key]-option-selected
             var filteredForm = Request.Form
-                .Where(kvp => kvp.Key != "__RequestVerificationToken"
-                              && !kvp.Key.StartsWith(IFilter.RemoveKey)
-                              && (remove == null || !kvp.Key.StartsWith(remove)));
+                .Where(kvp => KeepParam(kvp.Key, removeKey));
+
+            //todo: -option-selected handling
+            //todo: children=all works, run through to check
+            //todo: empty values are getting cleaned up, so no e.g. activities= . run through to check
+
+            if (removeValue != null)
+            {
+                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, removeKey!, removeValue));
+            }
+
+            routeValues = new ExpandoObject();
+            var routeValuesDictionary = (IDictionary<string, object>)routeValues;
 
             foreach (var keyValuePair in filteredForm)
             {
@@ -112,6 +133,51 @@ public class ServiceFilterModel : PageModel
         }
 
         return RedirectToPage("/ServiceFilter/Index", routeValues);
+    }
+
+    private static KeyValuePair<string, StringValues> RemoveFilterValue(
+        KeyValuePair<string, StringValues> kvp, string removeKey, string removeValue)
+    {
+        if (kvp.Key != removeKey)
+            return kvp;
+
+        var values = kvp.Value.ToList();
+        values.Remove(removeValue);
+        return new KeyValuePair<string, StringValues>(kvp.Key, new StringValues(values.ToArray()));
+    }
+
+    // simpler than asking all the filters to remove themselves
+    private static HashSet<string> _parametersWhitelist = new()
+    {
+        "postcode",
+        "admindistrict",
+        "latitude",
+        "longitude",
+    };
+
+    private static bool KeepParam(string key, string? removeKey)
+    {
+        if (key == "__RequestVerificationToken" || key.StartsWith(IFilter.RemoveKey))
+            return false;
+
+        if (removeKey == null)
+            return true;
+
+        //todo: move this logic out of here?
+        if (removeKey == IFilter.RemoveAllValue)
+        {
+            return _parametersWhitelist.Contains(key.ToLowerInvariant());
+        }
+
+        // if we're removing a filter, go back to page 1
+        if (key == "pageNum")
+            return false;
+
+        // key.StartsWith rather than '!= remove' to also remove [key]-option-selected
+        //return !key.StartsWith(removeKey);
+
+        // keeping, but might remove the only value still
+        return true;
     }
 
     public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum, bool? fromPostcodeSearch)

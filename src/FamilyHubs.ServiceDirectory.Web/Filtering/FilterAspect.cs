@@ -5,7 +5,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
 //todo: more precise Id description
 //todo: put name in data- attribute for test
-//todo: remove filter-- from id
 //todo: allow null name and default to id for name?
 /// <param name="Id">The value that the code uses to identify the filter aspect.
 /// For sub-categories, it must be the sub-category taxonomy guid from the database.
