@@ -170,7 +170,6 @@ public static class SecurityHeaders
                 )
                 .AddCustomHeader("X-Permitted-Cross-Domain-Policies", "none")
                 .AddXssProtectionDisabled());
-#pragma warning restore S125
 #pragma warning restore S1075
 
         return app;
