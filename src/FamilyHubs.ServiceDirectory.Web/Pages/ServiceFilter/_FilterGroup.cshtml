@@ -12,13 +12,14 @@
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     @foreach (var aspect in Model.Aspects)
                     {
+                        string checkboxId = $"{Model.Name}-{aspect.Id}";
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="@aspect.Id" name="@Model.Name" type="checkbox" value="@aspect.Id"
+                            <input class="govuk-checkboxes__input" id="@checkboxId" name="@Model.Name" type="checkbox" value="@aspect.Id"
                                    @if (Model.IsSelected(aspect))
                                    {
                                        @:checked
                                    }>
-                            <label class="govuk-label govuk-checkboxes__label" for="@aspect.Id">
+                            <label class="govuk-label govuk-checkboxes__label" for="@checkboxId">
                                 @aspect.Description
                             </label>
                         </div>
@@ -29,14 +30,15 @@
                 <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
                     @foreach (var aspect in Model.Aspects)
                     {
+                        string radioId = $"{Model.Name}-{aspect.Id}";
                         <div class="govuk-radios__item">
-                               <input class="govuk-radios__input" id="@aspect.Id" name="@Model.Name" type="radio" value="@aspect.Id"
+                            <input class="govuk-radios__input" id="@radioId" name="@Model.Name" type="radio" value="@aspect.Id"
                                @if (Model.IsSelected(aspect))
                                {
                                    @:checked
                                }>
 
-                            <label class="govuk-label govuk-radios__label" for="@aspect.Id">
+                            <label class="govuk-label govuk-radios__label" for="@radioId">
                                 @aspect.Description
                             </label>
                         </div>

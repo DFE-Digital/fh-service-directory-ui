@@ -24,13 +24,15 @@
                                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                     @foreach (var aspect in subFilter.Aspects)
                                     {
+                                        string checkboxId = $"{Model.Name}-{aspect.Id}";
+
                                         <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="@aspect.Id" name="@subFilter.Name" type="checkbox" value="@aspect.Id"
+                                                <input class="govuk-checkboxes__input" id="@checkboxId" name="@subFilter.Name" type="checkbox" value="@aspect.Id"
                                                    @if (subFilter.IsSelected(aspect))
                                                    {
                                                        @:checked
                                                    }>
-                                            <label class="govuk-label govuk-checkboxes__label" for="@aspect.Id">
+                                                <label class="govuk-label govuk-checkboxes__label" for="@checkboxId">
                                                 @aspect.Description
                                             </label>
                                         </div>
