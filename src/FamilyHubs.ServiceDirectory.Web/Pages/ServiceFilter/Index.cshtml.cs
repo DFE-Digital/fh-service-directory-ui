@@ -128,7 +128,8 @@ public class ServiceFilterModel : PageModel
 
             foreach (var keyValuePair in filteredForm)
             {
-                routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value;
+                // ToString() stops RedirectToPage() using key=foo&key=bar, and instead we get key=foo,bar which we unpick on the GET
+                routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value.ToString();
             }
         }
 
@@ -145,8 +146,6 @@ public class ServiceFilterModel : PageModel
         values.Remove(removeValue);
         return new KeyValuePair<string, StringValues>(kvp.Key, new StringValues(values.ToArray()));
     }
-
-    //todo: cost=free&cost=pay-to-use & separate in remove filter tag list
 
     // simpler than asking all the filters to remove themselves
     private static HashSet<string> _parametersWhitelist = new()
