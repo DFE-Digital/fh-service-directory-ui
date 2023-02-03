@@ -171,7 +171,7 @@ public class ServiceFilterModel : PageModel
         }
 
         // if we're removing a filter, go back to page 1
-        if (key == "pageNum")
+        if (key == QueryParamKeys.PageNum)
             return false;
 
         // key.StartsWith rather than '!= remove' to also remove [key]-option-selected
@@ -222,7 +222,7 @@ public class ServiceFilterModel : PageModel
             TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
         }
 
-        string pageNum = Request.Query["pageNum"].ToString();
+        string pageNum = Request.Query[QueryParamKeys.PageNum].ToString();
         if (pageNum != "")
             CurrentPage = int.Parse(pageNum);
 
