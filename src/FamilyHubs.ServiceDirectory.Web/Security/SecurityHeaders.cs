@@ -170,8 +170,7 @@ public static class SecurityHeaders
                     }
                 )
                 .AddCustomHeader("X-Permitted-Cross-Domain-Policies", "none")
-                // this is called in AddDefaultSecurityHeaders(), but without this, we get AddXssProtectionDisabled() instead
-                .AddXssProtectionBlock());
+                .AddXssProtectionDisabled());
 #pragma warning restore S125
 #pragma warning restore S1075
 
