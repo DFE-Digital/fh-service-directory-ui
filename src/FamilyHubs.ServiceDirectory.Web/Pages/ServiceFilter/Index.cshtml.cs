@@ -43,7 +43,6 @@ public class ServiceFilterModel : PageModel
         TypeOfSupportFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
-        CurrentPage = 1;
         Pagination = new DontShowPagination();
     }
 
@@ -181,7 +180,7 @@ public class ServiceFilterModel : PageModel
         return true;
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum, bool? fromPostcodeSearch)
+    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
     {
         if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
         {
@@ -193,7 +192,7 @@ public class ServiceFilterModel : PageModel
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, fromPostcodeSearch);
+        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
     }
 
     private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
@@ -204,13 +203,14 @@ public class ServiceFilterModel : PageModel
                || longitude == null;
     }
 
-    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, bool? fromPostcodeSearch)
+    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch)
     {
         FromPostcodeSearch = fromPostcodeSearch == true;
         Postcode = postcode;
         AdminDistrict = adminDistrict;
         Latitude = latitude;
         Longitude = longitude;
+        CurrentPage = pageNum ?? 1;
 
         //todo: display friendly ids in url?
 
@@ -221,10 +221,6 @@ public class ServiceFilterModel : PageModel
             Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query));
             TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
         }
-
-        string pageNum = Request.Query[QueryParamKeys.PageNum].ToString();
-        if (pageNum != "")
-            CurrentPage = int.Parse(pageNum);
 
         (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
 
