@@ -54,12 +54,12 @@ else {
                                 </div>
                             </div>
                     
-                            @if (Model.TypeOfSupportFilter.SelectedAspects.Any())
+                            @if (Model.CategoryFilter.SelectedAspects.Any())
                             {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.TypeOfSupportFilter.Description</h3>
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.CategoryFilter.Description</h3>
 
                                 <ul class="moj-filter-tags">
-                                    @foreach (var subFilter in Model.TypeOfSupportFilter.SubFilters)
+                                    @foreach (var subFilter in Model.CategoryFilter.SubFilters)
                                     {
                                         @foreach (var selectedAspect in subFilter.SelectedAspects)
                                         {
@@ -91,7 +91,7 @@ else {
                             </button>
                         
                             @*todo: store name of partial in filter?*@
-                            <partial name="_FilterGroupSubGroups" model="Model.TypeOfSupportFilter" />
+                            <partial name="_FilterGroupSubGroups" model="Model.CategoryFilter" />
 
                             @foreach (var filterGroup in Model.Filters)
                             {

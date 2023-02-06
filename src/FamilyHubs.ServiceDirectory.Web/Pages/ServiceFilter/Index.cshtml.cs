@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
-using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.Pagination;
 using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
@@ -21,8 +20,7 @@ public class ServiceFilterModel : PageModel
 {
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
-    //todo: rename CategoryFilter
-    public IFilterSubGroups TypeOfSupportFilter { get; set; }
+    public IFilterSubGroups CategoryFilter { get; set; }
     public string? Postcode { get; set; }
     public string? AdminArea { get; set; }
     public float? Latitude { get; set; }
@@ -42,7 +40,7 @@ public class ServiceFilterModel : PageModel
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
         Filters = FilterDefinitions.Filters;
-        TypeOfSupportFilter = FilterDefinitions.CategoryFilter;
+        CategoryFilter = FilterDefinitions.CategoryFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -220,7 +218,7 @@ public class ServiceFilterModel : PageModel
         if (!FromPostcodeSearch)
         {
             Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query));
-            TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
+            CategoryFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
@@ -245,45 +243,9 @@ public class ServiceFilterModel : PageModel
         {
             filter.AddFilterCriteria(serviceParams);
         }
-
-        //var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
-        //var searchWithinFilterAspect = searchWithinFilter.SelectedAspects.FirstOrDefault();
-        //if (searchWithinFilterAspect != null)
-        //{
-        //    serviceParams.MaximumProximityMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilterAspect.Id));
-        //}
-
-        //var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
-        //if (costFilter.SelectedAspects.Count() == 1)
-        //{
-        //    serviceParams.IsPaidFor = costFilter.SelectedAspects.First().Id == "pay-to-use";
-        //}
-
-        //var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
-        //switch (showFilter.SelectedAspects.Count())
-        //{
-        //    case 0:
-        //        OnlyShowOneFamilyHubAndHighlightIt = true;
-        //        break;
-        //    case 1:
-        //        serviceParams.FamilyHub = bool.Parse(showFilter.SelectedAspects.First().Id);
-        //        break;
-        //    //case 2: there are only 2 options, so if both are selected, there's no need to filter
-        //}
-        //serviceParams.MaxFamilyHubs = OnlyShowOneFamilyHubAndHighlightIt ? 1 : null;
+        CategoryFilter.AddFilterCriteria(serviceParams);
 
         OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
-
-        //var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
-        //var childFilterAspect = childrenFilter.SelectedAspects.FirstOrDefault();
-        //if (childFilterAspect != null && childFilterAspect.Id != FilterDefinitions.ChildrenAndYoungPeopleAllId)
-        //{
-        //    serviceParams.GivenAge = int.Parse(childFilterAspect.Id);
-        //}
-
-        //serviceParams.TaxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
-
-        TypeOfSupportFilter.AddFilterCriteria(serviceParams);
 
         var services = await _serviceDirectoryClient.GetServicesWithOrganisation(serviceParams);
 
