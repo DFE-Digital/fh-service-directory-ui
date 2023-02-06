@@ -155,7 +155,7 @@ public class ServiceFilterModel : PageModel
 
     private static bool KeepParam(string key, string? removeKey)
     {
-        if (key == "__RequestVerificationToken" || key.StartsWith(IFilter.RemoveKey))
+        if (key is "__RequestVerificationToken" or IFilter.RemoveKey)
             return false;
 
         if (removeKey == null)
@@ -171,10 +171,11 @@ public class ServiceFilterModel : PageModel
         if (key == QueryParamKeys.PageNum)
             return false;
 
-        // key.StartsWith rather than '!= remove' to also remove [key]-option-selected
-        //return !key.StartsWith(removeKey);
+        //todo: we don't want knowledge of the internals of the optional filter here
+        if (key.EndsWith("-option-selected") && key.StartsWith(removeKey))
+            return false;
 
-        // keeping, but might remove the only value still
+        // keep, but we might remove the only value later
         return true;
     }
 
