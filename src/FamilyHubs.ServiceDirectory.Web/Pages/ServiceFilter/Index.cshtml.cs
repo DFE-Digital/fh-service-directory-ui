@@ -7,6 +7,8 @@ using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
+using FamilyHubs.ServiceDirectory.Web.Filtering;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -18,6 +20,16 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
+    private static readonly FilterSubGroups DefaultCategoryFilter = new CategoryFilter();
+
+    public static readonly IEnumerable<IFilter> DefaultFilters = new IFilter[]
+    {
+        new CostFilter(),
+        new ShowFilter(),
+        new SearchWithinFilter(),
+        new ChildrenAndYoungPeopleFilter()
+    };
+
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
     public IFilterSubGroups CategoryFilter { get; set; }
@@ -39,8 +51,8 @@ public class ServiceFilterModel : PageModel
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
-        Filters = FilterDefinitions.Filters;
-        CategoryFilter = FilterDefinitions.CategoryFilter;
+        Filters = DefaultFilters;
+        CategoryFilter = DefaultCategoryFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -217,8 +229,8 @@ public class ServiceFilterModel : PageModel
         // otherwise, apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
-            Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Query));
-            CategoryFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
+            Filters = DefaultFilters.Select(fd => fd.ToPostFilter(Request.Query));
+            CategoryFilter = DefaultCategoryFilter.ToPostFilter(Request.Query);
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
