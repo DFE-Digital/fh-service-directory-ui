@@ -92,9 +92,6 @@ public class ServiceFilterModel : PageModel
         else
         {
             //todo: move into method
-            //todo: remove all
-            //todo: remove all filters of type when multiple
-            //todo: remove all went back to postcode search (fromPostcodeSearch?)
 
             //todo: method to get key and value
             string? remove = Request.Form[IFilter.RemoveKey];
@@ -116,8 +113,6 @@ public class ServiceFilterModel : PageModel
                     }
                 }
             }
-
-            //todo: remove pageNum when remove != null, to go back to page 1 when removing a/all filter
 
             //todo: test removing -option-selected - works, but old selected value still in url
             var filteredForm = Request.Form
