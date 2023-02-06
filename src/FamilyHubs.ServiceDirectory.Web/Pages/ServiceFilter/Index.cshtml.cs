@@ -111,6 +111,8 @@ public class ServiceFilterModel : PageModel
             var filteredForm = Request.Form
                 .Where(kvp => KeepParam(kvp.Key, removeKey));
 
+            //todo: if option value doesn't also have the option-selected, remove the optional value. except if we do that, we couldn't implement 'show original selection when option is reselected'
+
             //todo: -option-selected handling
             //todo: children=all works, run through to check
             //todo: empty values are getting cleaned up, so no e.g. activities= . run through to check

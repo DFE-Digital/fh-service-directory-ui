@@ -18,7 +18,7 @@ public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
         bool.TryParse(isOptionSelectedStr, out var isOptionSelected);
         IsOptionSelected = isOptionSelected;
 
-        // we _could_ remember the selection when the option isn't selected, but not have it as an active selection
+        //todo: we _could_ remember the selection when the option isn't selected, but not have it as an active selection
         if (!IsOptionSelected)
         {
             SelectedAspects = Array.Empty<IFilterAspect>();
