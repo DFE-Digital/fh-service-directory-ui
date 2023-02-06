@@ -12,7 +12,7 @@ public interface IFilterAspect
     /// A friendly name. Used in the URL, so *must* be url safe and mustn't contain ','. Preferably, keep it to alphanumeric and hyphens.
     /// *Must* be unique within the category (or sub-category when using FilterSubGroups).
     /// </summary>
-    string? Name { get; }
+    string? Value { get; }
 
     /// <summary>
     /// As displayed in the filter panel.

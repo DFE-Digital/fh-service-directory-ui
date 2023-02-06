@@ -10,5 +10,5 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 public sealed record FilterAspect(
     string Id,
     string Description,
-    string? Name = null,
+    string? Value = null,
     bool SelectedByDefault = false) : IFilterAspect;
