@@ -29,7 +29,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     }
 
     public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        string districtCode,
+        string adminArea,
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
@@ -43,7 +43,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         CancellationToken cancellationToken = default)
     {
         var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, familyHub, taxonomyIds, pageNumber, pageSize, cancellationToken);
+            adminArea, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, familyHub, taxonomyIds, pageNumber, pageSize, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -58,7 +58,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     }
 
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
-        string districtCode,
+        string adminArea,
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
@@ -76,7 +76,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         // mandatory params
         var queryParams = new Dictionary<string, string?>
         {
-            {"districtCode", districtCode},
+            {"districtCode", adminArea},
             {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
             {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)}
         };

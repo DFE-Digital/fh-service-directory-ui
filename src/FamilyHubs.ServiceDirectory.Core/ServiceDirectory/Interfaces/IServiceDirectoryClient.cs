@@ -9,7 +9,7 @@ public interface IServiceDirectoryClient
 {
     // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
     Task<PaginatedList<OpenReferralServiceDto>> GetServices(
-        string districtCode,
+        string adminArea,
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,
@@ -22,11 +22,19 @@ public interface IServiceDirectoryClient
         int? pageSize = null,
         CancellationToken cancellationToken = default);
 
-    // caches organisations for 1 hour
+    /// <summary>
+    /// Fetches an organisation from the service directory
+    /// </summary>
+    /// <param name="id">The ID of the organisation to fetch.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The organisation</returns>
+    /// <remarks>
+    /// Organisations are cached for 1 hour.
+    /// </remarks>
     Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
 
     Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        string districtCode,
+        string adminArea,
         float latitude,
         float longitude,
         int? maximumProximityMeters = null,

@@ -22,7 +22,7 @@ public class ServiceFilterModel : PageModel
     //todo: into Filters (above)
     public IFilterSubGroups TypeOfSupportFilter { get; set; }
     public string? Postcode { get; set; }
-    public string? AdminDistrict { get; set; }
+    public string? AdminArea { get; set; }
     public float? Latitude { get; set; }
     public float? Longitude { get; set; }
     public IEnumerable<Service> Services { get; set; }
@@ -46,21 +46,21 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnPost(string? postcode, string? adminDistrict)
+    public Task<IActionResult> OnPost(string? postcode, string? adminArea)
     {
         CheckParameters(postcode);
 
-        return HandlePost(postcode, adminDistrict);
+        return HandlePost(postcode, adminArea);
     }
 
     //todo: input hidden for postcode etc. so don't keep getting
     //todo: test postcode error handling
     //todo: no need for the remaining 2 params
-    private async Task<IActionResult> HandlePost(string postcode, string? adminDistrict)
+    private async Task<IActionResult> HandlePost(string postcode, string? adminArea)
     {
         dynamic routeValues;
 
-        if (adminDistrict == null)
+        if (adminArea == null)
         {
             var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postcode);
             if (postcodeError != PostcodeError.None)
@@ -71,8 +71,7 @@ public class ServiceFilterModel : PageModel
             routeValues = new
             {
                 postcode = postcodeInfo!.Postcode,
-                // todo: rename AdminDistrict
-                adminDistrict = postcodeInfo.AdminArea,
+                adminArea = postcodeInfo.AdminArea,
                 latitude = postcodeInfo.Latitude,
                 longitude = postcodeInfo.Longitude,
                 fromPostcodeSearch = true
@@ -80,7 +79,6 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            //todo: remove redundant remove handling in filters
             //todo: move into method
             //todo: remove all
             //todo: remove all filters of type when multiple
@@ -109,7 +107,7 @@ public class ServiceFilterModel : PageModel
 
             //todo: remove pageNum when remove != null, to go back to page 1 when removing a/all filter
 
-            //todo: test removing -option-selected
+            //todo: test removing -option-selected - works, but old selected value still in url
             var filteredForm = Request.Form
                 .Where(kvp => KeepParam(kvp.Key, removeKey));
 
@@ -150,7 +148,7 @@ public class ServiceFilterModel : PageModel
     private static HashSet<string> _parametersWhitelist = new()
     {
         "postcode",
-        "admindistrict",
+        "adminarea",
         "latitude",
         "longitude",
     };
@@ -180,9 +178,9 @@ public class ServiceFilterModel : PageModel
         return true;
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
+    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
     {
-        if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
+        if (AnyParametersMissing(postcode, adminArea, latitude, longitude))
         {
             // handle cases:
             //todo: check
@@ -192,27 +190,25 @@ public class ServiceFilterModel : PageModel
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
+        return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
     }
 
-    private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    private static bool AnyParametersMissing(string? postcode, string? adminArea, float? latitude, float? longitude)
     {
         return string.IsNullOrEmpty(postcode)
-               || string.IsNullOrEmpty(adminDistrict)
+               || string.IsNullOrEmpty(adminArea)
                || latitude == null
                || longitude == null;
     }
 
-    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch)
+    private async Task<IActionResult> HandleGet(string postcode, string adminArea, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch)
     {
         FromPostcodeSearch = fromPostcodeSearch == true;
         Postcode = postcode;
-        AdminDistrict = adminDistrict;
+        AdminArea = adminArea;
         Latitude = latitude;
         Longitude = longitude;
         CurrentPage = pageNum ?? 1;
-
-        //todo: display friendly ids in url?
 
         // if we've just come from the postcode search, go with the configured default filter options
         // otherwise, apply the filters from the query parameters
@@ -222,7 +218,7 @@ public class ServiceFilterModel : PageModel
             TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Query);
         }
 
-        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
+        (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
 
         return Page();
     }
@@ -232,7 +228,7 @@ public class ServiceFilterModel : PageModel
         ArgumentException.ThrowIfNullOrEmpty(postcode);
     }
 
-    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
+    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         // or references to the individual filters too, so we don't keep iterating them
@@ -277,7 +273,7 @@ public class ServiceFilterModel : PageModel
         var taxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
 
         var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
-            adminDistrict,
+            adminArea,
             latitude,
             longitude,
             searchWithinMeters,
