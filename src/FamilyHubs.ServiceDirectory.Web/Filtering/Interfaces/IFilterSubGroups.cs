@@ -6,6 +6,5 @@ public interface IFilterSubGroups
     string Description { get; }
     IEnumerable<IFilter> SubFilters { get; }
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    public IEnumerable<string> Values { get; }
     IFilterSubGroups ToPostFilter(IQueryCollection query);
 }

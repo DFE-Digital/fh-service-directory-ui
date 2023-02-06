@@ -10,7 +10,6 @@ public class PostFilterSubGroups : IFilterSubGroups
     public string Description => _filterSubGroups.Description;
     public IEnumerable<IFilter> SubFilters { get; }
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    public IEnumerable<string> Values { get; }
 
     private readonly FilterSubGroups _filterSubGroups;
 
@@ -19,7 +18,6 @@ public class PostFilterSubGroups : IFilterSubGroups
         _filterSubGroups = filterSubGroups;
 
         SubFilters = filterSubGroups.SubFilters.Select(f => new PostFilter(f, query)).ToArray();
-        Values = SubFilters.SelectMany(f => f.Values);
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
 

@@ -274,6 +274,8 @@ public class ServiceFilterModel : PageModel
             givenAge = int.Parse(childFilterAspect.Id);
         }
 
+        var taxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
+
         var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
             adminDistrict,
             latitude,
@@ -283,7 +285,7 @@ public class ServiceFilterModel : PageModel
             isPaidFor,
             OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
             familyHubFilter,
-            TypeOfSupportFilter.Values,
+            taxonomyIds,
             CurrentPage,
             PageSize);
 
