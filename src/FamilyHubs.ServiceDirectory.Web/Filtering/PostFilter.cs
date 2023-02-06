@@ -10,7 +10,6 @@ public class PostFilter : IFilter
     public FilterType FilterType => Filter.FilterType;
     public IEnumerable<IFilterAspect> Aspects => Filter.Aspects;
     public IEnumerable<IFilterAspect> SelectedAspects { get; protected set; }
-    public IEnumerable<string> Values { get; protected set; }
 
     protected readonly IFilter Filter;
 
@@ -18,7 +17,6 @@ public class PostFilter : IFilter
     {
         Filter = filter;
 
-        Values = Enumerable.Empty<string>();
         SelectedAspects = Array.Empty<IFilterAspect>();
 
         //todo: work directly with StringValues
@@ -27,8 +25,7 @@ public class PostFilter : IFilter
         {
             string[] fullValues = fullValuesCsv.Split(',');
 
-            Values = fullValues;
-            SelectedAspects = Filter.Aspects.Where(a => fullValues.Contains(a.Id)).ToArray();
+            SelectedAspects = Filter.Aspects.Where(a => fullValues.Contains(a.Value)).ToArray();
         }
     }
 

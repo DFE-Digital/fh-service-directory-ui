@@ -21,7 +21,7 @@ public class Filter : IFilter
 
         _selectedFilterAspects = Aspects.Where(a => a.SelectedByDefault).ToArray();
 
-        Values = _selectedFilterAspects.Select(a => a.Id);
+        Values = _selectedFilterAspects.Select(a => a.Value);
     }
 
     public virtual IFilter ToPostFilter(IQueryCollection query)
