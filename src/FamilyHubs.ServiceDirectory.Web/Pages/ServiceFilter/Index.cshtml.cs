@@ -235,40 +235,43 @@ public class ServiceFilterModel : PageModel
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
     {
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
+        // or references to the individual filters too, so we don't keep iterating them
+        //todo: work with selected aspects, rather than values
+        // have value as a property of the aspect, and use that in the razor
         int? searchWithinMeters = null;
         var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
-        var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
-        if (searchWithFilterValue != null)
+        var searchWithinFilterAspect = searchWithinFilter.SelectedAspects.FirstOrDefault();
+        if (searchWithinFilterAspect != null)
         {
-            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithFilterValue));
+            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilterAspect.Id));
         }
 
         bool? isPaidFor = null;
         var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
-        if (costFilter.Values.Count() == 1)
+        if (costFilter.SelectedAspects.Count() == 1)
         {
-            isPaidFor = costFilter.Values.First() == "pay-to-use";
+            isPaidFor = costFilter.SelectedAspects.First().Id == "pay-to-use";
         }
 
         bool? familyHubFilter = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
-        switch (showFilter.Values.Count())
+        switch (showFilter.SelectedAspects.Count())
         {
             case 0:
                 OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
-                familyHubFilter = bool.Parse(showFilter.Values.First());
+                familyHubFilter = bool.Parse(showFilter.SelectedAspects.First().Id);
                 break;
             //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
 
         int? givenAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
-        var childFilterValue = childrenFilter.Values.FirstOrDefault();
-        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
+        var childFilterAspect = childrenFilter.SelectedAspects.FirstOrDefault();
+        if (childFilterAspect != null && childFilterAspect.Id != FilterDefinitions.ChildrenAndYoungPeopleAllId)
         {
-            givenAge = int.Parse(childFilterValue);
+            givenAge = int.Parse(childFilterAspect.Id);
         }
 
         var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
