@@ -3,7 +3,6 @@ using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 
-//todo: don't think will need filter name, so remove. we can get a filter by its type
 public class CostFilter : Filter
 {
     public CostFilter() : base("cost", "Cost", FilterType.Checkboxes, new IFilterAspect[]
