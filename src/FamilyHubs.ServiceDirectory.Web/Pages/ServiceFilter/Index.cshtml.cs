@@ -21,6 +21,7 @@ public class ServiceFilterModel : PageModel
 {
     public IEnumerable<IFilter> Filters { get; set; }
     //todo: into Filters (above)
+    //todo: rename CategoryFilter
     public IFilterSubGroups TypeOfSupportFilter { get; set; }
     public string? Postcode { get; set; }
     public string? AdminArea { get; set; }
@@ -240,44 +241,49 @@ public class ServiceFilterModel : PageModel
             PageSize = PageSize
         };
 
-        //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
-        // or references to the individual filters too, so we don't keep iterating them
-        //todo: work with selected aspects, rather than values
-        // have value as a property of the aspect, and use that in the razor
-        var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
-        var searchWithinFilterAspect = searchWithinFilter.SelectedAspects.FirstOrDefault();
-        if (searchWithinFilterAspect != null)
+        foreach (var filter in Filters)
         {
-            serviceParams.MaximumProximityMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilterAspect.Id));
+            filter.AddFilterCriteria(serviceParams);
         }
 
-        var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
-        if (costFilter.SelectedAspects.Count() == 1)
-        {
-            serviceParams.IsPaidFor = costFilter.SelectedAspects.First().Id == "pay-to-use";
-        }
+        //var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
+        //var searchWithinFilterAspect = searchWithinFilter.SelectedAspects.FirstOrDefault();
+        //if (searchWithinFilterAspect != null)
+        //{
+        //    serviceParams.MaximumProximityMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilterAspect.Id));
+        //}
 
-        var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
-        switch (showFilter.SelectedAspects.Count())
-        {
-            case 0:
-                OnlyShowOneFamilyHubAndHighlightIt = true;
-                break;
-            case 1:
-                serviceParams.FamilyHub = bool.Parse(showFilter.SelectedAspects.First().Id);
-                break;
-            //case 2: there are only 2 options, so if both are selected, there's no need to filter
-        }
-        serviceParams.MaxFamilyHubs = OnlyShowOneFamilyHubAndHighlightIt ? 1 : null;
+        //var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
+        //if (costFilter.SelectedAspects.Count() == 1)
+        //{
+        //    serviceParams.IsPaidFor = costFilter.SelectedAspects.First().Id == "pay-to-use";
+        //}
 
-        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
-        var childFilterAspect = childrenFilter.SelectedAspects.FirstOrDefault();
-        if (childFilterAspect != null && childFilterAspect.Id != FilterDefinitions.ChildrenAndYoungPeopleAllId)
-        {
-            serviceParams.GivenAge = int.Parse(childFilterAspect.Id);
-        }
+        //var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
+        //switch (showFilter.SelectedAspects.Count())
+        //{
+        //    case 0:
+        //        OnlyShowOneFamilyHubAndHighlightIt = true;
+        //        break;
+        //    case 1:
+        //        serviceParams.FamilyHub = bool.Parse(showFilter.SelectedAspects.First().Id);
+        //        break;
+        //    //case 2: there are only 2 options, so if both are selected, there's no need to filter
+        //}
+        //serviceParams.MaxFamilyHubs = OnlyShowOneFamilyHubAndHighlightIt ? 1 : null;
 
-        serviceParams.TaxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
+        OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
+
+        //var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
+        //var childFilterAspect = childrenFilter.SelectedAspects.FirstOrDefault();
+        //if (childFilterAspect != null && childFilterAspect.Id != FilterDefinitions.ChildrenAndYoungPeopleAllId)
+        //{
+        //    serviceParams.GivenAge = int.Parse(childFilterAspect.Id);
+        //}
+
+        //serviceParams.TaxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
+
+        TypeOfSupportFilter.AddFilterCriteria(serviceParams);
 
         var services = await _serviceDirectoryClient.GetServicesWithOrganisation(serviceParams);
 

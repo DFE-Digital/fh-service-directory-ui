@@ -1,4 +1,6 @@
-﻿namespace FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+
+namespace FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 public interface IFilter
 {
@@ -12,4 +14,7 @@ public interface IFilter
     IEnumerable<IFilterAspect> SelectedAspects { get; }
     bool IsSelected(IFilterAspect aspect);
     IFilter ToPostFilter(IQueryCollection query);
+
+    void AddFilterCriteria(ServicesParams servicesParams);
+    void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams);
 }

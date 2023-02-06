@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
@@ -25,5 +26,17 @@ public class PostFilterSubGroups : IFilterSubGroups
     {
         Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
         return this;
+    }
+
+    public virtual void AddFilterCriteria(ServicesParams servicesParams)
+    {
+        _filterSubGroups.AddFilterCriteria(SelectedAspects, servicesParams);
+    }
+
+    public void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams)
+    {
+        // or this?
+        //throw new NotImplementedException();
+        _filterSubGroups.AddFilterCriteria(selectedAspects, servicesParams);
     }
 }

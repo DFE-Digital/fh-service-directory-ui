@@ -1,8 +1,9 @@
-﻿using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-public class Filter : IFilter
+public abstract class Filter : IFilter
 {
     public string Name { get; }
     public string Description { get; }
@@ -12,7 +13,7 @@ public class Filter : IFilter
 
     private readonly IFilterAspect[] _selectedFilterAspects;
 
-    public Filter(string name, string description, FilterType filterType, IEnumerable<IFilterAspect> aspects)
+    protected Filter(string name, string description, FilterType filterType, IEnumerable<IFilterAspect> aspects)
     {
         Name = name;
         Description = description;
@@ -36,4 +37,11 @@ public class Filter : IFilter
     {
         return aspect.SelectedByDefault;
     }
+
+    public void AddFilterCriteria(ServicesParams servicesParams)
+    {
+        AddFilterCriteria(SelectedAspects, servicesParams);
+    }
+
+    public abstract void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams);
 }
