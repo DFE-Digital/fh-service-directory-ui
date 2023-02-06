@@ -17,7 +17,7 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<(PostcodeError, PostcodeInfo?)> Get(string? postcode, CancellationToken cancellationToken = default)
+    public async Task<(PostcodeError, IPostcodeInfo?)> Get(string? postcode, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(postcode))
             return (PostcodeError.NoPostcode, null);
