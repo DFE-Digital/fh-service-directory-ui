@@ -233,26 +233,29 @@ public class ServiceFilterModel : PageModel
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
+        var serviceParams = new ServicesWithOrganisationParams(adminArea, latitude, longitude)
+        {
+            PageNumber = CurrentPage,
+            PageSize = PageSize
+        };
+
         //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
         // or references to the individual filters too, so we don't keep iterating them
         //todo: work with selected aspects, rather than values
         // have value as a property of the aspect, and use that in the razor
-        int? searchWithinMeters = null;
         var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
         var searchWithinFilterAspect = searchWithinFilter.SelectedAspects.FirstOrDefault();
         if (searchWithinFilterAspect != null)
         {
-            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilterAspect.Id));
+            serviceParams.MaximumProximityMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithinFilterAspect.Id));
         }
 
-        bool? isPaidFor = null;
         var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
         if (costFilter.SelectedAspects.Count() == 1)
         {
-            isPaidFor = costFilter.SelectedAspects.First().Id == "pay-to-use";
+            serviceParams.IsPaidFor = costFilter.SelectedAspects.First().Id == "pay-to-use";
         }
 
-        bool? familyHubFilter = null;
         var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
         switch (showFilter.SelectedAspects.Count())
         {
@@ -260,33 +263,22 @@ public class ServiceFilterModel : PageModel
                 OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
-                familyHubFilter = bool.Parse(showFilter.SelectedAspects.First().Id);
+                serviceParams.FamilyHub = bool.Parse(showFilter.SelectedAspects.First().Id);
                 break;
             //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
+        serviceParams.MaxFamilyHubs = OnlyShowOneFamilyHubAndHighlightIt ? 1 : null;
 
-        int? givenAge = null;
         var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
         var childFilterAspect = childrenFilter.SelectedAspects.FirstOrDefault();
         if (childFilterAspect != null && childFilterAspect.Id != FilterDefinitions.ChildrenAndYoungPeopleAllId)
         {
-            givenAge = int.Parse(childFilterAspect.Id);
+            serviceParams.GivenAge = int.Parse(childFilterAspect.Id);
         }
 
-        var taxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
+        serviceParams.TaxonomyIds = TypeOfSupportFilter.SelectedAspects.Select(a => a.Id);
 
-        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
-            adminArea,
-            latitude,
-            longitude,
-            searchWithinMeters,
-            givenAge,
-            isPaidFor,
-            OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
-            familyHubFilter,
-            taxonomyIds,
-            CurrentPage,
-            PageSize);
+        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(serviceParams);
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
 

@@ -29,21 +29,10 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     }
 
     public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        string adminArea,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesWithOrganisationParams servicesWithOrganisationParams,
         CancellationToken cancellationToken = default)
     {
-        var services = await GetServices(
-            adminArea, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, familyHub, taxonomyIds, pageNumber, pageSize, cancellationToken);
+        var services = await GetServices(servicesWithOrganisationParams, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -54,21 +43,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             services.TotalCount,
             services.PageNumber,
             //todo: not nice to hard-code default from api
-            pageSize ?? 10);
+            servicesWithOrganisationParams.PageSize ?? 10);
     }
 
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
-        string adminArea,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesWithOrganisationParams servicesWithOrganisationParams,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -76,21 +55,21 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         // mandatory params
         var queryParams = new Dictionary<string, string?>
         {
-            {"districtCode", adminArea},
-            {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
-            {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)}
+            {"districtCode", servicesWithOrganisationParams.AdminArea},
+            {"latitude", servicesWithOrganisationParams.Latitude.ToString(CultureInfo.InvariantCulture)},
+            {"longtitude", servicesWithOrganisationParams.Longitude.ToString(CultureInfo.InvariantCulture)}
         };
 
         // optional params
         queryParams
-            .AddOptionalQueryParams("proximity", maximumProximityMeters)
-            .AddOptionalQueryParams("given_age", givenAge)
-            .AddOptionalQueryParams("isPaidFor", isPaidFor)
-            .AddOptionalQueryParams("pageNumber", pageNumber)
-            .AddOptionalQueryParams("pageSize", pageSize)
-            .AddOptionalQueryParams("isFamilyHub", familyHub)
-            .AddOptionalQueryParams("maxFamilyHubs", maxFamilyHubs)
-            .AddOptionalQueryParams("taxonmyIds", taxonomyIds);
+            .AddOptionalQueryParams("proximity", servicesWithOrganisationParams.MaximumProximityMeters)
+            .AddOptionalQueryParams("given_age", servicesWithOrganisationParams.GivenAge)
+            .AddOptionalQueryParams("isPaidFor", servicesWithOrganisationParams.IsPaidFor)
+            .AddOptionalQueryParams("pageNumber", servicesWithOrganisationParams.PageNumber)
+            .AddOptionalQueryParams("pageSize", servicesWithOrganisationParams.PageSize)
+            .AddOptionalQueryParams("isFamilyHub", servicesWithOrganisationParams.FamilyHub)
+            .AddOptionalQueryParams("maxFamilyHubs", servicesWithOrganisationParams.MaxFamilyHubs)
+            .AddOptionalQueryParams("taxonmyIds", servicesWithOrganisationParams.TaxonomyIds);
 
         var getServicesUri = queryParams.CreateUriWithQueryString(GetServicesBaseUri);
 

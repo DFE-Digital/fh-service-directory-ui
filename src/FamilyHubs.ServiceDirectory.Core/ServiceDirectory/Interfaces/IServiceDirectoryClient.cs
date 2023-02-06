@@ -5,21 +5,33 @@ using FamilyHubs.SharedKernel;
     
 namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 
+public class ServicesWithOrganisationParams
+{
+    public ServicesWithOrganisationParams(string adminArea, float latitude, float longitude)
+    {
+        AdminArea = adminArea;
+        Latitude = latitude;
+        Longitude = longitude;
+    }
+
+    public string AdminArea { get; set; }
+    public float Latitude { get; set; }
+    public float Longitude { get; set; }
+    public int? MaximumProximityMeters { get; set; }
+    public int? GivenAge { get; set; }
+    public bool? IsPaidFor { get; set; }
+    public int? MaxFamilyHubs { get; set; }
+    public bool? FamilyHub { get; set; }
+    public IEnumerable<string>? TaxonomyIds { get; set; }
+    public int? PageNumber { get; set; }
+    public int? PageSize { get; set; }
+}
+
 public interface IServiceDirectoryClient
 {
     // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
     Task<PaginatedList<OpenReferralServiceDto>> GetServices(
-        string adminArea,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesWithOrganisationParams servicesWithOrganisationParams,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -34,16 +46,6 @@ public interface IServiceDirectoryClient
     Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
 
     Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        string adminArea,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesWithOrganisationParams servicesWithOrganisationParams,
         CancellationToken cancellationToken = default);
 }
