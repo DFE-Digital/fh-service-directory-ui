@@ -29,10 +29,10 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     }
 
     public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        ServicesWithOrganisationParams servicesWithOrganisationParams,
+        ServicesParams servicesParams,
         CancellationToken cancellationToken = default)
     {
-        var services = await GetServices(servicesWithOrganisationParams, cancellationToken);
+        var services = await GetServices(servicesParams, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -43,11 +43,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             services.TotalCount,
             services.PageNumber,
             //todo: not nice to hard-code default from api
-            servicesWithOrganisationParams.PageSize ?? 10);
+            servicesParams.PageSize ?? 10);
     }
 
     public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
-        ServicesWithOrganisationParams servicesWithOrganisationParams,
+        ServicesParams servicesParams,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -55,21 +55,21 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         // mandatory params
         var queryParams = new Dictionary<string, string?>
         {
-            {"districtCode", servicesWithOrganisationParams.AdminArea},
-            {"latitude", servicesWithOrganisationParams.Latitude.ToString(CultureInfo.InvariantCulture)},
-            {"longtitude", servicesWithOrganisationParams.Longitude.ToString(CultureInfo.InvariantCulture)}
+            {"districtCode", servicesParams.AdminArea},
+            {"latitude", servicesParams.Latitude.ToString(CultureInfo.InvariantCulture)},
+            {"longtitude", servicesParams.Longitude.ToString(CultureInfo.InvariantCulture)}
         };
 
         // optional params
         queryParams
-            .AddOptionalQueryParams("proximity", servicesWithOrganisationParams.MaximumProximityMeters)
-            .AddOptionalQueryParams("given_age", servicesWithOrganisationParams.GivenAge)
-            .AddOptionalQueryParams("isPaidFor", servicesWithOrganisationParams.IsPaidFor)
-            .AddOptionalQueryParams("pageNumber", servicesWithOrganisationParams.PageNumber)
-            .AddOptionalQueryParams("pageSize", servicesWithOrganisationParams.PageSize)
-            .AddOptionalQueryParams("isFamilyHub", servicesWithOrganisationParams.FamilyHub)
-            .AddOptionalQueryParams("maxFamilyHubs", servicesWithOrganisationParams.MaxFamilyHubs)
-            .AddOptionalQueryParams("taxonmyIds", servicesWithOrganisationParams.TaxonomyIds);
+            .AddOptionalQueryParams("proximity", servicesParams.MaximumProximityMeters)
+            .AddOptionalQueryParams("given_age", servicesParams.GivenAge)
+            .AddOptionalQueryParams("isPaidFor", servicesParams.IsPaidFor)
+            .AddOptionalQueryParams("pageNumber", servicesParams.PageNumber)
+            .AddOptionalQueryParams("pageSize", servicesParams.PageSize)
+            .AddOptionalQueryParams("isFamilyHub", servicesParams.FamilyHub)
+            .AddOptionalQueryParams("maxFamilyHubs", servicesParams.MaxFamilyHubs)
+            .AddOptionalQueryParams("taxonmyIds", servicesParams.TaxonomyIds);
 
         var getServicesUri = queryParams.CreateUriWithQueryString(GetServicesBaseUri);
 

@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
@@ -233,7 +234,7 @@ public class ServiceFilterModel : PageModel
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
-        var serviceParams = new ServicesWithOrganisationParams(adminArea, latitude, longitude)
+        var serviceParams = new ServicesParams(adminArea, latitude, longitude)
         {
             PageNumber = CurrentPage,
             PageSize = PageSize
