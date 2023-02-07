@@ -9,32 +9,7 @@
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     @subFilter.Description
                 </legend>
-
-                @*todo: partials, as shared with normal filters?*@
-                @switch (subFilter.FilterType)
-                {
-                    case FilterType.Checkboxes:
-                        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                            @foreach (var aspect in subFilter.Aspects)
-                            {
-                                string checkboxId = $"{Model.Name}-{aspect.Value}";
-
-                                <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="@checkboxId" name="@subFilter.Name" type="checkbox" value="@aspect.Value"
-                                           @if (subFilter.IsSelected(aspect))
-                                           {
-                                               @:checked
-                                           }>
-                                        <label class="govuk-label govuk-checkboxes__label" for="@checkboxId">
-                                        @aspect.Description
-                                    </label>
-                                </div>
-                            }
-                        </div>
-                        break;
-                    case FilterType.Radios:
-                        throw new NotImplementedException();
-                }
+                    <partial name="FilterGroups/@subFilter.PartialName" model="subFilter" />
             </fieldset>
         </div>
     }
