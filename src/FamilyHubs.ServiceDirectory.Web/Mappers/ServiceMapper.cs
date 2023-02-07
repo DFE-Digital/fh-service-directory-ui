@@ -115,7 +115,7 @@ public static class ServiceMapper
 
         if (firstCost.Amount != decimal.Zero)
         {
-            var amount = firstCost.Amount.ToString(firstCost.Amount == (int)firstCost.Amount ? "C0" : "C", UkNumberFormat);
+            string amount = firstCost.Amount.ToString(firstCost.Amount == (int)firstCost.Amount ? "C0" : "C", UkNumberFormat);
             cost.Add($"{amount} every {firstCost.AmountDescription.ToLowerInvariant()}");
         }
 
