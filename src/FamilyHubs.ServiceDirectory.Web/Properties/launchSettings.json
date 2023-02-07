@@ -8,7 +8,7 @@
         }
     },
     "profiles": {
-        "FamilyHubs.ServiceDirectoryAdminUi.Ui": {
+        "FamilyHubs.ServiceDirectory.Ui": {
             "commandName": "Project",
             "dotnetRunMessages": true,
             "launchBrowser": true,
