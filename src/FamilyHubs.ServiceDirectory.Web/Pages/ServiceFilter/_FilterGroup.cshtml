@@ -74,8 +74,7 @@
                 </div>
                 break;
             case FilterType.SubGroups:
-                @*todo: store name of partial in filter?*@
-                <partial name="_FilterGroupSubGroups" model="Model" />
+                <partial name="@Model.PartialName" model="Model" />
                 break;
         }
     </fieldset>

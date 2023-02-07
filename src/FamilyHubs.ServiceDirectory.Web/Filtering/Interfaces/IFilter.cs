@@ -9,6 +9,7 @@ public interface IFilter
 
     string Name { get; }
     string Description { get; }
+    string PartialName => "";
     //todo: remove and have real types
     FilterType FilterType { get; }
     IEnumerable<IFilterAspect> Aspects { get; }
