@@ -5,6 +5,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
 public abstract class Filter : IFilter
 {
+    protected const string CheckboxesPartialName = "_Checkboxes";
+    protected const string RadiosPartialName = "_Radios";
+
     public string Name { get; }
     public string Description { get; }
     public string PartialName { get; }

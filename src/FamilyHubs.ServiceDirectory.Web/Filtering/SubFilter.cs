@@ -7,7 +7,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 public class SubFilter : Filter
 {
     public SubFilter(string name, string description, FilterType filterType, IEnumerable<IFilterAspect> aspects)
-        : base(name, description, "_Checkboxes", filterType, aspects)
+        : base(name, description, CheckboxesPartialName, filterType, aspects)
     {
     }
 
