@@ -111,7 +111,6 @@ li.govuk-pagination__item--current {
     }
 }
 
-//todo: the after for this class has content="", which sonetimes causes the text to be on one line with a blank line below
 .moj-filter__tag {
     line-height: 1.5;
     padding-left: 25px;
@@ -129,11 +128,6 @@ li.govuk-pagination__item--current {
     &:after {
         all: unset;
     }
-
-/*    &:after {
-        background-image: none;
-        content: none;
-    }*/
 
     &:hover:after {
         background-image: none;
