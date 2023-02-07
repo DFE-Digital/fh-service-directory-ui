@@ -10,7 +10,7 @@ public class ChildrenAndYoungPeopleFilter : FilterOptionalSelect
     public ChildrenAndYoungPeopleFilter() : base("children_and_young", "Children and young people",
         "For children and young people", "Age", new IFilterAspect[]
         {
-            new FilterAspect(ChildrenAndYoungPeopleAllId, "all", "All ages"),
+            new FilterAspect(ChildrenAndYoungPeopleAllId, "All ages"),
             new FilterAspect("0", "0 to 12 months"),
             new FilterAspect("1", "1 year old"),
             new FilterAspect("2", "2 year old"),

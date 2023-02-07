@@ -7,9 +7,8 @@ public class ShowFilter : Filter
 {
     public ShowFilter() : base("show", "Show", CheckboxesPartialName, new IFilterAspect[]
     {
-        //todo: true.ToString()
-        new FilterAspect("true", "Family hubs", "family-hubs"),
-        new FilterAspect("false", "Services and groups", "services")
+        new FilterAspect(true.ToString(), "Family hubs", "family-hubs"),
+        new FilterAspect(false.ToString(), "Services and groups", "services")
     })
     {
     }
