@@ -18,15 +18,16 @@ public class AppliedFilter : IFilter
     {
         Filter = filter;
 
-        SelectedAspects = Array.Empty<IFilterAspect>();
-
-        //todo: work directly with StringValues
         string? fullValuesCsv = query[filter.Name];
         if (fullValuesCsv != null)
         {
             string[] fullValues = fullValuesCsv.Split(',');
 
             SelectedAspects = Filter.Aspects.Where(a => fullValues.Contains(a.Value)).ToArray();
+        }
+        else
+        {
+            SelectedAspects = Array.Empty<IFilterAspect>();
         }
     }
 
