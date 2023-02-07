@@ -32,7 +32,7 @@ public class LargeSetPagination : IPagination
     {
         var uniquePageNumbers = pages.Distinct().Where(p => p > 0 && p <= totalPages);
 
-        int lastPageNumber = 1;
+        var lastPageNumber = 1;
         foreach (var uniquePage in uniquePageNumbers)
         {
             if (uniquePage > lastPageNumber + 1)
