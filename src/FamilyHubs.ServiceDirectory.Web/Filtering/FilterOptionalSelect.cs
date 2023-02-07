@@ -2,9 +2,6 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-// notes:
-// * really, should be an ifilter sub-option on checkbox (filtertype)
-// * we could add have FilterSelect with an optional flag (as to whether needs checkbox), but there's no requirement for on atm
 public abstract class FilterOptionalSelect : Filter, IFilterOptionalSelect
 {
     public bool IsOptionSelected { get; }
@@ -19,7 +16,7 @@ public abstract class FilterOptionalSelect : Filter, IFilterOptionalSelect
         string selectDescription,
         IEnumerable<IFilterAspect> aspects,
         bool optionSelectedByDefault = false)
-        : base(name, description, "_OptionalSelect", FilterType.Select, aspects)
+        : base(name, description, "_OptionalSelect", aspects)
     {
         OptionDescription = optionDescription;
         SelectDescription = selectDescription;

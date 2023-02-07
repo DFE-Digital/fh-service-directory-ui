@@ -6,7 +6,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 public class ShowFilter : Filter
 {
     //todo: const for checkboxes/radios partialname
-    public ShowFilter() : base("show", "Show", CheckboxesPartialName, FilterType.Checkboxes, new IFilterAspect[]
+    public ShowFilter() : base("show", "Show", CheckboxesPartialName, new IFilterAspect[]
     {
         //todo: true.ToString()
         new FilterAspect("true", "Family hubs", "family-hubs"),

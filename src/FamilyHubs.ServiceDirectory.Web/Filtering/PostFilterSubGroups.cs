@@ -13,8 +13,6 @@ public class PostFilterSubGroups : IFilterSubGroups
     //todo: not used remove from filter, or throw not implemented, or implement
     public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    //todo: going
-    public FilterType FilterType => FilterType.SubGroups;
 
     private readonly FilterSubGroups _filterSubGroups;
 

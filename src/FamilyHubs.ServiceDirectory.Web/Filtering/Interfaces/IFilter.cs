@@ -12,8 +12,6 @@ public interface IFilter
 
     string PartialName { get; }
 
-    //todo: remove and have real types
-    FilterType FilterType { get; }
     IEnumerable<IFilterAspect> Aspects { get; }
     IEnumerable<IFilterAspect> SelectedAspects { get; }
     bool IsSelected(IFilterAspect aspect);

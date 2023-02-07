@@ -12,8 +12,6 @@ public abstract class FilterSubGroups : IFilterSubGroups
     //todo: not used remove from filter, or throw not implemented, or implement
     public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    //todo: going
-    public FilterType FilterType => FilterType.SubGroups;
 
     protected FilterSubGroups(string name, string description, IEnumerable<IFilter> subFilters)
     {

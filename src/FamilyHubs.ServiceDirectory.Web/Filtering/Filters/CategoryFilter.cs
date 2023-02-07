@@ -10,7 +10,7 @@ public class CategoryFilter : FilterSubGroups
     public CategoryFilter() : base("category", "Category", new SubFilter[]
     {
         //todo: for names, use initials or easier to recognise snippet. e.g. sr or sport, ss or smoke etc? ask designers/content?
-        new("activities", "Activities, clubs and groups", FilterType.Checkboxes, new IFilterAspect[]
+        new("activities", "Activities, clubs and groups", new IFilterAspect[]
         {
             new FilterAspect("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "activities"),
             new FilterAspect("3c207700-dc08-43bc-94ab-80c3d36d2e12", "Before and after school clubs", "school-clubs"),
@@ -20,7 +20,7 @@ public class CategoryFilter : FilterSubGroups
             new FilterAspect("85cc81bd-c81a-4565-94fc-094bc605489e", "Pre-school playgroup", "playgroup"),
             new FilterAspect("e48bd335-ac3c-44ce-a0f7-57c91a823a2f", "Sports and recreation", "sports")
         }),
-        new("family-support", "Family support", FilterType.Checkboxes, new IFilterAspect[]
+        new("family-support", "Family support", new IFilterAspect[]
         {
             new FilterAspect("a6a8e423-7c32-493d-ad21-4732a40f2793", "Bullying and cyber bullying", "bullying"),
             new FilterAspect("9944d79d-00c8-43b7-b369-2f1baca1dcb0", "Debt and welfare advice", "debt"),
@@ -35,7 +35,7 @@ public class CategoryFilter : FilterSubGroups
             new FilterAspect("8a74745f-b95e-4c57-be27-f3cc4e24ddd6", "Targeted youth support", "youth-support"),
             new FilterAspect("be1de9a2-a833-498b-95d3-9e525d4d9951", "Youth justice services", "youth-justice")
         }),
-        new("health", "Health", FilterType.Checkboxes, new IFilterAspect[]
+        new("health", "Health", new IFilterAspect[]
         {
             new FilterAspect("11696b1f-209a-47b1-9ef5-c588a14d43c6", "Hearing and sight", "hearing-sight"),
             new FilterAspect("7c39c3df-2ad4-4f94-aedd-d1cf5981e195", "Mental health, social and emotional support", "mental-health"),
@@ -43,7 +43,7 @@ public class CategoryFilter : FilterSubGroups
             new FilterAspect("2bc4dba9-14a8-4942-b52d-c0cf5622f5a7", "Oral health", "oral"),
             new FilterAspect("75fe2e44-69c8-4da7-b4bd-d2d042acc657", "Public health services", "public-health"),
         }),
-        new("pregnancy", "Pregnancy, birth and early years", FilterType.Checkboxes, new IFilterAspect[]
+        new("pregnancy", "Pregnancy, birth and early years", new IFilterAspect[]
         {
             new FilterAspect("1e305952-ea60-43d6-bbc8-6cf6f1a1c7f0", "Birth registration", "birth-registration"),
             new FilterAspect("5f9acf55-be45-4847-9d45-cf94445b71ca", "Early years language and learning", "early-years"),
@@ -52,8 +52,7 @@ public class CategoryFilter : FilterSubGroups
             new FilterAspect("19c29d11-ffbc-41d0-841c-ea8f0dfdda94", "Midwife and maternity", "midwife-maternity"),
             new FilterAspect("2b2489d5-aee8-42ef-8c97-d8fcccdb5a8b", "Perinatal mental health support (pregnancy to one year post birth)", "perinatal-mental-health"),
         }),
-        new("send", "Special educational needs and disabilities (SEND) support", FilterType.Checkboxes,
-            new IFilterAspect[]
+        new("send", "Special educational needs and disabilities (SEND) support", new IFilterAspect[]
             {
                 new FilterAspect("2db648ae-69fb-4f06-b76f-b66a3bb64215", "Autistic Spectrum Disorder (ASD)", "asd"),
                 new FilterAspect("9d5161ee-a289-47b4-a967-a5912ae143ba", "Breaks and respite", "breaks-respite"),
@@ -68,7 +67,7 @@ public class CategoryFilter : FilterSubGroups
                 new FilterAspect("38bf4fc2-f6b9-4c15-bc07-b03b707659bd", "Speech, language and communication needs", "speech-language"),
                 new FilterAspect("4c219f95-21da-4222-8286-bbe1cfaf675c", "Visual impairment", "visual-impairment")
             }),
-        new("transport", "Transport", FilterType.Checkboxes, new IFilterAspect[]
+        new("transport", "Transport", new IFilterAspect[]
         {
             new FilterAspect("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport", "community-transport")
         })
