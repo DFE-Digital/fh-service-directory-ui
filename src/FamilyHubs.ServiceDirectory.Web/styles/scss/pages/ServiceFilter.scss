@@ -89,20 +89,6 @@
     background-repeat: no-repeat;
 }
 
-.app-remove-filter-tag {
-    line-height: 1.5;
-    padding-left: 25px;
-    background-position: 5px center;
-    border: 2px solid $govuk-link-active-colour;
-
-    &:hover {
-        @include govuk-text-colour;
-        background-color: govuk-colour("white");
-        border: 2px solid $govuk-link-hover-colour;
-        cursor: pointer;
-    }
-}
-
 li.govuk-pagination__item--current {
     .app-button-link {
         color: govuk-colour("white");
@@ -125,10 +111,29 @@ li.govuk-pagination__item--current {
     }
 }
 
+//todo: the after for this class has content="", which sonetimes causes the text to be on one line with a blank line below
 .moj-filter__tag {
-    &:after {
-        background-image: none;
+    line-height: 1.5;
+    padding-left: 25px;
+    background-position: 5px center;
+    border: 2px solid $govuk-link-active-colour;
+    text-align: left;
+
+    &:hover {
+        @include govuk-text-colour;
+        background-color: govuk-colour("white");
+        border: 2px solid $govuk-link-hover-colour;
+        cursor: pointer;
     }
+
+    &:after {
+        all: unset;
+    }
+
+/*    &:after {
+        background-image: none;
+        content: none;
+    }*/
 
     &:hover:after {
         background-image: none;
