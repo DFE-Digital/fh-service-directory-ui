@@ -9,8 +9,7 @@ public abstract class FilterSubGroups : IFilterSubGroups
     public string Description { get; }
     public string PartialName => "_SubGroups";
     public IEnumerable<IFilter> SubFilters { get; }
-    //todo: not used remove from filter, or throw not implemented, or implement
-    public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();
+    public IEnumerable<IFilterAspect> Aspects { get; }
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
 
     protected FilterSubGroups(string name, string description, IEnumerable<IFilter> subFilters)
@@ -18,6 +17,7 @@ public abstract class FilterSubGroups : IFilterSubGroups
         Name = name;
         Description = description;
         SubFilters = subFilters as IFilter[] ?? subFilters.ToArray();
+        Aspects = SubFilters.SelectMany(f => f.Aspects);
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
 
@@ -25,7 +25,7 @@ public abstract class FilterSubGroups : IFilterSubGroups
     //    public IFilterSubGroups Apply(IQueryCollection query)
     public IFilter Apply(IQueryCollection query)
     {
-        return new PostFilterSubGroups(this, query);
+        return new AppliedFilterSubGroups(this, query);
     }
 
     public void AddFilterCriteria(ServicesParams servicesParams)
