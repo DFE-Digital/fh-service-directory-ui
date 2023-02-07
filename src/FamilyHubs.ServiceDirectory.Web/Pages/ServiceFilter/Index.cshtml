@@ -110,7 +110,7 @@ else {
                 }
                 else
                 {
-                    var firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
+                    Service? firstFamilyHub = Model.Services.FirstOrDefault(s => s.Type == ServiceType.FamilyHub);
                     IEnumerable<Service> servicesAndHubsToShow;
                     if (Model.OnlyShowOneFamilyHubAndHighlightIt && firstFamilyHub != null)
                     {

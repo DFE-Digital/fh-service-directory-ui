@@ -44,7 +44,7 @@
                 </div>
                 break;
             case FilterType.Select:
-                var filterOptionalSelect = (IFilterOptionalSelect) Model;
+                IFilterOptionalSelect filterOptionalSelect = (IFilterOptionalSelect) Model;
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input" id="@(filterOptionalSelect.OptionSelectedName)" name="@(filterOptionalSelect.OptionSelectedName)" type="checkbox" value="true" data-aria-controls="@(filterOptionalSelect.Name)-conditional"
