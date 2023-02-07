@@ -7,16 +7,18 @@ public abstract class Filter : IFilter
 {
     public string Name { get; }
     public string Description { get; }
+    public string PartialName { get; }
     public FilterType FilterType { get; }
     public IEnumerable<IFilterAspect> Aspects { get; }
     public IEnumerable<string> Values { get; }
 
     private readonly IFilterAspect[] _selectedFilterAspects;
 
-    protected Filter(string name, string description, FilterType filterType, IEnumerable<IFilterAspect> aspects)
+    protected Filter(string name, string description, string partialName, FilterType filterType, IEnumerable<IFilterAspect> aspects)
     {
         Name = name;
         Description = description;
+        PartialName = partialName;
         FilterType = filterType;
         Aspects = aspects;
 

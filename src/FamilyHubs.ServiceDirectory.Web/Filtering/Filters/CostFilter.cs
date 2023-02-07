@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 
 public class CostFilter : Filter
 {
-    public CostFilter() : base("cost", "Cost", FilterType.Checkboxes, new IFilterAspect[]
+    public CostFilter() : base("cost", "Cost", "_Checkboxes", FilterType.Checkboxes, new IFilterAspect[]
     {
         new FilterAspect("free", "Free"),
         new FilterAspect("pay-to-use", "Pay to ue")

@@ -1,0 +1,18 @@
+﻿@model IFilter
+
+<div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+    @foreach (var aspect in Model.Aspects)
+    {
+        string checkboxId = $"{Model.Name}-{aspect.Value}";
+        <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="@checkboxId" name="@Model.Name" type="checkbox" value="@aspect.Value"
+                   @if (Model.IsSelected(aspect))
+                   {
+                       @:checked
+                   }>
+            <label class="govuk-label govuk-checkboxes__label" for="@checkboxId">
+                @aspect.Description
+            </label>
+        </div>
+    }
+</div>

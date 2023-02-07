@@ -1,0 +1,19 @@
+﻿@model IFilter
+
+<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+    @foreach (var aspect in Model.Aspects)
+    {
+        string radioId = $"{Model.Name}-{aspect.Value}";
+        <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="@radioId" name="@Model.Name" type="radio" value="@aspect.Value"
+                   @if (Model.IsSelected(aspect))
+                   {
+                       @:checked
+                   }>
+
+            <label class="govuk-label govuk-radios__label" for="@radioId">
+                @aspect.Description
+            </label>
+        </div>
+    }
+</div>

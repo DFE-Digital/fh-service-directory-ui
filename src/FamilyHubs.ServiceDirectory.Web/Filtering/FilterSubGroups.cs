@@ -7,7 +7,7 @@ public abstract class FilterSubGroups : IFilterSubGroups
 {
     public string Name { get; }
     public string Description { get; }
-    public string PartialName => "_FilterGroupSubGroups";
+    public string PartialName => "_SubGroups";
     public IEnumerable<IFilter> SubFilters { get; }
     //todo: not used remove from filter, or throw not implemented, or implement
     public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();
