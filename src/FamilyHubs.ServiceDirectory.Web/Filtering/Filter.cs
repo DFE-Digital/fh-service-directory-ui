@@ -12,8 +12,6 @@ public abstract class Filter : IFilter
     public string Description { get; }
     public string PartialName { get; }
     public IEnumerable<IFilterAspect> Aspects { get; }
-    //todo: is this used anymore?
-    public IEnumerable<string> Values { get; }
 
     private readonly IFilterAspect[] _selectedFilterAspects;
 
@@ -25,8 +23,6 @@ public abstract class Filter : IFilter
         Aspects = aspects;
 
         _selectedFilterAspects = Aspects.Where(a => a.SelectedByDefault).ToArray();
-
-        Values = _selectedFilterAspects.Select(a => a.Value);
     }
 
     public virtual IFilter Apply(IQueryCollection query)

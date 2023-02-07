@@ -9,7 +9,6 @@ public interface IFilter
 
     string Name { get; }
     string Description { get; }
-
     string PartialName { get; }
 
     IEnumerable<IFilterAspect> Aspects { get; }
