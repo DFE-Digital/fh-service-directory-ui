@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,13 +34,13 @@ public static class ServiceDirectoryClientServiceCollectionExtension
         {
             client.BaseAddress = new Uri(ServiceDirectoryClient.GetEndpoint(configuration));
         })
-            .AddPolicyHandler((callbackServices, _) => HttpPolicyExtensions
+            .AddPolicyHandler((callbackServices, request) => HttpPolicyExtensions
                 .HandleTransientHttpError()
-                .WaitAndRetryAsync(delay, (_, timeSpan, retryAttempt, _) =>
+                .WaitAndRetryAsync(delay, (result, timespan, retryAttempt, context) =>
                 {
                     callbackServices.GetService<ILogger<ServiceDirectoryClient>>()?
-                        .LogWarning("Delaying for {timeSpan}, then making retry {RetryAttempt}.",
-                            timeSpan, retryAttempt);
+                        .LogWarning("Delaying for {Timespan}, then making retry {RetryAttempt}.",
+                            timespan, retryAttempt);
                 }))
             .AddPolicyHandler(timeoutPolicy);
 

@@ -15,7 +15,7 @@ public static class FilterDefinitions
 
     public const string ChildrenAndYoungPeopleAllId = "all";
 
-    //todo: we could read this data from the db (Taxonomy) and automatically pick up any changes to the categories
+    //todo: we could read this data from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
     public static readonly FilterSubGroups CategoryFilter = new("category", "Category", new Filter[]
     {
         new("activities", "Activities, clubs and groups", FilterType.Checkboxes, new IFilterAspect[]
