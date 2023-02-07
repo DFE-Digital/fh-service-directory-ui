@@ -2,14 +2,14 @@
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-public class PostFilterOptionalSelect : PostFilter, IFilterOptionalSelect
+public class AppliedFilterOptionalSelect : AppliedFilter, IFilterOptionalSelect
 {
     public bool IsOptionSelected { get; }
     public string OptionDescription => ((IFilterOptionalSelect)Filter).OptionDescription;
     public string SelectDescription => ((IFilterOptionalSelect)Filter).SelectDescription;
     public string OptionSelectedName { get; }
 
-    public PostFilterOptionalSelect(IFilterOptionalSelect filter, IQueryCollection query)
+    public AppliedFilterOptionalSelect(IFilterOptionalSelect filter, IQueryCollection query)
         : base(filter, query)
     {
         OptionSelectedName = $"{filter.Name}{IFilterOptionalSelect.OptionSelectedPostfix}";

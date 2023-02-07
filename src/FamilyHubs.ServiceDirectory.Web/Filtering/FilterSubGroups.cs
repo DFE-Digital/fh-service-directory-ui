@@ -22,8 +22,8 @@ public abstract class FilterSubGroups : IFilterSubGroups
     }
 
     //todo: covariance
-    //    public IFilterSubGroups ToPostFilter(IQueryCollection query)
-    public IFilter ToPostFilter(IQueryCollection query)
+    //    public IFilterSubGroups Apply(IQueryCollection query)
+    public IFilter Apply(IQueryCollection query)
     {
         return new PostFilterSubGroups(this, query);
     }

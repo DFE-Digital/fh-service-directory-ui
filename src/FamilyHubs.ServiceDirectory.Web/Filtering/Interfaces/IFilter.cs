@@ -15,7 +15,7 @@ public interface IFilter
     IEnumerable<IFilterAspect> Aspects { get; }
     IEnumerable<IFilterAspect> SelectedAspects { get; }
     bool IsSelected(IFilterAspect aspect);
-    IFilter ToPostFilter(IQueryCollection query);
+    IFilter Apply(IQueryCollection query);
 
     void AddFilterCriteria(ServicesParams servicesParams);
     void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams);

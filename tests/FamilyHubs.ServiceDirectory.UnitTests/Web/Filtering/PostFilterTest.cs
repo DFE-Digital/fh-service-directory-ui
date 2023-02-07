@@ -7,10 +7,10 @@
 
 //namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Filtering
 //{
-//    // xunit test for PostFilter in the style of lazcool
+//    // xunit test for AppliedFilter in the style of lazcool
 //    public class PostFilterTest
 //    {
-//        // xunit test for PostFilter constructor
+//        // xunit test for AppliedFilter constructor
 //        [Fact]
 //        public void PostFilterConstructorTest()
 //        {
@@ -20,7 +20,7 @@
 //            var remove = "remove";
 
 //            // act
-//            var postFilter = new PostFilter(filter.Object, form.Object, remove);
+//            var postFilter = new AppliedFilter(filter.Object, form.Object, remove);
 
 //            // assert
 //            Assert.Equal(filter.Object.Name, postFilter.Name);
@@ -31,7 +31,7 @@
 //            Assert.Equal(Enumerable.Empty<string>(), postFilter.Values);
 //        }
 
-//        // xunit test for PostFilter constructor with null remove
+//        // xunit test for AppliedFilter constructor with null remove
 //        [Fact]
 //        public void PostFilterConstructorWithNullRemoveTest()
 //        {
@@ -41,7 +41,7 @@
 //            string? remove = null;
 
 //            // act
-//            var postFilter = new PostFilter(filter.Object, form.Object, remove);
+//            var postFilter = new AppliedFilter(filter.Object, form.Object, remove);
 
 //            // assert
 //            Assert.Equal(filter.Object.Name, postFilter.Name);
@@ -52,7 +52,7 @@
 //            Assert.Equal(Enumerable.Empty<string>(), postFilter.Values);
 //        }
 
-//        // xunit test for PostFilter constructor with empty remove
+//        // xunit test for AppliedFilter constructor with empty remove
 //        [Fact]
 //        public void PostFilterConstructorWithEmptyRemoveTest()
 //        {
@@ -62,7 +62,7 @@
 //            var remove = string.Empty;
 
 //            // act
-//            var postFilter = new PostFilter(filter.Object, form.Object, remove);
+//            var postFilter = new AppliedFilter(filter.Object, form.Object, remove);
 
 //            // assert
 //            Assert.Equal(filter.Object.Name, postFilter.Name);

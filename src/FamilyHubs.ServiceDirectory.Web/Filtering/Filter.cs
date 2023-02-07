@@ -28,10 +28,9 @@ public abstract class Filter : IFilter
         Values = _selectedFilterAspects.Select(a => a.Value);
     }
 
-    public virtual IFilter ToPostFilter(IQueryCollection query)
+    public virtual IFilter Apply(IQueryCollection query)
     {
-        //todo: rename filter/postfilter, something like defaultfilter/appliedfilter??
-        return new PostFilter(this, query);
+        return new AppliedFilter(this, query);
     }
 
     public IEnumerable<IFilterAspect> SelectedAspects => _selectedFilterAspects;

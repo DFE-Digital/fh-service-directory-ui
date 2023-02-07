@@ -4,7 +4,7 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-public class PostFilter : IFilter
+public class AppliedFilter : IFilter
 {
     public string Name => Filter.Name;
     public string Description => Filter.Description;
@@ -14,7 +14,7 @@ public class PostFilter : IFilter
 
     protected readonly IFilter Filter;
 
-    public PostFilter(IFilter filter, IQueryCollection query)
+    public AppliedFilter(IFilter filter, IQueryCollection query)
     {
         Filter = filter;
 
@@ -35,9 +35,9 @@ public class PostFilter : IFilter
         return SelectedAspects.Any(a => a.Id == aspect.Id);
     }
 
-    public IFilter ToPostFilter(IQueryCollection query)
+    public IFilter Apply(IQueryCollection query)
     {
-        Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
+        Debug.Assert(false, "Calling Apply() on an AppliedFilter");
         return this;
     }
 

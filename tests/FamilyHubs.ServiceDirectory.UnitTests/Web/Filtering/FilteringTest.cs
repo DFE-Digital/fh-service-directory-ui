@@ -58,13 +58,13 @@
 //        var remove = "TestFilter1";
 
 //        // Act
-//        var postFilter = filter.ToPostFilter(form, remove);
+//        var postFilter = filter.Apply(form, remove);
 
 //        // Assert
-//        Assert.IsType<PostFilter>(postFilter);
-//        //Assert.Equal(filter, ((PostFilter)postFilter).BaseFilter);
-//        //Assert.Equal(form, ((PostFilter)postFilter).Form);
-//        //Assert.Equal(remove, ((PostFilter)postFilter).Remove);
+//        Assert.IsType<AppliedFilter>(postFilter);
+//        //Assert.Equal(filter, ((AppliedFilter)postFilter).BaseFilter);
+//        //Assert.Equal(form, ((AppliedFilter)postFilter).Form);
+//        //Assert.Equal(remove, ((AppliedFilter)postFilter).Remove);
 //    }
 
 //    [Fact]

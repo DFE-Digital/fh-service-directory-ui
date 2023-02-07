@@ -28,7 +28,7 @@
 //    public void PostFilterOptionalSelectConstructor(string? remove)
 //    {
 //        // act
-//        var postFilterOptionalSelect = new PostFilterOptionalSelect(FilterOptionalSelect.Object, Form.Object, remove);
+//        var postFilterOptionalSelect = new AppliedFilterOptionalSelect(FilterOptionalSelect.Object, Form.Object, remove);
 
 //        // assert
 //        Assert.Equal(FilterOptionalSelect.Object.Name, postFilterOptionalSelect.Name);

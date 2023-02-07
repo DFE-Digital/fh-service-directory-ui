@@ -20,15 +20,15 @@ public class PostFilterSubGroups : IFilterSubGroups
     {
         _filterSubGroups = filterSubGroups;
 
-        SubFilters = filterSubGroups.SubFilters.Select(f => new PostFilter(f, query)).ToArray();
+        SubFilters = filterSubGroups.SubFilters.Select(f => new AppliedFilter(f, query)).ToArray();
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
 
     //todo: covariance
-    //    public IFilterSubGroups ToPostFilter(IQueryCollection query)
-    public IFilter ToPostFilter(IQueryCollection query)
+    //    public IFilterSubGroups Apply(IQueryCollection query)
+    public IFilter Apply(IQueryCollection query)
     {
-        Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
+        Debug.Assert(false, "Calling Apply() on a AppliedFilter");
         return this;
     }
 

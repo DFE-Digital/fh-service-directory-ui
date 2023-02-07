@@ -220,7 +220,7 @@ public class ServiceFilterModel : PageModel
         // otherwise, apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
-            Filters = DefaultFilters.Select(fd => fd.ToPostFilter(Request.Query));
+            Filters = DefaultFilters.Select(fd => fd.Apply(Request.Query));
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
