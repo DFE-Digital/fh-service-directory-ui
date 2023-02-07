@@ -2,7 +2,10 @@
 
 declare global {
     interface Window {
-        GDS_CONSENT_COOKIE_VERSION: any;
+        GDS_CONSENT_COOKIE_VERSION: number;
+        GA_MEASUREMENT_ID: string;
+        GA_CONTAINER_ID: string;
+        GA_MEASUREMENT_URL: string;
     }
 }
 
@@ -16,9 +19,9 @@ var $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]'
 new CookieBanner($cookieBanner).init()
 
 // Initialise analytics if consent is given
-var userConsent = getConsentCookie()
+var userConsent = getConsentCookie();
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-    Analytics()
+    Analytics(window.GA_MEASUREMENT_ID, window.GA_MEASUREMENT_URL);
 }
 
 //todo: move this into scripts section on cookie page

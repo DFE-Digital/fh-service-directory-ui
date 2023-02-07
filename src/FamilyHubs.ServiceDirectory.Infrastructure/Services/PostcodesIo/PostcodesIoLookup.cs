@@ -64,7 +64,7 @@ public class PostcodesIoLookup : IPostcodeLookup, IHealthCheckUrlGroup
             }
         }
 
-        return (postcodeError, postcodesIoResponse.PostcodeInfo);
+        return (postcodeError, postcodesIoResponse.Result);
     }
 
     internal static string GetEndpoint(IConfiguration configuration)

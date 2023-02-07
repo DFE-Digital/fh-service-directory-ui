@@ -1,5 +1,9 @@
 # Todo
 
+* js in tmp/components/components
+
+* environment tags for non-optimised js
+
 * use stringvalues for multi-params?
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
