@@ -57,11 +57,24 @@ else {
                             @foreach (var filter in Model.Filters.Where(f => f.SelectedAspects.Any()))
                             {
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
-
                                 <ul class="moj-filter-tags">
-                                    @foreach (var selectedAspect in filter.SelectedAspects)
+                                    @* we could do this generically, if we had added a reference to the filter in the filteraspect *@
+                                    @if (filter is IFilterSubGroups filterSubGroups)
                                     {
-                                        <li><button type="submit" class="moj-filter__tag app-icon-cross" name="@IFilter.RemoveKey" value="@(filter.Name)--@selectedAspect.Value"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                        foreach (var subFilter in filterSubGroups.SubFilters)
+                                        {
+                                            foreach (var selectedAspect in subFilter.SelectedAspects)
+                                            {
+                                                <li><button type="submit" class="moj-filter__tag app-icon-cross" name="@IFilter.RemoveKey" value="@(subFilter.Name)--@selectedAspect.Value"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var selectedAspect in filter.SelectedAspects)
+                                        {
+                                            <li><button type="submit" class="moj-filter__tag app-icon-cross" name="@IFilter.RemoveKey" value="@(filter.Name)--@selectedAspect.Value"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                        }
                                     }
                                 </ul>
                             }

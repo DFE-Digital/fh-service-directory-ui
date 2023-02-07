@@ -12,6 +12,7 @@ public abstract class Filter : IFilter
     public string Description { get; }
     public string PartialName { get; }
     public IEnumerable<IFilterAspect> Aspects { get; }
+    //todo: is this used anymore?
     public IEnumerable<string> Values { get; }
 
     private readonly IFilterAspect[] _selectedFilterAspects;
