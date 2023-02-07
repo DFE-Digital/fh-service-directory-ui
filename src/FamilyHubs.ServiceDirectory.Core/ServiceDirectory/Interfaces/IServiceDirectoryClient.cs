@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
     
 namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
@@ -8,7 +7,7 @@ namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 public interface IServiceDirectoryClient
 {
     // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
-    Task<PaginatedList<OpenReferralServiceDto>> GetServices(
+    Task<PaginatedList<ServiceDto>> GetServices(
         string districtCode,
         float latitude,
         float longitude,
@@ -23,7 +22,7 @@ public interface IServiceDirectoryClient
         CancellationToken cancellationToken = default);
 
     // caches organisations for 1 hour
-    Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
+    Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
 
     Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
         string districtCode,
