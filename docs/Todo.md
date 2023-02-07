@@ -17,7 +17,7 @@
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
-* we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
+* we could read the categories from the db (Taxonomy) and automatically pick up any changes to the categories
  (reuse old service to update data on the fly)
 
 * this looks useful for exception testing: https://github.com/dotnet/aspnetcore/blob/ed1ac4285213158a85f69449dba448ef0c65fbf4/src/Testing/src/ExceptionAssertions.cs
