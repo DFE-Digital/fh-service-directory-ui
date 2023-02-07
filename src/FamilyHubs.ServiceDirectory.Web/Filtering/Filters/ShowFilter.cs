@@ -5,7 +5,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 
 public class ShowFilter : Filter
 {
-    //todo: const for checkboxes/radios partialname
     public ShowFilter() : base("show", "Show", CheckboxesPartialName, new IFilterAspect[]
     {
         //todo: true.ToString()
@@ -21,13 +20,11 @@ public class ShowFilter : Filter
         {
             case 0:
                 servicesParams.MaxFamilyHubs = 1;
-                //OnlyShowOneFamilyHubAndHighlightIt = true;
                 break;
             case 1:
                 servicesParams.FamilyHub = bool.Parse(selectedAspects.First().Id);
                 break;
             //case 2: there are only 2 options, so if both are selected, there's no need to filter
         }
-        //servicesParams.MaxFamilyHubs = OnlyShowOneFamilyHubAndHighlightIt ? 1 : null;
     }
 }

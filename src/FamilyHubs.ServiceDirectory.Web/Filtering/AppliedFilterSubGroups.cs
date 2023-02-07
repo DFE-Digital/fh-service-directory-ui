@@ -42,7 +42,7 @@ public class AppliedFilterSubGroups : IFilterSubGroups
         _filterSubGroups.AddFilterCriteria(selectedAspects, servicesParams);
     }
 
-    //todo: throw not implemented, or implement
+    // makes sense, but no current consumers
     public bool IsSelected(IFilterAspect aspect)
     {
         throw new NotImplementedException();

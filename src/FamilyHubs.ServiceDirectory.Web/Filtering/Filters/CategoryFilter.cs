@@ -9,7 +9,6 @@ public class CategoryFilter : FilterSubGroups
 
     public CategoryFilter() : base("category", "Category", new SubFilter[]
     {
-        //todo: for names, use initials or easier to recognise snippet. e.g. sr or sport, ss or smoke etc? ask designers/content?
         new("activities", "Activities, clubs and groups", new IFilterAspect[]
         {
             new FilterAspect("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "activities"),

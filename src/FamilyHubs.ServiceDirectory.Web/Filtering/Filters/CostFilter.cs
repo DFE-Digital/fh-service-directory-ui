@@ -5,10 +5,12 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 
 public class CostFilter : Filter
 {
+    private const string PayToUseId = "pay-to-use";
+    
     public CostFilter() : base("cost", "Cost", CheckboxesPartialName, new IFilterAspect[]
     {
         new FilterAspect("free", "Free"),
-        new FilterAspect("pay-to-use", "Pay to ue")
+        new FilterAspect(PayToUseId, "Pay to ue")
     })
     {
     }
@@ -17,8 +19,7 @@ public class CostFilter : Filter
     {
         if (selectedAspects.Count() == 1)
         {
-            //todo: const for pay-to-use
-            servicesParams.IsPaidFor = selectedAspects.First().Id == "pay-to-use";
+            servicesParams.IsPaidFor = selectedAspects.First().Id == PayToUseId;
         }
     }
 }
