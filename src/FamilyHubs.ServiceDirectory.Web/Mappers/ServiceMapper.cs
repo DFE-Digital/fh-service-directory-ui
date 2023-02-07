@@ -14,15 +14,13 @@ public static class ServiceMapper
 {
     private static readonly NumberFormatInfo UkNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
 
-    public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceWithOrganisation> servicesWithOrganisation)
+    public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceDto> services)
     {
-        return servicesWithOrganisation.Select(ToViewModel);
+        return services.Select(ToViewModel);
     }
 
-    private static Service ToViewModel(ServiceWithOrganisation serviceWithOrganisation)
+    private static Service ToViewModel(ServiceDto service)
     {
-        var service = serviceWithOrganisation.Service;
-
         Debug.Assert(service.ServiceType.Name == "Family Experience");
 
         var serviceAtLocation = service.ServiceAtLocations?.FirstOrDefault();
@@ -39,7 +37,6 @@ public static class ServiceMapper
             GetAddress(serviceAtLocation),
             GetWhen(serviceAtLocation),
             GetCategories(service),
-            serviceWithOrganisation.Organisation.Name,
             GetAgeRange(eligibility),
             contact?.Telephone,
             contact?.Email,

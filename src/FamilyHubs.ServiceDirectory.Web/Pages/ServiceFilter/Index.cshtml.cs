@@ -248,7 +248,7 @@ public class ServiceFilterModel : PageModel
 
         OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
 
-        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(serviceParams);
+        var services = await _serviceDirectoryClient.GetServices(serviceParams);
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
 
