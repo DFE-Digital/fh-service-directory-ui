@@ -8,6 +8,7 @@ public class PostFilterSubGroups : IFilterSubGroups
 {
     public string Name => _filterSubGroups.Name;
     public string Description => _filterSubGroups.Description;
+    public string PartialName => _filterSubGroups.PartialName;
     public IEnumerable<IFilter> SubFilters { get; }
     //todo: not used remove from filter, or throw not implemented, or implement
     public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();

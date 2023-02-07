@@ -45,36 +45,8 @@
                 </div>
                 break;
             case FilterType.Select:
-                IFilterOptionalSelect filterOptionalSelect = (IFilterOptionalSelect) Model;
-                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="@(filterOptionalSelect.OptionSelectedName)" name="@(filterOptionalSelect.OptionSelectedName)" type="checkbox" value="true" data-aria-controls="@(filterOptionalSelect.Name)-conditional"
-                               @if (filterOptionalSelect.IsOptionSelected)
-                               {
-                                   @:checked
-                               }>
-                        <label class="govuk-label govuk-checkboxes__label" for="@(filterOptionalSelect.OptionSelectedName)">
-                            @filterOptionalSelect.OptionDescription
-                        </label>
-                    </div>
-                    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="@(filterOptionalSelect.Name)-conditional">
-
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="@(filterOptionalSelect.Name)-select">
-                                @filterOptionalSelect.SelectDescription
-                            </label>
-                            <select class="govuk-select" id="@(filterOptionalSelect.Name)-select" name="@filterOptionalSelect.Name">
-                                @foreach (var aspect in filterOptionalSelect.Aspects)
-                                {
-                                    <!option value="@aspect.Value" @(filterOptionalSelect.IsSelected(aspect)?"selected":"")>@aspect.Description</!option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                break;
             case FilterType.SubGroups:
-                <partial name="@Model.PartialName" model="Model" />
+                <partial name="FilterGroups/@Model.PartialName" model="Model" />
                 break;
         }
     </fieldset>
