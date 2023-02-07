@@ -8,7 +8,11 @@ public abstract class FilterSubGroups : IFilterSubGroups
     public string Name { get; }
     public string Description { get; }
     public IEnumerable<IFilter> SubFilters { get; }
+    //todo: not used remove from filter, or throw not implemented, or implement
+    public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
+    //todo: going
+    public FilterType FilterType => FilterType.SubGroups;
 
     protected FilterSubGroups(string name, string description, IEnumerable<IFilter> subFilters)
     {
@@ -18,7 +22,9 @@ public abstract class FilterSubGroups : IFilterSubGroups
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
 
-    public IFilterSubGroups ToPostFilter(IQueryCollection query)
+    //todo: covariance
+    //    public IFilterSubGroups ToPostFilter(IQueryCollection query)
+    public IFilter ToPostFilter(IQueryCollection query)
     {
         return new PostFilterSubGroups(this, query);
     }
@@ -29,4 +35,10 @@ public abstract class FilterSubGroups : IFilterSubGroups
     }
 
     public abstract void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams);
+
+    //todo: throw not implemented, or implement
+    public bool IsSelected(IFilterAspect aspect)
+    {
+        throw new NotImplementedException();
+    }
 }

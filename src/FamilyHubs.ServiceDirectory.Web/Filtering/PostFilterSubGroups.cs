@@ -4,13 +4,16 @@ using System.Diagnostics;
 
 namespace FamilyHubs.ServiceDirectory.Web.Filtering;
 
-//todo: can it also implement IFilter?
 public class PostFilterSubGroups : IFilterSubGroups
 {
     public string Name => _filterSubGroups.Name;
     public string Description => _filterSubGroups.Description;
     public IEnumerable<IFilter> SubFilters { get; }
+    //todo: not used remove from filter, or throw not implemented, or implement
+    public IEnumerable<IFilterAspect> Aspects => throw new NotImplementedException();
     public IEnumerable<IFilterAspect> SelectedAspects { get; }
+    //todo: going
+    public FilterType FilterType => FilterType.SubGroups;
 
     private readonly FilterSubGroups _filterSubGroups;
 
@@ -22,7 +25,9 @@ public class PostFilterSubGroups : IFilterSubGroups
         SelectedAspects = SubFilters.SelectMany(f => f.SelectedAspects);
     }
 
-    public IFilterSubGroups ToPostFilter(IQueryCollection query)
+    //todo: covariance
+    //    public IFilterSubGroups ToPostFilter(IQueryCollection query)
+    public IFilter ToPostFilter(IQueryCollection query)
     {
         Debug.Assert(false, "Calling ToPostFilter() on a PostFilter");
         return this;
@@ -38,5 +43,11 @@ public class PostFilterSubGroups : IFilterSubGroups
         // or this?
         //throw new NotImplementedException();
         _filterSubGroups.AddFilterCriteria(selectedAspects, servicesParams);
+    }
+
+    //todo: throw not implemented, or implement
+    public bool IsSelected(IFilterAspect aspect)
+    {
+        throw new NotImplementedException();
     }
 }

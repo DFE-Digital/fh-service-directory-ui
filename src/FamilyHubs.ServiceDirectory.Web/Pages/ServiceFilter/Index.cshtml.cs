@@ -20,10 +20,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
-    private static readonly FilterSubGroups DefaultCategoryFilter = new CategoryFilter();
-
     public static readonly IEnumerable<IFilter> DefaultFilters = new IFilter[]
     {
+        new CategoryFilter(),
         new CostFilter(),
         new ShowFilter(),
         new SearchWithinFilter(),
@@ -31,8 +30,6 @@ public class ServiceFilterModel : PageModel
     };
 
     public IEnumerable<IFilter> Filters { get; set; }
-    //todo: into Filters (above)
-    public IFilterSubGroups CategoryFilter { get; set; }
     public string? Postcode { get; set; }
     public string? AdminArea { get; set; }
     public float? Latitude { get; set; }
@@ -52,7 +49,6 @@ public class ServiceFilterModel : PageModel
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
         Filters = DefaultFilters;
-        CategoryFilter = DefaultCategoryFilter;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -225,7 +221,6 @@ public class ServiceFilterModel : PageModel
         if (!FromPostcodeSearch)
         {
             Filters = DefaultFilters.Select(fd => fd.ToPostFilter(Request.Query));
-            CategoryFilter = DefaultCategoryFilter.ToPostFilter(Request.Query);
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
@@ -250,7 +245,6 @@ public class ServiceFilterModel : PageModel
         {
             filter.AddFilterCriteria(serviceParams);
         }
-        CategoryFilter.AddFilterCriteria(serviceParams);
 
         OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
 
