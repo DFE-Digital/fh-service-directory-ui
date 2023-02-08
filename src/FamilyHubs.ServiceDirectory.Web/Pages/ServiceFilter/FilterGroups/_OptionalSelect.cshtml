@@ -1,0 +1,28 @@
+﻿@model IFilterOptionalSelect
+
+<div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+    <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input" id="@(Model.OptionSelectedName)" name="@(Model.OptionSelectedName)" type="checkbox" value="true" data-aria-controls="@(Model.Name)-conditional"
+        @if (Model.IsOptionSelected)
+               {
+                   @:checked
+               }>
+        <label class="govuk-label govuk-checkboxes__label" for="@(Model.OptionSelectedName)">
+            @Model.OptionDescription
+        </label>
+    </div>
+    <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="@(Model.Name)-conditional">
+
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="@(Model.Name)-select">
+                @Model.SelectDescription
+            </label>
+            <select class="govuk-select" id="@(Model.Name)-select" name="@Model.Name">
+                @foreach (var aspect in Model.Aspects)
+                {
+                    <!option value="@aspect.Value" @(Model.IsSelected(aspect) ? "selected" : "")>@aspect.Description</!option>
+                }
+            </select>
+        </div>
+    </div>
+</div>

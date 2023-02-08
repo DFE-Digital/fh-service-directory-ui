@@ -154,7 +154,7 @@ export function resetCookies() {
         const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
         if (analyticsAllowed) {
-            Analytics(window.GA_MEASUREMENT_ID, window.GA_MEASUREMENT_URL);
+            Analytics(window.GA_MEASUREMENT_ID);
         }
 
         if (!options[cookieType]) {

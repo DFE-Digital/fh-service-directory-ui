@@ -1,11 +1,7 @@
-﻿namespace FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
+﻿
+namespace FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 
-public interface IFilterSubGroups
+public interface IFilterSubGroups : IFilter
 {
-    string Name { get; }
-    string Description { get; }
     IEnumerable<IFilter> SubFilters { get; }
-    public IEnumerable<IFilterAspect> SelectedAspects { get; }
-    public IEnumerable<string> Values { get; }
-    IFilterSubGroups ToPostFilter(IFormCollection form, string? remove);
 }

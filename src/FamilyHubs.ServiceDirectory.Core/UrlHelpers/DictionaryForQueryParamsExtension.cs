@@ -28,15 +28,8 @@ public static class DictionaryForQueryParamsExtension
 
     public static string CreateUriWithQueryString(this IEnumerable<KeyValuePair<string, string?>> queryString, string uri)
     {
-        if (uri == null)
-        {
-            throw new ArgumentNullException(nameof(uri));
-        }
-
-        if (queryString == null)
-        {
-            throw new ArgumentNullException(nameof(queryString));
-        }
+        ArgumentNullException.ThrowIfNull(uri);
+        ArgumentNullException.ThrowIfNull(queryString);
 
         var anchorIndex = uri.IndexOf('#');
         var uriToBeAppended = uri;

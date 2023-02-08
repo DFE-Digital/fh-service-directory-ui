@@ -1,160 +1,260 @@
 using System.Diagnostics.CodeAnalysis;
-using FamilyHubs.ServiceDirectory.Core.Distance;
+using System.Dynamic;
 using FamilyHubs.ServiceDirectory.Core.Pagination;
 using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
+using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
+using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
+using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
+    public static readonly IEnumerable<IFilter> DefaultFilters = new IFilter[]
+    {
+        new CategoryFilter(),
+        new CostFilter(),
+        new ShowFilter(),
+        new SearchWithinFilter(),
+        new ChildrenAndYoungPeopleFilter()
+    };
+
+    // simpler than asking all the filters to remove themselves
+    private static HashSet<string> _parametersWhitelist = new()
+    {
+        "postcode",
+        "adminarea",
+        "latitude",
+        "longitude",
+    };
+
     public IEnumerable<IFilter> Filters { get; set; }
-    //todo: into Filters (above)
-    public IFilterSubGroups TypeOfSupportFilter { get; set; }
     public string? Postcode { get; set; }
+    public string? AdminArea { get; set; }
+    public float? Latitude { get; set; }
+    public float? Longitude { get; set; }
     public IEnumerable<Service> Services { get; set; }
     public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
-    public bool IsGet { get; set; }
+    public bool FromPostcodeSearch { get; set; }
     public int CurrentPage { get; set; }
     public IPagination Pagination { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
+    private readonly IPostcodeLookup _postcodeLookup;
     private const int PageSize = 10;
 
-    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient)
+    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient, IPostcodeLookup postcodeLookup)
     {
         _serviceDirectoryClient = serviceDirectoryClient;
-        Filters = FilterDefinitions.Filters;
-        TypeOfSupportFilter = FilterDefinitions.CategoryFilter;
+        _postcodeLookup = postcodeLookup;
+        Filters = DefaultFilters;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
-        CurrentPage = 1;
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    public Task<IActionResult> OnPost(string? postcode, string? adminArea)
     {
-        if (AnyParametersMissing(postcode, adminDistrict, latitude, longitude))
+        CheckParameters(postcode);
+
+        return HandlePost(postcode, adminArea);
+    }
+
+    private async Task<IActionResult> HandlePost(string postcode, string? adminArea)
+    {
+        dynamic routeValues;
+
+        if (adminArea == null)
+        {
+            var (postcodeError, postcodeInfo) = await _postcodeLookup.Get(postcode);
+            if (postcodeError != PostcodeError.None)
+            {
+                return RedirectToPage("/PostcodeSearch/Index", new { postcodeError });
+            }
+
+            routeValues = GetFromPostcodeSearchRouteValues(postcodeInfo!);
+        }
+        else
+        {
+            var remove = GetRemove(Request.Form);
+
+            // remove key/values we don't want to keep
+            var filteredForm = Request.Form
+                .Where(kvp => KeepParam(kvp.Key, remove.Key));
+
+            //todo: hacky: ask optional filters (or all filters), to manipulate form
+            if (!filteredForm.Any(kvp => kvp.Key == "children_and_young-option-selected"))
+            {
+                filteredForm = filteredForm.Where(KeyValuePair => KeyValuePair.Key != "children_and_young");
+            }
+
+            if (remove.Value != null)
+            {
+                // remove values we don't want to keep
+                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove));
+            }
+
+            routeValues = ToRouteValues(filteredForm);
+        }
+
+        return RedirectToPage("/ServiceFilter/Index", routeValues);
+    }
+
+    private static dynamic GetFromPostcodeSearchRouteValues(IPostcodeInfo postcodeInfo)
+    {
+        dynamic routeValues = new
+        {
+            postcode = postcodeInfo.Postcode,
+            adminarea = postcodeInfo.AdminArea,
+            latitude = postcodeInfo.Latitude,
+            longitude = postcodeInfo.Longitude,
+            frompostcodesearch = true
+        };
+        return routeValues;
+    }
+
+    private static dynamic ToRouteValues(IEnumerable<KeyValuePair<string, StringValues>> values)
+    {
+        dynamic routeValues = new ExpandoObject();
+        var routeValuesDictionary = (IDictionary<string, object>) routeValues;
+
+        foreach (var keyValuePair in values)
+        {
+            // ToString() stops RedirectToPage() using key=foo&key=bar, and instead we get key=foo,bar which we unpick on the GET
+            routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value.ToString();
+        }
+
+        return routeValues;
+    }
+
+    private static KeyValuePair<string?, string?> GetRemove(IFormCollection form)
+    {
+        string? remove = form[IFilter.RemoveKey];
+        switch (remove)
+        {
+            case null:
+                return default;
+            case IFilter.RemoveAllValue:
+                return new KeyValuePair<string?, string?>(IFilter.RemoveAllValue, null);
+        }
+
+        int filterNameEndPos = remove.IndexOf("--", StringComparison.Ordinal);
+        if (filterNameEndPos == -1)
+            return default;
+
+        return new KeyValuePair<string?, string?>(remove[..filterNameEndPos], remove[(filterNameEndPos + 2)..]);
+    }
+
+    private static KeyValuePair<string, StringValues> RemoveFilterValue(
+        KeyValuePair<string, StringValues> kvp, KeyValuePair<string?, string?> remove)
+    {
+        if (kvp.Key != remove.Key)
+            return kvp;
+
+        var values = kvp.Value.ToList();
+        values.Remove(remove.Value);
+        return new KeyValuePair<string, StringValues>(kvp.Key, new StringValues(values.ToArray()));
+    }
+
+    private static bool KeepParam(string key, string? removeKey)
+    {
+        if (key is "__RequestVerificationToken" or IFilter.RemoveKey)
+            return false;
+
+        if (removeKey == null)
+            return true;
+
+        //todo: move this logic out of here?
+        if (removeKey == IFilter.RemoveAllValue)
+        {
+            return _parametersWhitelist.Contains(key.ToLowerInvariant());
+        }
+
+        // if we're removing a filter, go back to page 1
+        if (key == QueryParamKeys.PageNum)
+            return false;
+
+        //todo: we don't want knowledge of the internals of the optional filter here
+        if (key.EndsWith("-option-selected") && key.StartsWith(removeKey))
+            return false;
+
+        // keep, but we might remove the only value later
+        return true;
+    }
+
+    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
+    {
+        if (AnyParametersMissing(postcode, adminArea, latitude, longitude))
         {
             // handle cases:
             // * when user goes filter page => cookie page => back link from success banner
             // * user manually removes query parameters from url
+            // * user goes directly to page by typing it into the address bar
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
 
-        return HandleGet(postcode!, adminDistrict!, latitude!.Value, longitude!.Value);
+        return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
     }
 
-    private static bool AnyParametersMissing(string? postcode, string? adminDistrict, float? latitude, float? longitude)
+    private static bool AnyParametersMissing(string? postcode, string? adminArea, float? latitude, float? longitude)
     {
         return string.IsNullOrEmpty(postcode)
-                || string.IsNullOrEmpty(adminDistrict)
-                || latitude == null
-                || longitude == null;
+               || string.IsNullOrEmpty(adminArea)
+               || latitude == null
+               || longitude == null;
     }
 
-    private static void CheckParameters([NotNull] string? postcode, [NotNull] string? adminDistrict, [NotNull] float? latitude, [NotNull] float? longitude)
+    private async Task<IActionResult> HandleGet(string postcode, string adminArea, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch)
     {
-        ArgumentException.ThrowIfNullOrEmpty(postcode);
-        ArgumentException.ThrowIfNullOrEmpty(adminDistrict);
-        ArgumentNullException.ThrowIfNull(latitude);
-        ArgumentNullException.ThrowIfNull(longitude);
-    }
-
-    private async Task<IActionResult> HandleGet(string postcode, string adminDistrict, float latitude, float longitude)
-    {
-        IsGet = true;
+        FromPostcodeSearch = fromPostcodeSearch == true;
         Postcode = postcode;
+        AdminArea = adminArea;
+        Latitude = latitude;
+        Longitude = longitude;
+        CurrentPage = pageNum ?? 1;
 
-        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
+        // if we've just come from the postcode search, go with the configured default filter options
+        // otherwise, apply the filters from the query parameters
+        if (!FromPostcodeSearch)
+        {
+            Filters = DefaultFilters.Select(fd => fd.Apply(Request.Query));
+        }
+
+        (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
 
         return Page();
     }
 
-    public Task OnPost(string? postcode, string? adminDistrict, float? latitude, float? longitude, string? remove, string? pageNum)
+    private static void CheckParameters([NotNull] string? postcode)
     {
-        CheckParameters(postcode, adminDistrict, latitude, longitude);
-
-        return HandlePost(postcode, adminDistrict, latitude.Value, longitude.Value, remove, pageNum);
+        ArgumentException.ThrowIfNullOrEmpty(postcode);
     }
 
-    private async Task HandlePost(string postcode, string adminDistrict, float latitude, float longitude, string? remove, string? pageNum)
+    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
-        IsGet = false;
-
-        Postcode = postcode;
-
-        Filters = FilterDefinitions.Filters.Select(fd => fd.ToPostFilter(Request.Form, remove));
-        TypeOfSupportFilter = FilterDefinitions.CategoryFilter.ToPostFilter(Request.Form, remove);
-
-        //todo: have page in querystring for bookmarking?
-        if (!string.IsNullOrWhiteSpace(pageNum))
-            CurrentPage = int.Parse(pageNum);
-
-        (Services, Pagination) = await GetServicesAndPagination(adminDistrict, latitude, longitude);
-    }
-
-    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminDistrict, float latitude, float longitude)
-    {
-        //todo: add method to filter to add its filter criteria to a request object sent to getservices.., then call in a foreach loop
-        int? searchWithinMeters = null;
-        var searchWithinFilter = Filters.First(f => f.Name == FilterDefinitions.SearchWithinFilterName);
-        var searchWithFilterValue = searchWithinFilter.Values.FirstOrDefault();
-        if (searchWithFilterValue != null)
+        var serviceParams = new ServicesParams(adminArea, latitude, longitude)
         {
-            searchWithinMeters = DistanceConverter.MilesToMeters(int.Parse(searchWithFilterValue));
+            PageNumber = CurrentPage,
+            PageSize = PageSize
+        };
+
+        foreach (var filter in Filters)
+        {
+            filter.AddFilterCriteria(serviceParams);
         }
 
-        bool? isPaidFor = null;
-        var costFilter = Filters.First(f => f.Name == FilterDefinitions.CostFilterName);
-        if (costFilter.Values.Count() == 1)
-        {
-            isPaidFor = costFilter.Values.First() == "pay-to-use";
-        }
+        OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
 
-        bool? familyHubFilter = null;
-        var showFilter = Filters.First(f => f.Name == FilterDefinitions.ShowFilterName);
-        switch (showFilter.Values.Count())
-        {
-            case 0:
-                OnlyShowOneFamilyHubAndHighlightIt = true;
-                break;
-            case 1:
-                familyHubFilter = bool.Parse(showFilter.Values.First());
-                break;
-            //case 2: there are only 2 options, so if both are selected, there's no need to filter
-        }
-
-        int? givenAge = null;
-        var childrenFilter = Filters.First(f => f.Name == FilterDefinitions.ChildrenAndYoungPeopleFilterName);
-        var childFilterValue = childrenFilter.Values.FirstOrDefault();
-        if (childFilterValue != null && childFilterValue != FilterDefinitions.ChildrenAndYoungPeopleAllId)
-        {
-            givenAge = int.Parse(childFilterValue);
-        }
-
-        // whilst we limit results to a single local authority, we don't actually need to get the organisation for each service
-        // we could assume that they all share the same organisation
-        // leave it as-is for now though (as we handle the more generic case)
-
-        var services = await _serviceDirectoryClient.GetServicesWithOrganisation(
-            adminDistrict,
-            latitude,
-            longitude,
-            searchWithinMeters,
-            givenAge,
-            isPaidFor,
-            OnlyShowOneFamilyHubAndHighlightIt ? 1 : null,
-            familyHubFilter,
-            TypeOfSupportFilter.Values,
-            CurrentPage,
-            PageSize);
+        var services = await _serviceDirectoryClient.GetServices(serviceParams);
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
 

@@ -1,10 +1,19 @@
 # Todo
 
+* resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared
+
+* update url paths to match prototype
+
 * js in tmp/components/components
 
 * environment tags for non-optimised js
 
+* pick up standard libraries such as jQuery from one of the big CDN's (Google/MS/jQuery) with fallback to fetching a local copy.
+
 * use stringvalues for multi-params?
+
+* fix extra whitespace in filter tag sometimes when text wraps
+* fix incorrect colour of bottom border of header in chromium browsers
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 

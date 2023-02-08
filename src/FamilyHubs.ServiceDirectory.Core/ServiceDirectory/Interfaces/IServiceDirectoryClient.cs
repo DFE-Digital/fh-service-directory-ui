@@ -8,33 +8,21 @@ public interface IServiceDirectoryClient
 {
     // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
     Task<PaginatedList<ServiceDto>> GetServices(
-        string districtCode,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesParams servicesParams,
         CancellationToken cancellationToken = default);
 
-    // caches organisations for 1 hour
+    /// <summary>
+    /// Fetches an organisation from the service directory
+    /// </summary>
+    /// <param name="id">The ID of the organisation to fetch.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The organisation</returns>
+    /// <remarks>
+    /// Organisations are cached for 1 hour.
+    /// </remarks>
     Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
 
     Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        string districtCode,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesParams servicesParams,
         CancellationToken cancellationToken = default);
 }

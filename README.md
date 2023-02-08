@@ -34,7 +34,7 @@ The bundling process supports the use of ECMAScript modules.
 
 To manually transpile, bundle and minify the js files, run the `js` gulp task, or run the `js:watch` gulp task to initiate a watcher that will automatically run the process when the ts/js files are changed.
 
-The entry point for the site's JavaScript is `scripts\app.ts`. This file imports the other modules that make up the site's JavaScript. That is then bundled with GOVUK's JavaScript.
+The entry point for the site's JavaScript is `scripts\app.ts`. This file imports the modules that make up the site's JavaScript.
 
 ## Debugging the JavaScript in Visual Studio
 
