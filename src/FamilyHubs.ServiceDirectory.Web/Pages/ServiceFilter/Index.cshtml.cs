@@ -185,7 +185,6 @@ public class ServiceFilterModel : PageModel
         if (AnyParametersMissing(postcode, adminArea, latitude, longitude))
         {
             // handle cases:
-            //todo: check
             // * when user goes filter page => cookie page => back link from success banner
             // * user manually removes query parameters from url
             // * user goes directly to page by typing it into the address bar
