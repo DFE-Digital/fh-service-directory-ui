@@ -35,7 +35,7 @@ public abstract class FilterSubGroups : IFilterSubGroups
 
     public abstract void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams);
 
-    //todo: throw not implemented, or implement
+    // makes sense, but no current consumers
     public bool IsSelected(IFilterAspect aspect)
     {
         throw new NotImplementedException();
