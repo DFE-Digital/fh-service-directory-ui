@@ -114,10 +114,10 @@ public class ServiceFilterModel : PageModel
         dynamic routeValues = new
         {
             postcode = postcodeInfo.Postcode,
-            adminArea = postcodeInfo.AdminArea,
+            adminarea = postcodeInfo.AdminArea,
             latitude = postcodeInfo.Latitude,
             longitude = postcodeInfo.Longitude,
-            fromPostcodeSearch = true
+            frompostcodesearch = true
         };
         return routeValues;
     }

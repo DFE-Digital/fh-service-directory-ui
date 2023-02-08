@@ -22,10 +22,10 @@
 else {
     <form method="post" asp-page="/ServiceFilter/Index">
 
-        <input type="hidden" asp-for="Postcode" value="@Model.Postcode" />
-        <input type="hidden" asp-for="AdminArea" value="@Model.AdminArea" />
-        <input type="hidden" asp-for="Latitude" value="@Model.Latitude" />
-        <input type="hidden" asp-for="Longitude" value="@Model.Longitude" />
+        <input type="hidden" asp-for="Postcode" name="postcode" value="@Model.Postcode" />
+        <input type="hidden" asp-for="AdminArea" name="adminarea" value="@Model.AdminArea" />
+        <input type="hidden" asp-for="Latitude" name="latitude" value="@Model.Latitude" />
+        <input type="hidden" asp-for="Longitude" name="longitude" value="@Model.Longitude" />
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">

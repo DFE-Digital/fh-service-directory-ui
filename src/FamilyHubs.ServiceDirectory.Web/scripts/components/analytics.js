@@ -85,6 +85,7 @@ function getPiiSafePageView(gaMeasurementId) {
 
 function getPiiSafeQueryString(queryString) {
 
+    //todo: for safety, convert to lowercase, so that if the user changes the case of the url, we still don't collect pii
     const queryParams = new URLSearchParams(queryString);
 
     let postcode = queryParams.get("postcode");
