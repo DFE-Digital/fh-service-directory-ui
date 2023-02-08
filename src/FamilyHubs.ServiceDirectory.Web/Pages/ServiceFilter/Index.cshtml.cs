@@ -87,12 +87,11 @@ public class ServiceFilterModel : PageModel
         {
             var remove = GetRemove(Request.Form);
 
-            //todo: work with a list?
             // remove key/values we don't want to keep
             var filteredForm = Request.Form
                 .Where(kvp => KeepParam(kvp.Key, remove.Key));
 
-            //todo: hacky
+            //todo: hacky: ask optional filters (or all filters), to manipulate form
             if (!filteredForm.Any(kvp => kvp.Key == "children_and_young-option-selected"))
             {
                 filteredForm = filteredForm.Where(KeyValuePair => KeyValuePair.Key != "children_and_young");
