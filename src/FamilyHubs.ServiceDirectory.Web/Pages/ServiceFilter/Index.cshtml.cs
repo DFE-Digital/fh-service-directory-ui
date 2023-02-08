@@ -8,7 +8,6 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
-using FamilyHubs.ServiceDirectory.Web.Filtering;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -61,9 +60,6 @@ public class ServiceFilterModel : PageModel
         return HandlePost(postcode, adminArea);
     }
 
-    //todo: input hidden for postcode etc. so don't keep getting
-    //todo: test postcode error handling
-    //todo: no need for the remaining 2 params
     private async Task<IActionResult> HandlePost(string postcode, string? adminArea)
     {
         dynamic routeValues;
