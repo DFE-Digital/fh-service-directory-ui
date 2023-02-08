@@ -106,15 +106,17 @@ public class ServiceFilterModel : PageModel
                 }
             }
 
-            //todo: test removing -option-selected - works, but old selected value still in url
+            //todo: work with a list?
             var filteredForm = Request.Form
                 .Where(kvp => KeepParam(kvp.Key, removeKey));
 
-            //todo: if option value doesn't also have the option-selected, remove the optional value. except if we do that, we couldn't implement 'show original selection when option is reselected'
-
-            //todo: -option-selected handling
-            //todo: children=all works, run through to check
             //todo: empty values are getting cleaned up, so no e.g. activities= . run through to check
+
+            //todo: hacky
+            if (!filteredForm.Any(kvp => kvp.Key == "children_and_young-option-selected"))
+            {
+                filteredForm = filteredForm.Where(KeyValuePair => KeyValuePair.Key != "children_and_young");
+            }
 
             if (removeValue != null)
             {
