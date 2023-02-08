@@ -92,32 +92,12 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            //todo: move into method
-
-            //todo: method to get key and value
-            string? remove = Request.Form[IFilter.RemoveKey];
-            string? removeKey = null, removeValue = null;
-            if (remove != null)
-            {
-                if (remove == IFilter.RemoveAllValue)
-                {
-                    removeKey = IFilter.RemoveAllValue;
-                }
-                else
-                {
-                    int filterNameEndPos = remove.IndexOf("--", StringComparison.Ordinal);
-                    //todo: think through if this is the right way to handle -1
-                    if (filterNameEndPos != -1)
-                    {
-                        removeKey = remove[..filterNameEndPos];
-                        removeValue = remove[(filterNameEndPos + 2)..];
-                    }
-                }
-            }
+            var remove = GetRemove(Request.Form);
 
             //todo: work with a list?
+            // remove key/values we don't want to keep
             var filteredForm = Request.Form
-                .Where(kvp => KeepParam(kvp.Key, removeKey));
+                .Where(kvp => KeepParam(kvp.Key, remove.Key));
 
             //todo: hacky
             if (!filteredForm.Any(kvp => kvp.Key == "children_and_young-option-selected"))
@@ -125,9 +105,10 @@ public class ServiceFilterModel : PageModel
                 filteredForm = filteredForm.Where(KeyValuePair => KeyValuePair.Key != "children_and_young");
             }
 
-            if (removeValue != null)
+            if (remove.Value != null)
             {
-                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, removeKey!, removeValue));
+                // remove values we don't want to keep
+                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove));
             }
 
             routeValues = new ExpandoObject();
@@ -143,14 +124,32 @@ public class ServiceFilterModel : PageModel
         return RedirectToPage("/ServiceFilter/Index", routeValues);
     }
 
-    private static KeyValuePair<string, StringValues> RemoveFilterValue(
-        KeyValuePair<string, StringValues> kvp, string removeKey, string removeValue)
+    private static KeyValuePair<string?, string?> GetRemove(IFormCollection form)
     {
-        if (kvp.Key != removeKey)
+        string? remove = form[IFilter.RemoveKey];
+        switch (remove)
+        {
+            case null:
+                return default;
+            case IFilter.RemoveAllValue:
+                return new KeyValuePair<string?, string?>(IFilter.RemoveAllValue, null);
+        }
+
+        int filterNameEndPos = remove.IndexOf("--", StringComparison.Ordinal);
+        if (filterNameEndPos == -1)
+            return default;
+
+        return new KeyValuePair<string?, string?>(remove[..filterNameEndPos], remove[(filterNameEndPos + 2)..]);
+    }
+
+    private static KeyValuePair<string, StringValues> RemoveFilterValue(
+        KeyValuePair<string, StringValues> kvp, KeyValuePair<string?, string?> remove)
+    {
+        if (kvp.Key != remove.Key)
             return kvp;
 
         var values = kvp.Value.ToList();
-        values.Remove(removeValue);
+        values.Remove(remove.Value);
         return new KeyValuePair<string, StringValues>(kvp.Key, new StringValues(values.ToArray()));
     }
 
