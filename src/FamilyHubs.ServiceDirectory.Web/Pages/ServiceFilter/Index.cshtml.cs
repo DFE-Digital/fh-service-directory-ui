@@ -81,14 +81,7 @@ public class ServiceFilterModel : PageModel
                 return RedirectToPage("/PostcodeSearch/Index", new { postcodeError });
             }
 
-            routeValues = new
-            {
-                postcode = postcodeInfo!.Postcode,
-                adminArea = postcodeInfo.AdminArea,
-                latitude = postcodeInfo.Latitude,
-                longitude = postcodeInfo.Longitude,
-                fromPostcodeSearch = true
-            };
+            routeValues = GetFromPostcodeSearchRouteValues(postcodeInfo!);
         }
         else
         {
@@ -111,17 +104,37 @@ public class ServiceFilterModel : PageModel
                 filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove));
             }
 
-            routeValues = new ExpandoObject();
-            var routeValuesDictionary = (IDictionary<string, object>)routeValues;
-
-            foreach (var keyValuePair in filteredForm)
-            {
-                // ToString() stops RedirectToPage() using key=foo&key=bar, and instead we get key=foo,bar which we unpick on the GET
-                routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value.ToString();
-            }
+            routeValues = ToRouteValues(filteredForm);
         }
 
         return RedirectToPage("/ServiceFilter/Index", routeValues);
+    }
+
+    private static dynamic GetFromPostcodeSearchRouteValues(IPostcodeInfo postcodeInfo)
+    {
+        dynamic routeValues = new
+        {
+            postcode = postcodeInfo.Postcode,
+            adminArea = postcodeInfo.AdminArea,
+            latitude = postcodeInfo.Latitude,
+            longitude = postcodeInfo.Longitude,
+            fromPostcodeSearch = true
+        };
+        return routeValues;
+    }
+
+    private static dynamic ToRouteValues(IEnumerable<KeyValuePair<string, StringValues>> values)
+    {
+        dynamic routeValues = new ExpandoObject();
+        var routeValuesDictionary = (IDictionary<string, object>) routeValues;
+
+        foreach (var keyValuePair in values)
+        {
+            // ToString() stops RedirectToPage() using key=foo&key=bar, and instead we get key=foo,bar which we unpick on the GET
+            routeValuesDictionary[keyValuePair.Key] = keyValuePair.Value.ToString();
+        }
+
+        return routeValues;
     }
 
     private static KeyValuePair<string?, string?> GetRemove(IFormCollection form)
