@@ -28,6 +28,15 @@ public class ServiceFilterModel : PageModel
         new ChildrenAndYoungPeopleFilter()
     };
 
+    // simpler than asking all the filters to remove themselves
+    private static HashSet<string> _parametersWhitelist = new()
+    {
+        "postcode",
+        "adminarea",
+        "latitude",
+        "longitude",
+    };
+
     public IEnumerable<IFilter> Filters { get; set; }
     public string? Postcode { get; set; }
     public string? AdminArea { get; set; }
@@ -146,15 +155,6 @@ public class ServiceFilterModel : PageModel
         values.Remove(removeValue);
         return new KeyValuePair<string, StringValues>(kvp.Key, new StringValues(values.ToArray()));
     }
-
-    // simpler than asking all the filters to remove themselves
-    private static HashSet<string> _parametersWhitelist = new()
-    {
-        "postcode",
-        "adminarea",
-        "latitude",
-        "longitude",
-    };
 
     private static bool KeepParam(string key, string? removeKey)
     {
