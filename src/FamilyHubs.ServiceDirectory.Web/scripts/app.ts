@@ -5,13 +5,14 @@ declare global {
         GDS_CONSENT_COOKIE_VERSION: number;
         GA_MEASUREMENT_ID: string;
         GA_CONTAINER_ID: string;
+        dataLayer: any[];
     }
 }
 
 import CookieBanner from './components/cookie-banner.js'
 import { getConsentCookie, isValidConsentCookie } from './components/cookie-functions.js'
-import Analytics from './components/analytics.js'
 import CookiesPage from './components/cookies-page.js'
+import Analytics from './components/analytics';
 
 // Initialise cookie banner
 var $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]')
@@ -20,7 +21,7 @@ new CookieBanner($cookieBanner).init()
 // Initialise analytics if consent is given
 var userConsent = getConsentCookie();
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-    Analytics(window.GA_MEASUREMENT_ID);
+    const analytics = new Analytics(window.GA_MEASUREMENT_ID);
 }
 
 //todo: move this into scripts section on cookie page
