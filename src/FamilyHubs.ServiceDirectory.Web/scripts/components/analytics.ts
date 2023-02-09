@@ -28,6 +28,20 @@ export default function initAnalytics(gaMeasurementId: string) {
 
     // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
+
+    sendTotalResultsEvent();
+}
+
+function sendTotalResultsEvent() {
+    //todo: make filter page only
+    const element = document.getElementById('results');
+    const totalResults = element?.getAttribute('data-total-results');
+    if (totalResults === undefined)
+        return;
+
+    gtag('event', 'filter_page', {
+        'total_results': totalResults
+    });
 }
 
 function loadGaScript(gaMeasurementId : string) {

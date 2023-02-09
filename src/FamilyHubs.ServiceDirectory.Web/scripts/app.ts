@@ -1,4 +1,4 @@
-﻿// js components have been snaffled from https://github.com/alphagov/govuk-design-system/blob/main/src/javascripts/components/
+﻿// js components were originally snaffled from https://github.com/alphagov/govuk-design-system/blob/main/src/javascripts/components/
 
 declare global {
     interface Window {
