@@ -1,5 +1,8 @@
 # Todo
 
+* govuk-frontend has been updated to 4.5 - update it
+^ it's switched to terser, so should be compatible with our gulpfile now, as we already use terser
+
 * resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared
 
 * update url paths to match prototype
