@@ -47,6 +47,7 @@ public class ServiceFilterModel : PageModel
     public bool FromPostcodeSearch { get; set; }
     public int CurrentPage { get; set; }
     public IPagination Pagination { get; set; }
+    public int TotalResults { get; set; }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private readonly IPostcodeLookup _postcodeLookup;
@@ -257,6 +258,8 @@ public class ServiceFilterModel : PageModel
         var services = await _serviceDirectoryClient.GetServices(serviceParams);
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
+
+        TotalResults = services.TotalCount;
 
         return (ServiceMapper.ToViewModel(services.Items), pagination);
     }

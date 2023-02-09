@@ -103,7 +103,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return GetOrganisationTryCache(id, cancellationToken);
     }
 
-    //todo: priority for a (multi-threaded) unit test
     // based on code from https://sahansera.dev/in-memory-caching-aspcore-dotnet/
     private async Task<OrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
     {
