@@ -54,8 +54,6 @@ function loadGaScript(gaMeasurementId : string) {
 
 function getPiiSafePageView(gaMeasurementId: string) {
 
-    //todo: ConfigParams interface
-
     const pageView = {
         page_title: document.title,
         send_to: gaMeasurementId,
