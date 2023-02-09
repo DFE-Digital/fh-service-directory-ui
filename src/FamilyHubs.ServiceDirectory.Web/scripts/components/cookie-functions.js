@@ -12,7 +12,7 @@
  * The consent cookie version is defined in cookie-banner.njk
  */
 
-import Analytics from './analytics.js'
+import initAnalytics from './analytics.js'
 
 /* Name of the cookie to save users cookie preferences to. */
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
@@ -154,7 +154,7 @@ export function resetCookies() {
         const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
         if (analyticsAllowed) {
-            const analytics = new Analytics(window.GA_MEASUREMENT_ID);
+            initAnalytics(window.GA_MEASUREMENT_ID);
         }
 
         if (!options[cookieType]) {
