@@ -1,7 +1,6 @@
 # Todo
 
-* govuk-frontend has been updated to 4.5 - update it
-^ it's switched to terser, so should be compatible with our gulpfile now, as we already use terser
+* govuk-frontend 4.5 has switched to terser, so should now be compatible with our gulpfile, as we already use terser
 
 * resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared
 
@@ -12,8 +11,6 @@
 * environment tags for non-optimised js
 
 * pick up standard libraries such as jQuery from one of the big CDN's (Google/MS/jQuery) with fallback to fetching a local copy.
-
-* use stringvalues for multi-params?
 
 * fix extra whitespace in filter tag sometimes when text wraps
 * fix incorrect colour of bottom border of header in chromium browsers
