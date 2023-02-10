@@ -23,7 +23,8 @@ export default function initAnalytics(gaMeasurementId: string) {
         send_page_view: false, //disable auto page_view measurement
         page_path: pageViewParams.page_path,
         page_location: pageViewParams.page_location,
-        page_referrer: pageViewParams.referrer
+        page_referrer: pageViewParams.referrer,
+        cookie_flags: 'secure'
     });
 
     // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
