@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Content Include="scripts\components\analytics.ts" />
-    <Content Include="scripts\components\cookie-banner.js" />
+    <Content Include="scripts\components\cookie-banner.ts" />
     <Content Include="scripts\components\cookie-functions.js" />
     <Content Include="scripts\components\cookies-page.js" />
     <Content Include="scripts\components\helpers.js" />

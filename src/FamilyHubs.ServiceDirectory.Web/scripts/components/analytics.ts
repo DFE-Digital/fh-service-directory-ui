@@ -1,8 +1,10 @@
 ﻿
 function gtag(command: string, ...args: any[]): void {
+    window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(arguments);
 }
 
+//todo: use prototype? (or class?)
 export default function initAnalytics(gaMeasurementId: string) {
 
     // if the environment doesn't have a measurement id, don't load analytics
@@ -12,8 +14,6 @@ export default function initAnalytics(gaMeasurementId: string) {
 
     loadGaScript(gaMeasurementId);
 
-    window.dataLayer = window.dataLayer || [];
-//    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     const pageViewParams = getPiiSafePageView(gaMeasurementId);
@@ -26,6 +26,8 @@ export default function initAnalytics(gaMeasurementId: string) {
         page_referrer: pageViewParams.referrer,
         cookie_flags: 'secure'
     });
+
+    //todo: don't send these if we're only sending the disable event
 
     // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
@@ -45,10 +47,12 @@ function sendFilterPageCustomEvent() {
     });
 }
 
-function sendAnalyticsCustomEvent(accepted: boolean) {
+//todo: or accepted|rejected
+export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
 
     gtag('event', 'analytics', {
-        'accepted': accepted
+        'accepted': accepted,
+        'source': source
     });
 }
 

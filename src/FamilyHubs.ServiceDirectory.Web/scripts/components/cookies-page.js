@@ -1,5 +1,6 @@
 ﻿import { getConsentCookie, setConsentCookie } from './cookie-functions.js'
 import { nodeListForEach } from './helpers.js'
+import { sendAnalyticsCustomEvent } from './analytics.js'
 
 function CookiesPage($module) {
     this.$module = $module
@@ -43,6 +44,8 @@ CookiesPage.prototype.savePreferences = function (event) {
 
     // Save preferences to cookie and show success notification
     setConsentCookie(preferences);
+
+    sendAnalyticsCustomEvent(preferences["analytics"], 'cookies');
 
     // handle the corner case, where the user has selected their preference on the cookie page, whilst the banner is still open as they haven't previously selected their preference
     //todo: call hideBanner

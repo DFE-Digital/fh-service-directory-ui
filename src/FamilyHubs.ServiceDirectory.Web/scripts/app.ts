@@ -15,7 +15,7 @@ import CookiesPage from './components/cookies-page.js'
 import initAnalytics from './components/analytics';
 
 // Initialise cookie banner
-var $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]')
+const $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]') as HTMLElement | null;
 new CookieBanner($cookieBanner).init()
 
 // Initialise analytics if consent is given
