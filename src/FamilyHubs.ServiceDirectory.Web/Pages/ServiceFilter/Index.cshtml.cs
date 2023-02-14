@@ -65,7 +65,12 @@ public class ServiceFilterModel : PageModel
 
     public Task<IActionResult> OnPost(string? postcode, string? adminArea)
     {
-        CheckParameters(postcode);
+        //CheckParameters(postcode);
+
+        if (string.IsNullOrEmpty(postcode))
+        {
+            return Task.FromResult((IActionResult)RedirectToPage("/PostcodeSearch/Index", new { postcodeError = PostcodeError.NoPostcode }));
+        }
 
         return HandlePost(postcode, adminArea);
     }
@@ -235,10 +240,10 @@ public class ServiceFilterModel : PageModel
         return Page();
     }
 
-    private static void CheckParameters([NotNull] string? postcode)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(postcode);
-    }
+    //private static void CheckParameters([NotNull] string? postcode)
+    //{
+    //    ArgumentException.ThrowIfNullOrEmpty(postcode);
+    //}
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
