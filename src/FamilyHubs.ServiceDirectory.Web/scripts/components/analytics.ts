@@ -30,10 +30,10 @@ export default function initAnalytics(gaMeasurementId: string) {
     // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
     gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
 
-    sendTotalResultsEvent();
+    sendFilterPageCustomEvent();
 }
 
-function sendTotalResultsEvent() {
+function sendFilterPageCustomEvent() {
     //todo: make filter page only
     const element = document.getElementById('results');
     const totalResults = element?.getAttribute('data-total-results');
@@ -45,7 +45,14 @@ function sendTotalResultsEvent() {
     });
 }
 
-function loadGaScript(gaMeasurementId : string) {
+function sendAnalyticsCustomEvent(accepted: boolean) {
+
+    gtag('event', 'analytics', {
+        'accepted': accepted
+    });
+}
+
+function loadGaScript(gaMeasurementId: string) {
     const f = document.getElementsByTagName('script')[0];
     const j = document.createElement('script');
     j.async = true;
