@@ -228,11 +228,6 @@ public class ServiceFilterModel : PageModel
         return Page();
     }
 
-    //private static void CheckParameters([NotNull] string? postcode)
-    //{
-    //    ArgumentException.ThrowIfNullOrEmpty(postcode);
-    //}
-
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
         var serviceParams = new ServicesParams(adminArea, latitude, longitude)
