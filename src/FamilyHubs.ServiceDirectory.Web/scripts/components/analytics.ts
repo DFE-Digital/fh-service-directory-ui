@@ -61,7 +61,15 @@ export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
 //todo: having an object (prototype/class) will ensure that GaMeasurementId will have already been set
 export function disableAnalytics()
 {
-    window['ga-disable-' + GaMeasurementId] = true;
+    gtag('set', {
+        'allow_google_signals': false,
+        'custom_map': {
+            'scroll': 'non_interaction'
+        }
+    });
+
+    // in theory these should be enough to disable analytics. has it already checked these at load time rather than at send time?
+    //window['ga-disable-' + GaMeasurementId] = true;
 
     //window["_gaUserPrefs"] = { ioo() { return true; } }
 
@@ -72,6 +80,7 @@ export function disableAnalytics()
     // issues:
     // gtag operates async, so how do we know when it's sent the custom event
     // we don't want a race condition (if we can disable ga4)
+    // could use a promise
 
     //window.dataLayer.push({
     //    'event': 'ga-disable',
