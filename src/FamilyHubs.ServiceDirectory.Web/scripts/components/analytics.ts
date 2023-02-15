@@ -61,12 +61,25 @@ export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
 //todo: having an object (prototype/class) will ensure that GaMeasurementId will have already been set
 export function disableAnalytics()
 {
-    gtag('set', {
-        'allow_google_signals': false,
-        'custom_map': {
-            'scroll': 'non_interaction'
-        }
-    });
+    //gtag('config', GaMeasurementId, {
+    //    'allow_ad_personalization_signals': false,
+    //    'allow_google_signals': false,
+    //    'scroll_threshold': 0,
+    //    'link_attribution': false
+    //});
+
+    //gtag('set', {
+    //    'allow_google_signals': false,
+    //    'custom_map': {
+    //        'scroll': 'non_interaction'
+    //    }
+    //});
+
+    // this kills our custom event, but not ga4's own events which must be caching the measurement id
+    //window.dataLayer = [];
+    //gtag('config', '');
+
+//todo: when get working, ensure our own custom events and manual page_view events are not sent
 
     // in theory these should be enough to disable analytics. has it already checked these at load time rather than at send time?
     //window['ga-disable-' + GaMeasurementId] = true;
@@ -74,13 +87,15 @@ export function disableAnalytics()
     //window["_gaUserPrefs"] = { ioo() { return true; } }
 
     //possible options
-    // send the custom event without loading the gtag script. possible??
-    // blatt the measurement id in the config?
+    // send the custom event without loading the gtag script. possible?? not easily, and not maintainable
+    // blatt the measurement id in the config? doesn't work - caching?
+    // replace a central function in the gtag script? not maintainable?
 
     // issues:
     // gtag operates async, so how do we know when it's sent the custom event
     // we don't want a race condition (if we can disable ga4)
     // could use a promise
+    // or could use a callback: https://developers.google.com/tag-platform/gtagjs/reference/parameters
 
     //window.dataLayer.push({
     //    'event': 'ga-disable',
