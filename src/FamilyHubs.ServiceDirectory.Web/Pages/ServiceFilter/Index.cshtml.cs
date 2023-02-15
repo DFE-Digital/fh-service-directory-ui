@@ -63,14 +63,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnPost(string? postcode, string? adminArea)
-    {
-        CheckParameters(postcode);
-
-        return HandlePost(postcode, adminArea);
-    }
-
-    private async Task<IActionResult> HandlePost(string postcode, string? adminArea)
+    public async Task<IActionResult> OnPost(string? postcode, string? adminArea)
     {
         dynamic routeValues;
 
@@ -233,11 +226,6 @@ public class ServiceFilterModel : PageModel
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
 
         return Page();
-    }
-
-    private static void CheckParameters([NotNull] string? postcode)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(postcode);
     }
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
