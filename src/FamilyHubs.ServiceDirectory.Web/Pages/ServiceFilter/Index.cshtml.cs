@@ -63,19 +63,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public Task<IActionResult> OnPost(string? postcode, string? adminArea)
-    {
-        //CheckParameters(postcode);
-
-        if (string.IsNullOrEmpty(postcode))
-        {
-            return Task.FromResult((IActionResult)RedirectToPage("/PostcodeSearch/Index", new { postcodeError = PostcodeError.NoPostcode }));
-        }
-
-        return HandlePost(postcode, adminArea);
-    }
-
-    private async Task<IActionResult> HandlePost(string postcode, string? adminArea)
+    public async Task<IActionResult> OnPost(string? postcode, string? adminArea)
     {
         dynamic routeValues;
 
