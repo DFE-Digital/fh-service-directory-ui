@@ -4,6 +4,8 @@ function gtag(command: string, ...args: any[]): void {
     window.dataLayer.push(arguments);
 }
 
+let GaMeasurementId: string = '';
+
 //todo: use prototype? (or class?)
 export default function initAnalytics(gaMeasurementId: string) {
 
@@ -11,6 +13,8 @@ export default function initAnalytics(gaMeasurementId: string) {
     if (!Boolean(gaMeasurementId)) {
         return;
     }
+
+    GaMeasurementId = gaMeasurementId;
 
     loadGaScript(gaMeasurementId);
 
@@ -26,16 +30,14 @@ export default function initAnalytics(gaMeasurementId: string) {
         page_referrer: pageViewParams.referrer,
         cookie_flags: 'secure'
     });
-
-    //todo: don't send these if we're only sending the disable event
-
-    // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
-    gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
-
-    sendFilterPageCustomEvent();
 }
 
-function sendFilterPageCustomEvent() {
+export function sendPageViewEvent() {
+    // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
+    gtag('event', 'page_view', getPiiSafePageView(GaMeasurementId));
+}
+
+export function sendFilterPageCustomEvent() {
     //todo: make filter page only
     const element = document.getElementById('results');
     const totalResults = element?.getAttribute('data-total-results');
@@ -54,6 +56,61 @@ export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
         'accepted': accepted,
         'source': source
     });
+}
+
+//todo: having an object (prototype/class) will ensure that GaMeasurementId will have already been set
+export function disableAnalytics()
+{
+    window['ga-disable-' + GaMeasurementId] = true;
+
+    //window["_gaUserPrefs"] = { ioo() { return true; } }
+
+    //possible options
+    // send the custom event without loading the gtag script. possible??
+    // blatt the measurement id in the config?
+
+    // issues:
+    // gtag operates async, so how do we know when it's sent the custom event
+    // we don't want a race condition (if we can disable ga4)
+
+    //window.dataLayer.push({
+    //    'event': 'ga-disable',
+    //    'ga-disable': true
+    //});
+
+    //todo: unload the loaded script??
+//    const gtagScript = document.querySelector('script[src^="https://www.googletagmanager.com/gtag/js"]');
+//    if (gtagScript) {
+//        gtagScript.remove();
+//    }
+
+//}; aa.sl = function (a) { var b = this, c = TA(a); c ? Mh(c, function (d) { b.Eg(a, 1 === d.split("~").length ? void 0 : d) }) : this.Eg(a) }; var WB = function (a, b, c) { var d = a + "?" + b; Lk("Sending request: " + d); if (c) { Lk("  Request body: " + c); try { oc.sendBeacon && oc.sendBeacon(d, c) } catch (e) { xb("TAGGING", 15) } } else Fc(d) }, bC = Qm('', 500), cC = Qm('',
+//    5E3), aC = !0; var dC = window, eC = document, fC = function (a) { var b = dC._gaUserPrefs; if (b && b.ioo && b.ioo() || a && !0 === dC["ga-disable-" + a]) return !0; try { var c = dC.external; if (c && c._gaUserPrefs && "oo" == c._gaUserPrefs) return !0 } catch (f) { } for (var d = Uk("AMP_TOKEN", String(eC.cookie), !0), e = 0; e < d.length; e++)if ("$OPT_OUT" == d[e]) return !0; return eC.getElementById("__gaOptOutExtension") ? !0 : !1 };
+
+/*
+
+function (a) { var b = dC._gaUserPrefs; if (b && b.ioo && b.ioo() || a && !0 === dC["ga-disable-" + a]) return !0;
+
+    function (a)
+    var dC = window
+        !0 === dC["ga-disable-" + a]) return !0
+
+        chat-gpt's interpretation of the code...
+
+This is a function in Google Analytics 4 (GA4) that is used to check if tracking is enabled or disabled for a specific user.
+
+Here's what the code is doing:
+
+The function takes an argument a which represents the tracking ID (or "measurement ID" in GA4 terminology) for the Google Analytics property being tracked.
+The function then checks if the user has enabled or disabled tracking for themselves. This is done by checking a variable called _gaUserPrefs which is set by the user's browser.
+If _gaUserPrefs is defined and has a method called ioo that returns true, it means the user has disabled tracking for themselves. The function returns true to indicate that tracking is disabled.
+If the a argument is provided and there is a cookie called "ga-disable-[measurement ID]" that is set to true, it means the user has explicitly disabled tracking for that particular property. The function returns true to indicate that tracking is disabled.
+If neither of the above conditions are met, the function returns false to indicate that tracking is enabled for the user.
+Overall, this function is used to determine if tracking is enabled or disabled for a specific user in GA4, based on the user's preferences and any explicit settings they may have set.
+
+setting a property on window doesn't create a cookie, chat-gpt was hallucinating
+
+        */
 }
 
 function loadGaScript(gaMeasurementId: string) {
