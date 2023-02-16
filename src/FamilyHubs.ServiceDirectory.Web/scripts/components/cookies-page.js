@@ -31,22 +31,30 @@ CookiesPage.prototype.init = function () {
 
 CookiesPage.prototype.savePreferences = function (event) {
     // Stop default form submission behaviour
-    event.preventDefault()
+    event.preventDefault();
 
     var preferences = {}
 
-    nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
-        var cookieType = this.getCookieType($cookieFormFieldset)
-        var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value
+    nodeListForEach(this.$cookieFormFieldsets,
+        function($cookieFormFieldset) {
+            var cookieType = this.getCookieType($cookieFormFieldset)
+            var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value
 
-        preferences[cookieType] = selectedItem === 'true'
-    }.bind(this))
+            preferences[cookieType] = selectedItem === 'true'
+        }.bind(this));
+
+    updateAnalyticsStorageConsent(true);
+    const analyticsAccepted = preferences['analytics'];
+    sendAnalyticsCustomEvent(analyticsAccepted, 'cookies');
 
     // Save preferences to cookie and show success notification
     setConsentCookie(preferences);
-    sendPageViewEvent();
 
-    sendAnalyticsCustomEvent(preferences['analytics'], 'cookies');
+    if (analyticsAccepted) {
+        sendPageViewEvent();
+    } else {
+        updateAnalyticsStorageConsent(false);
+    }
 
     // handle the corner case, where the user has selected their preference on the cookie page, whilst the banner is still open as they haven't previously selected their preference
     //todo: call hideBanner
