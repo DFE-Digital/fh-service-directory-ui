@@ -1,5 +1,7 @@
 # Todo
 
+* package up filter framework into a razor class library
+
 * default filter values not in url
 
 * GA4 custom consent management:
