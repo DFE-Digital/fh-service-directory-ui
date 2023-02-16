@@ -74,19 +74,14 @@ CookieBanner.prototype.acceptCookies = function () {
 }
 
 CookieBanner.prototype.rejectCookies = function () {
-    // Do actual cookie consent bit
-    //CookieFunctions.setConsentCookie({ analytics: true });
 
-    CookieFunctions.setConsentCookie({ analytics: false });
-
-    //todo: delay?
     updateAnalyticsStorageConsent(true);
 
     sendAnalyticsCustomEvent(false, 'banner');
 
     updateAnalyticsStorageConsent(false);
 
-    //disableAnalytics();
+    CookieFunctions.setConsentCookie({ analytics: false });
 
     // Hide banner and show confirmation message
     this.$cookieMessage.setAttribute('hidden', true)
