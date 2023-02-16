@@ -7,6 +7,7 @@ function gtag(command: string, ...args: any[]): void {
 let GaMeasurementId: string = '';
 
 //todo: use prototype? (or class?)
+//todo: initAnalytics will have to be called irrespective of the current accept/decline cookie status
 export default function initAnalytics(gaMeasurementId: string) {
 
     // if the environment doesn't have a measurement id, don't load analytics
@@ -15,6 +16,8 @@ export default function initAnalytics(gaMeasurementId: string) {
     }
 
     GaMeasurementId = gaMeasurementId;
+
+    setDefaultConsent();
 
     loadGaScript(gaMeasurementId);
 
@@ -29,6 +32,20 @@ export default function initAnalytics(gaMeasurementId: string) {
         page_location: pageViewParams.page_location,
         page_referrer: pageViewParams.referrer,
         cookie_flags: 'secure'
+    });
+}
+
+function setDefaultConsent() {
+    gtag('consent', 'default', {
+        'analytics_storage': 'denied'
+    });
+
+    gtag('set', 'url_passthrough', true);
+}
+
+export function updateAnalyticsStorageConsent(granted: boolean) {
+    gtag('consent', 'update', {
+        'analytics_storage': granted ? 'granted' : 'denied'
     });
 }
 

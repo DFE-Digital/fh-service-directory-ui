@@ -12,19 +12,27 @@ declare global {
 import CookieBanner from './components/cookie-banner.js'
 import { getConsentCookie, isValidConsentCookie } from './components/cookie-functions.js'
 import CookiesPage from './components/cookies-page.js'
-import initAnalytics, { sendPageViewEvent, sendFilterPageCustomEvent } from './components/analytics';
+import initAnalytics, { sendPageViewEvent, sendFilterPageCustomEvent, updateAnalyticsStorageConsent } from './components/analytics';
 
 // Initialise cookie banner
 const $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]') as HTMLElement | null;
-new CookieBanner($cookieBanner).init()
+new CookieBanner($cookieBanner).init();
+
+initAnalytics(window.GA_MEASUREMENT_ID);
 
 // Initialise analytics if consent is given
 var userConsent = getConsentCookie();
 if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
-    initAnalytics(window.GA_MEASUREMENT_ID);
-    sendPageViewEvent();
-    sendFilterPageCustomEvent();
+    //initAnalytics(window.GA_MEASUREMENT_ID);
+    //todo: always do these?
+//    sendPageViewEvent();
+//    sendFilterPageCustomEvent();
+
+    updateAnalyticsStorageConsent(true);
 }
+
+sendPageViewEvent();
+sendFilterPageCustomEvent();
 
 //todo: move this into scripts section on cookie page
 // Initialise cookie page

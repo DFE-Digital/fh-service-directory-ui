@@ -151,11 +151,11 @@ export function resetCookies() {
         }
 
         //todo: enabling analytics doesn't belong in resetCookies
-        const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
+        //const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
 
-        if (analyticsAllowed) {
-            initAnalytics(window.GA_MEASUREMENT_ID);
-        }
+        //if (analyticsAllowed) {
+        //    initAnalytics(window.GA_MEASUREMENT_ID);
+        //}
 
         if (!options[cookieType]) {
             // Fetch the cookies in that category

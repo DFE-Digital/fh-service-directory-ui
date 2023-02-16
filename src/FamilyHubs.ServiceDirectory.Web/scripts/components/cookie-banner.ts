@@ -4,7 +4,7 @@
 /*todo: i think we're ok for this too (see above about ie8), but we _might_ need it for >8 ie (use? https://www.npmjs.com/package/events-polyfill)*/
 /*import 'govuk-frontend/govuk/vendor/polyfills/Event'*/
 import { nodeListForEach } from './helpers.js'
-import { sendPageViewEvent, sendFilterPageCustomEvent, sendAnalyticsCustomEvent, disableAnalytics } from './analytics.js';
+import { sendPageViewEvent, sendFilterPageCustomEvent, sendAnalyticsCustomEvent, disableAnalytics, updateAnalyticsStorageConsent } from './analytics.js';
 
 
 const cookieBannerAcceptSelector = '.js-cookie-banner-accept'
@@ -59,7 +59,10 @@ CookieBanner.prototype.hideBanner = function () {
 
 CookieBanner.prototype.acceptCookies = function () {
     // Do actual cookie consent bit
+    //todo: need to remove initAnalytics from setConsentCookie
     CookieFunctions.setConsentCookie({ analytics: true });
+
+    updateAnalyticsStorageConsent(true);
 
     sendAnalyticsCustomEvent(true, 'banner');
     sendPageViewEvent();
@@ -72,13 +75,18 @@ CookieBanner.prototype.acceptCookies = function () {
 
 CookieBanner.prototype.rejectCookies = function () {
     // Do actual cookie consent bit
-    CookieFunctions.setConsentCookie({ analytics: true });
-
-    sendAnalyticsCustomEvent(false, 'banner');
+    //CookieFunctions.setConsentCookie({ analytics: true });
 
     CookieFunctions.setConsentCookie({ analytics: false });
 
-    disableAnalytics();
+    //todo: delay?
+    updateAnalyticsStorageConsent(true);
+
+    sendAnalyticsCustomEvent(false, 'banner');
+
+    updateAnalyticsStorageConsent(false);
+
+    //disableAnalytics();
 
     // Hide banner and show confirmation message
     this.$cookieMessage.setAttribute('hidden', true)

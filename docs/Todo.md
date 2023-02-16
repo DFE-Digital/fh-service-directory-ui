@@ -1,5 +1,7 @@
 # Todo
 
+* default filter values not in url
+
 * GA4 custom consent management:
 
 Sending a custom event when the user declines analytics cookies is problematic.
