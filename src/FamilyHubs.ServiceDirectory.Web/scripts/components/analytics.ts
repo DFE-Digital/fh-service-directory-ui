@@ -76,7 +76,6 @@ export function sendFilterPageCustomEvent() {
     });
 }
 
-//todo: or accepted|rejected
 export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
 
     gtag('event', 'analytics', {
