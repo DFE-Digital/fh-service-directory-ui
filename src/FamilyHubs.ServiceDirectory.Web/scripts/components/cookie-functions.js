@@ -6,13 +6,9 @@
  *
  * Includes function `Cookie()` for getting, setting, and deleting cookies, and
  * functions to manage the users' consent to cookies.
- *
- * Note: there is an inline script in cookie-banner.njk to show the banner
- * as soon as possible, to avoid a high Cumulative Layout Shift (CLS) score.
- * The consent cookie version is defined in cookie-banner.njk
  */
 
-import initAnalytics from './analytics.js'
+//import initAnalytics from './analytics.js'
 
 /* Name of the cookie to save users cookie preferences to. */
 var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
