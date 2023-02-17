@@ -12,6 +12,9 @@ declare global {
 import CookieBanner from './components/cookie-banner.js'
 import CookiesPage from './components/cookies-page.js'
 import initAnalytics, { sendPageViewEvent, sendFilterPageCustomEvent, updateAnalyticsStorageConsent } from './components/analytics';
+import { nodeListForEach } from './components/helpers.js';
+
+//todo: consistency in module/proto/class style
 
 // Initialise cookie banner
 const $cookieBanner = document.querySelector('[data-module="govuk-cookie-banner"]') as HTMLElement | null;
@@ -26,7 +29,7 @@ new CookiesPage($cookiesPage).init()
 
 //todo: move into module
 const backLinks = document.querySelectorAll(".app-back-link");
-backLinks.forEach((link: HTMLAnchorElement) => {
+nodeListForEach(backLinks, (link: HTMLAnchorElement) => {
     link.addEventListener("click", () => {
         window.history.back();
     });
@@ -34,7 +37,6 @@ backLinks.forEach((link: HTMLAnchorElement) => {
 
 const button = document.getElementById('open-close-filters');
 button?.addEventListener('click', function handleClick(event) {
-    //todo: update to ts 2?
     const filterButton = document.getElementById("filters") as HTMLDivElement | null;
     if (filterButton.style.display === "none") {
         filterButton.style.display = "block";
