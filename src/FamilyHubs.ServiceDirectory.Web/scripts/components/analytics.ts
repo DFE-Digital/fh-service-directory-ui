@@ -79,7 +79,7 @@ export function sendFilterPageCustomEvent() {
 //todo: or accepted|rejected
 export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
 
-    gtag('event', 'analytics-nocookie-forreal', {
+    gtag('event', 'analytics', {
         'accepted': accepted,
         'source': source
     });
