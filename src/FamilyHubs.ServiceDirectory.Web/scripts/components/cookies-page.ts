@@ -1,4 +1,4 @@
-﻿import { getConsentCookie, setConsentCookie } from './cookie-functions.js'
+﻿import { getConsentCookie, setConsentCookie, ConsentCookie } from './cookie-functions.js'
 import { nodeListForEach } from './helpers.js'
 import { sendPageViewEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics.js'
 
@@ -33,7 +33,7 @@ CookiesPage.prototype.savePreferences = function (event) {
     // Stop default form submission behaviour
     event.preventDefault();
 
-    var preferences = {}
+    var preferences: ConsentCookie = {}
 
     nodeListForEach(this.$cookieFormFieldsets,
         function($cookieFormFieldset) {

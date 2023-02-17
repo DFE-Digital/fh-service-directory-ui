@@ -21,9 +21,9 @@
   <ItemGroup>
     <Content Include="scripts\components\analytics.ts" />
     <Content Include="scripts\components\cookie-banner.ts" />
-    <Content Include="scripts\components\cookie-functions.js" />
-    <Content Include="scripts\components\cookies-page.js" />
-    <Content Include="scripts\components\helpers.js" />
+    <Content Include="scripts\components\cookie-functions.ts" />
+    <Content Include="scripts\components\cookies-page.ts" />
+    <Content Include="scripts\components\helpers.ts" />
   </ItemGroup>
 
   <ItemGroup>

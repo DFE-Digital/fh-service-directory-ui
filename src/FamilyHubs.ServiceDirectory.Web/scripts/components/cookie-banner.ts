@@ -58,7 +58,6 @@ CookieBanner.prototype.hideBanner = function () {
 
 CookieBanner.prototype.acceptCookies = function () {
     // Do actual cookie consent bit
-    //todo: need to remove initAnalytics from setConsentCookie
     CookieFunctions.setConsentCookie({ analytics: true });
 
     updateAnalyticsStorageConsent(true);
