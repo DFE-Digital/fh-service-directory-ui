@@ -36,7 +36,7 @@ export default function initAnalytics(gaMeasurementId: string) {
         cookie_flags: 'secure'
     });
 
-    var userConsent = getConsentCookie();
+    const userConsent = getConsentCookie();
     if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
         updateAnalyticsStorageConsent(true);
     }
@@ -110,7 +110,7 @@ function getPiiSafePageView(gaMeasurementId: string) {
         if (piiSafeReferrerQueryString == null) {
             pageView.referrer = document.referrer;
         } else {
-            const urlArray = document.referrer.split("?");
+            const urlArray = document.referrer.split('?');
 
             pageView.referrer = urlArray[0] + piiSafeReferrerQueryString;
         }
@@ -125,7 +125,7 @@ function getPiiSafePageView(gaMeasurementId: string) {
         return pageView;
     }
 
-    const urlArray = window.location.href.split("?");
+    const urlArray = window.location.href.split('?');
 
     pageView.page_location = urlArray[0] + piiSafeQueryString;
     pageView.page_path = window.location.pathname + piiSafeQueryString;
@@ -133,21 +133,21 @@ function getPiiSafePageView(gaMeasurementId: string) {
     return pageView;
 }
 
-function getPiiSafeQueryString(queryString) {
+function getPiiSafeQueryString(queryString: string): string | null {
 
     //todo: for safety, convert to lowercase, so that if the user changes the case of the url, we still don't collect pii
     const queryParams = new URLSearchParams(queryString);
 
-    let postcode = queryParams.get("postcode");
+    let postcode = queryParams.get('postcode');
     if (postcode == null) {
         // null indicates original query params were already pii safe
         return null;
     }
 
-    postcode = postcode.replace(/[a-zA-Z]+$/, "");
-    queryParams.set("postcode", postcode);
-    queryParams.delete("latitude");
-    queryParams.delete("longitude");
+    postcode = postcode.replace(/[a-zA-Z]+$/, '');
+    queryParams.set('postcode', postcode);
+    queryParams.delete('latitude');
+    queryParams.delete('longitude');
 
     return '?' + queryParams.toString();
 }
