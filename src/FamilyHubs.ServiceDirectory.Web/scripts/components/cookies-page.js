@@ -47,14 +47,13 @@ CookiesPage.prototype.savePreferences = function (event) {
     const analyticsAccepted = preferences['analytics'];
     sendAnalyticsCustomEvent(analyticsAccepted, 'cookies');
 
-    // Save preferences to cookie and show success notification
-    setConsentCookie(preferences);
-
     if (analyticsAccepted) {
         sendPageViewEvent();
     } else {
         updateAnalyticsStorageConsent(false);
     }
+
+    setConsentCookie(preferences);
 
     // handle the corner case, where the user has selected their preference on the cookie page, whilst the banner is still open as they haven't previously selected their preference
     //todo: call hideBanner
