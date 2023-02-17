@@ -1,16 +1,12 @@
-﻿/**
- * This seems to fail in IE8, requires more investigation.
- * See: https://github.com/imagitama/nodelist-foreach-polyfill
- */
-function nodeListForEach(nodes, callback) {
+﻿
+export function nodeListForEach(
+    nodes: NodeListOf<Element>,
+    callback: (node: Element, index: number, nodes: NodeListOf<Element>) => void
+): void {
     if (window.NodeList.prototype.forEach) {
-        return nodes.forEach(callback)
+        return nodes.forEach(callback);
     }
     for (var i = 0; i < nodes.length; i++) {
-        callback.call(window, nodes[i], i, nodes)
+        callback.call(window, nodes[i], i, nodes);
     }
-}
-
-export {
-    nodeListForEach
 }

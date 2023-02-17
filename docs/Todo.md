@@ -4,24 +4,6 @@
 
 * default filter values not in url
 
-* GA4 custom consent management:
-
-Sending a custom event when the user declines analytics cookies is problematic.
-
-Analytics needs to be enabled, then the custom event can be sent, then analytics needs to be disabled again. GA4 doesn’t support disabling analytics for a page, after it has been enabled for a page. No way was found to disable analytics. There are potential option to do so, but they would be very brittle and liable to break without notice.
-
-A partial implementation was created, where analytics was enabled until the next page. This meant that after declining analytics cookies and the custom event was sent, no further events were sent after the user navigated to another page, or refreshed the current page. However, whilst still on the same page after declining cookies, further events were sent, such as page scroll and link clicks.
-
-We could reload the page after the user declines cookies, which would minimise the chance of subsequent events being sent. We’d have to add a query parameter to the URL so that we knew to show the confirmation banner.
-
-However, there is another option! We should be able to implement a custom consent mode. See
-
-https://developers.google.com/tag-platform/devguides/privacy
-
-https://developers.google.com/tag-platform/devguides/consent
-
-This might allow us to not only know when a user has declined analytics cookies, but to still track (at least some of) their activity, both after declining the cookie and before accepting the cookie.
-
 * govuk-frontend 4.5 has switched to terser, so should now be compatible with our gulpfile, as we already use terser
 
 * resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared

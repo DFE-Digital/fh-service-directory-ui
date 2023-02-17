@@ -75,7 +75,7 @@ export function isValidConsentCookie(options: ConsentCookie) {
 
 /** Update the user's cookie preferences. */
 export function setConsentCookie(options: ConsentCookie) {
-    var cookieConsent = getConsentCookie();
+    let cookieConsent = getConsentCookie();
 
     if (!cookieConsent) {
         cookieConsent = JSON.parse(JSON.stringify(DEFAULT_COOKIE_CONSENT));
