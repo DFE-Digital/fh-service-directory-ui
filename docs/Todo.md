@@ -1,5 +1,9 @@
 # Todo
 
+* package up filter framework into a razor class library
+
+* default filter values not in url
+
 * govuk-frontend 4.5 has switched to terser, so should now be compatible with our gulpfile, as we already use terser
 
 * resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared

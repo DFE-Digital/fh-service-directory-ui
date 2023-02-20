@@ -1,5 +1,6 @@
-﻿import { getConsentCookie, setConsentCookie } from './cookie-functions.js'
-import { nodeListForEach } from './helpers.js'
+﻿import { getConsentCookie, setConsentCookie, ConsentCookie } from './cookie-functions'
+import { nodeListForEach } from './helpers'
+import { sendPageViewEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics'
 
 function CookiesPage($module) {
     this.$module = $module
@@ -30,18 +31,28 @@ CookiesPage.prototype.init = function () {
 
 CookiesPage.prototype.savePreferences = function (event) {
     // Stop default form submission behaviour
-    event.preventDefault()
+    event.preventDefault();
 
-    var preferences = {}
+    var preferences: ConsentCookie = {}
 
-    nodeListForEach(this.$cookieFormFieldsets, function ($cookieFormFieldset) {
-        var cookieType = this.getCookieType($cookieFormFieldset)
-        var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value
+    nodeListForEach(this.$cookieFormFieldsets,
+        function($cookieFormFieldset) {
+            var cookieType = this.getCookieType($cookieFormFieldset)
+            var selectedItem = $cookieFormFieldset.querySelector('input[name=' + cookieType + ']:checked').value
 
-        preferences[cookieType] = selectedItem === 'true'
-    }.bind(this))
+            preferences[cookieType] = selectedItem === 'true'
+        }.bind(this));
 
-    // Save preferences to cookie and show success notification
+    updateAnalyticsStorageConsent(true);
+    const analyticsAccepted = preferences['analytics'];
+    sendAnalyticsCustomEvent(analyticsAccepted, 'cookies');
+
+    if (analyticsAccepted) {
+        sendPageViewEvent();
+    } else {
+        updateAnalyticsStorageConsent(false);
+    }
+
     setConsentCookie(preferences);
 
     // handle the corner case, where the user has selected their preference on the cookie page, whilst the banner is still open as they haven't previously selected their preference
