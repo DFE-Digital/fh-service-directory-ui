@@ -1,4 +1,7 @@
 ﻿
+//todo: consent mode debugging/check: https://developers.google.com/tag-platform/devguides/consent-debugging
+// denied event doesn't always seem to reach google - race condition? is wait_for_update for default only?
+
 import { getConsentCookie, isValidConsentCookie } from './cookie-functions.js'
 
 function gtag(command: string, ...args: any[]): void {
@@ -53,10 +56,17 @@ function setDefaultConsent() {
     gtag('set', 'url_passthrough', true);
 }
 
-export function updateAnalyticsStorageConsent(granted: boolean) {
-    gtag('consent', 'update', {
+export function updateAnalyticsStorageConsent(granted: boolean, delayMs?: number) {
+
+    let options = {
         'analytics_storage': granted ? 'granted' : 'denied'
-    });
+    };
+
+    if (typeof delayMs !== 'undefined') {
+        options['wait_for_update'] = delayMs;
+    }
+
+    gtag('consent', 'update', options);
 }
 
 export function sendPageViewEvent() {

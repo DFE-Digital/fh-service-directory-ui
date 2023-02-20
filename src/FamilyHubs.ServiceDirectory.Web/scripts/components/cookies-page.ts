@@ -50,7 +50,7 @@ CookiesPage.prototype.savePreferences = function (event) {
     if (analyticsAccepted) {
         sendPageViewEvent();
     } else {
-        updateAnalyticsStorageConsent(false);
+        updateAnalyticsStorageConsent(false, 250);
     }
 
     setConsentCookie(preferences);

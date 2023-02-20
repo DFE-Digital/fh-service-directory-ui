@@ -77,9 +77,11 @@ CookieBanner.prototype.rejectCookies = function () {
 
     sendAnalyticsCustomEvent(false, 'banner');
 
-    updateAnalyticsStorageConsent(false);
+    updateAnalyticsStorageConsent(false, 250);
 
-    CookieFunctions.setConsentCookie({ analytics: false });
+
+    setTimeout(CookieFunctions.setConsentCookie.bind({ analytics: false }), 250);
+    //CookieFunctions.setConsentCookie({ analytics: false });
 
     // Hide banner and show confirmation message
     this.$cookieMessage.setAttribute('hidden', true)

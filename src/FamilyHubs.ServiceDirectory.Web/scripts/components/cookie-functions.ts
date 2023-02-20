@@ -190,7 +190,6 @@ function getCookie(name: string) {
 // do we need to set the domain?
 function setCookie(name: string, value: string, options?: CookieOptions) {
     if (userAllowsCookie(name)) {
-        //todo: test
         if (typeof options === 'undefined') {
             options = {}
         }
