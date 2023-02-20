@@ -1,8 +1,18 @@
 ﻿
+//todo: consent mode debugging/check: https://developers.google.com/tag-platform/devguides/consent-debugging
+
+import { getConsentCookie, isValidConsentCookie } from './cookie-functions'
+import { toOutcode } from './postcode'
+
 function gtag(command: string, ...args: any[]): void {
+    window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(arguments);
 }
 
+let GaMeasurementId: string = '';
+
+//todo: use prototype? (or class?)
+// (having an object (prototype/class) will ensure that GaMeasurementId will have already been set)
 export default function initAnalytics(gaMeasurementId: string) {
 
     // if the environment doesn't have a measurement id, don't load analytics
@@ -10,10 +20,12 @@ export default function initAnalytics(gaMeasurementId: string) {
         return;
     }
 
+    GaMeasurementId = gaMeasurementId;
+
+    setDefaultConsent();
+
     loadGaScript(gaMeasurementId);
 
-    window.dataLayer = window.dataLayer || [];
-//    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     const pageViewParams = getPiiSafePageView(gaMeasurementId);
@@ -27,13 +39,42 @@ export default function initAnalytics(gaMeasurementId: string) {
         cookie_flags: 'secure'
     });
 
-    // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
-    gtag('event', 'page_view', getPiiSafePageView(gaMeasurementId));
+    const userConsent = getConsentCookie();
+    if (userConsent && isValidConsentCookie(userConsent) && userConsent.analytics) {
+        updateAnalyticsStorageConsent(true);
+    }
 
-    sendTotalResultsEvent();
+    sendPageViewEvent();
+    sendFilterPageCustomEvent();
 }
 
-function sendTotalResultsEvent() {
+function setDefaultConsent() {
+    gtag('consent', 'default', {
+        'analytics_storage': 'denied'
+    });
+
+    gtag('set', 'url_passthrough', true);
+}
+
+export function updateAnalyticsStorageConsent(granted: boolean, delayMs?: number) {
+
+    let options = {
+        'analytics_storage': granted ? 'granted' : 'denied'
+    };
+
+    if (typeof delayMs !== 'undefined') {
+        options['wait_for_update'] = delayMs;
+    }
+
+    gtag('consent', 'update', options);
+}
+
+export function sendPageViewEvent() {
+    // send the page_view event manually (https://developers.google.com/analytics/devguides/collection/gtagjs/pages#default_behavior)
+    gtag('event', 'page_view', getPiiSafePageView(GaMeasurementId));
+}
+
+export function sendFilterPageCustomEvent() {
     //todo: make filter page only
     const element = document.getElementById('results');
     const totalResults = element?.getAttribute('data-total-results');
@@ -45,7 +86,15 @@ function sendTotalResultsEvent() {
     });
 }
 
-function loadGaScript(gaMeasurementId : string) {
+export function sendAnalyticsCustomEvent(accepted: boolean, source: string) {
+
+    gtag('event', 'analytics', {
+        'accepted': accepted,
+        'source': source
+    });
+}
+
+function loadGaScript(gaMeasurementId: string) {
     const f = document.getElementsByTagName('script')[0];
     const j = document.createElement('script');
     j.async = true;
@@ -71,7 +120,7 @@ function getPiiSafePageView(gaMeasurementId: string) {
         if (piiSafeReferrerQueryString == null) {
             pageView.referrer = document.referrer;
         } else {
-            const urlArray = document.referrer.split("?");
+            const urlArray = document.referrer.split('?');
 
             pageView.referrer = urlArray[0] + piiSafeReferrerQueryString;
         }
@@ -86,7 +135,7 @@ function getPiiSafePageView(gaMeasurementId: string) {
         return pageView;
     }
 
-    const urlArray = window.location.href.split("?");
+    const urlArray = window.location.href.split('?');
 
     pageView.page_location = urlArray[0] + piiSafeQueryString;
     pageView.page_path = window.location.pathname + piiSafeQueryString;
@@ -94,21 +143,21 @@ function getPiiSafePageView(gaMeasurementId: string) {
     return pageView;
 }
 
-function getPiiSafeQueryString(queryString) {
+function getPiiSafeQueryString(queryString: string): string | null {
 
     //todo: for safety, convert to lowercase, so that if the user changes the case of the url, we still don't collect pii
     const queryParams = new URLSearchParams(queryString);
 
-    let postcode = queryParams.get("postcode");
+    let postcode = queryParams.get('postcode');
     if (postcode == null) {
         // null indicates original query params were already pii safe
         return null;
     }
 
-    postcode = postcode.replace(/[a-zA-Z]+$/, "");
-    queryParams.set("postcode", postcode);
-    queryParams.delete("latitude");
-    queryParams.delete("longitude");
+    postcode = toOutcode(postcode);
+    queryParams.set('postcode', postcode);
+    queryParams.delete('latitude');
+    queryParams.delete('longitude');
 
     return '?' + queryParams.toString();
 }

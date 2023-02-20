@@ -1,24 +1,25 @@
-﻿/**
- * Cookie functions
- * ================
- *
- * Used by the cookie banner component and cookies page pattern.
- *
- * Includes function `Cookie()` for getting, setting, and deleting cookies, and
- * functions to manage the users' consent to cookies.
- *
- * Note: there is an inline script in cookie-banner.njk to show the banner
- * as soon as possible, to avoid a high Cumulative Layout Shift (CLS) score.
- * The consent cookie version is defined in cookie-banner.njk
- */
+﻿
+export interface ConsentCookie {
+    //todo: just remove essential?
+    essential?: boolean;
+    analytics?: boolean;
+    version?: number;
+}
 
-import initAnalytics from './analytics.js'
+interface CookieCategories {
+    analytics: string[];
+    essential: string[];
+}
+
+interface CookieOptions {
+    days?: number;
+}
 
 /* Name of the cookie to save users cookie preferences to. */
-var CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
+const CONSENT_COOKIE_NAME = 'service_directory_cookies_policy';
 
 /* Users can (dis)allow different groups of cookies. */
-var COOKIE_CATEGORIES = {
+const COOKIE_CATEGORIES: CookieCategories = {
     analytics: ['_ga', '_ga_' + window.GA_CONTAINER_ID],
     /* Essential cookies
      *
@@ -36,38 +37,9 @@ var COOKIE_CATEGORIES = {
  * cookies cannot be disallowed. If the object contains { essential: false }
  * this will be ignored.
  */
-var DEFAULT_COOKIE_CONSENT = {
-    analytics: false
-}
-
-/*
- * Set, get, and delete cookies.
- *
- * Usage:
- *
- *   Setting a cookie:
- *   Cookie('hobnob', 'tasty', { days: 30 })
- *
- *   Reading a cookie:
- *   Cookie('hobnob')
- *
- *   Deleting a cookie:
- *   Cookie('hobnob', null)
- */
-export function Cookie(name, value, options) {
-    if (typeof value !== 'undefined') {
-        if (value === false || value === null) {
-            deleteCookie(name);
-        } else {
-            // Default expiry date of 30 days
-            if (typeof options === 'undefined') {
-                options = { days: 30 }
-            }
-            setCookie(name, value, options);
-        }
-    } else {
-        return getCookie(name);
-    }
+const DEFAULT_COOKIE_CONSENT: ConsentCookie = {
+    analytics: false,
+    version: window.GDS_CONSENT_COOKIE_VERSION
 }
 
 /** Return the user's cookie preferences.
@@ -75,9 +47,9 @@ export function Cookie(name, value, options) {
  * If the consent cookie is malformed, or not present,
  * returns null.
  */
-export function getConsentCookie() {
-    var consentCookie = getCookie(CONSENT_COOKIE_NAME);
-    var consentCookieObj;
+export function getConsentCookie(): ConsentCookie | null {
+    const consentCookie = getCookie(CONSENT_COOKIE_NAME);
+    let consentCookieObj: ConsentCookie | null;
 
     if (consentCookie) {
         try {
@@ -96,16 +68,14 @@ export function getConsentCookie() {
  *
  * If the consent object is not present, malformed, or incorrect version,
  * returns false, otherwise returns true.
- *
- * This is also duplicated in cookie-banner.njk - the two need to be kept in sync
  */
-export function isValidConsentCookie(options) {
+export function isValidConsentCookie(options: ConsentCookie) {
     return (options && options.version >= window.GDS_CONSENT_COOKIE_VERSION);
 }
 
 /** Update the user's cookie preferences. */
-export function setConsentCookie(options) {
-    var cookieConsent = getConsentCookie();
+export function setConsentCookie(options: ConsentCookie) {
+    let cookieConsent = getConsentCookie();
 
     if (!cookieConsent) {
         cookieConsent = JSON.parse(JSON.stringify(DEFAULT_COOKIE_CONSENT));
@@ -150,20 +120,12 @@ export function resetCookies() {
             continue;
         }
 
-        //todo: enabling analytics doesn't belong in resetCookies
-        const analyticsAllowed = (cookieType === 'analytics' && options[cookieType]);
-
-        if (analyticsAllowed) {
-            initAnalytics(window.GA_MEASUREMENT_ID);
-        }
-
         if (!options[cookieType]) {
             // Fetch the cookies in that category
             var cookiesInCategory = COOKIE_CATEGORIES[cookieType]
 
-            cookiesInCategory.forEach(function(cookie) {
-                // Delete cookie
-                Cookie(cookie, null);
+            cookiesInCategory.forEach(function (cookie) {
+                deleteCookie(cookie);
             });
         }
     }
@@ -184,7 +146,7 @@ function userAllowsCookieCategory(cookieCategory, cookiePreferences) {
     }
 }
 
-function userAllowsCookie(cookieName) {
+function userAllowsCookie(cookieName: string) {
     // Always allow setting the consent cookie
     if (cookieName === CONSENT_COOKIE_NAME) {
         return true;
@@ -207,10 +169,10 @@ function userAllowsCookie(cookieName) {
     }
 
     // Deny the cookie if it is not known to us
-    return false
+    return false;
 }
 
-function getCookie(name) {
+function getCookie(name: string) {
     var nameEQ = name + '=';
     var cookies = document.cookie.split(';');
     for (var i = 0, len = cookies.length; i < len; i++) {
@@ -226,7 +188,7 @@ function getCookie(name) {
 }
 
 // do we need to set the domain?
-function setCookie(name, value, options) {
+function setCookie(name: string, value: string, options?: CookieOptions) {
     if (userAllowsCookie(name)) {
         if (typeof options === 'undefined') {
             options = {}
@@ -244,8 +206,8 @@ function setCookie(name, value, options) {
     }
 }
 
-function deleteCookie(name) {
-    if (Cookie(name)) {
+function deleteCookie(name: string) {
+    if (getCookie(name)) {
         // Cookies need to be deleted in the same level of specificity in which they were set
         // If a cookie was set with a specified domain, it needs to be specified when deleted
         // If a cookie wasn't set with the domain attribute, it shouldn't be there when deleted

@@ -3,17 +3,18 @@
 /*import 'govuk-frontend/govuk/vendor/polyfills/Function/prototype/bind'*/
 /*todo: i think we're ok for this too (see above about ie8), but we _might_ need it for >8 ie (use? https://www.npmjs.com/package/events-polyfill)*/
 /*import 'govuk-frontend/govuk/vendor/polyfills/Event'*/
-import { nodeListForEach } from './helpers.js'
+import { nodeListForEach } from './helpers'
+import { sendPageViewEvent, sendFilterPageCustomEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics';
 
-var cookieBannerAcceptSelector = '.js-cookie-banner-accept'
-var cookieBannerRejectSelector = '.js-cookie-banner-reject'
-var cookieBannerHideButtonSelector = '.js-cookie-banner-hide'
-var cookieMessageSelector = '.js-cookie-banner-message'
-var cookieConfirmationAcceptSelector = '.js-cookie-banner-confirmation-accept'
-var cookieConfirmationRejectSelector = '.js-cookie-banner-confirmation-reject'
+const cookieBannerAcceptSelector = '.js-cookie-banner-accept'
+const cookieBannerRejectSelector = '.js-cookie-banner-reject'
+const cookieBannerHideButtonSelector = '.js-cookie-banner-hide'
+const cookieMessageSelector = '.js-cookie-banner-message'
+const cookieConfirmationAcceptSelector = '.js-cookie-banner-confirmation-accept'
+const cookieConfirmationRejectSelector = '.js-cookie-banner-confirmation-reject'
 
-function CookieBanner($module) {
-    this.$module = $module
+export default function CookieBanner($module: HTMLElement) {
+    this.$module = $module;
 }
 
 CookieBanner.prototype.init = function () {
@@ -57,7 +58,13 @@ CookieBanner.prototype.hideBanner = function () {
 
 CookieBanner.prototype.acceptCookies = function () {
     // Do actual cookie consent bit
-    CookieFunctions.setConsentCookie({ analytics: true })
+    CookieFunctions.setConsentCookie({ analytics: true });
+
+    updateAnalyticsStorageConsent(true);
+
+    sendAnalyticsCustomEvent(true, 'banner');
+    sendPageViewEvent();
+    sendFilterPageCustomEvent();
 
     // Hide banner and show confirmation message
     this.$cookieMessage.setAttribute('hidden', true)
@@ -65,8 +72,15 @@ CookieBanner.prototype.acceptCookies = function () {
 }
 
 CookieBanner.prototype.rejectCookies = function () {
-    // Do actual cookie consent bit
-    CookieFunctions.setConsentCookie({ analytics: false })
+
+    updateAnalyticsStorageConsent(true);
+
+    sendAnalyticsCustomEvent(false, 'banner');
+
+    updateAnalyticsStorageConsent(false);
+
+    //setTimeout(CookieFunctions.setConsentCookie.bind({ analytics: false }), 250);
+    CookieFunctions.setConsentCookie({ analytics: false });
 
     // Hide banner and show confirmation message
     this.$cookieMessage.setAttribute('hidden', true)
@@ -91,5 +105,3 @@ CookieBanner.prototype.revealConfirmationMessage = function (confirmationMessage
 CookieBanner.prototype.onCookiesPage = function () {
     return window.location.pathname === '/cookies/'
 }
-
-export default CookieBanner
