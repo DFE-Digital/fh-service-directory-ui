@@ -1,6 +1,6 @@
-﻿import { getConsentCookie, setConsentCookie, ConsentCookie } from './cookie-functions.js'
-import { nodeListForEach } from './helpers.js'
-import { sendPageViewEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics.js'
+﻿import { getConsentCookie, setConsentCookie, ConsentCookie } from './cookie-functions'
+import { nodeListForEach } from './helpers'
+import { sendPageViewEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics'
 
 function CookiesPage($module) {
     this.$module = $module

@@ -19,11 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="scripts\components\analytics.ts" />
-    <Content Include="scripts\components\cookie-banner.ts" />
-    <Content Include="scripts\components\cookie-functions.ts" />
-    <Content Include="scripts\components\cookies-page.ts" />
-    <Content Include="scripts\components\helpers.ts" />
+	  <Content Include="scripts\**\*.ts" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,10 +9,10 @@ declare global {
     }
 }
 
-import CookieBanner from './components/cookie-banner.js'
-import CookiesPage from './components/cookies-page.js'
-import initAnalytics, { sendPageViewEvent, sendFilterPageCustomEvent, updateAnalyticsStorageConsent } from './components/analytics';
-import { nodeListForEach } from './components/helpers.js';
+import CookieBanner from './components/cookie-banner'
+import CookiesPage from './components/cookies-page'
+import initAnalytics from './components/analytics';
+import { nodeListForEach } from './components/helpers';
 
 //todo: consistency in module/proto/class style
 

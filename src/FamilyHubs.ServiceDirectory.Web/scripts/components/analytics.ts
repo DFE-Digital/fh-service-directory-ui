@@ -1,7 +1,8 @@
 ﻿
 //todo: consent mode debugging/check: https://developers.google.com/tag-platform/devguides/consent-debugging
 
-import { getConsentCookie, isValidConsentCookie } from './cookie-functions.js'
+import { getConsentCookie, isValidConsentCookie } from './cookie-functions'
+import { toOutcode } from './postcode'
 
 function gtag(command: string, ...args: any[]): void {
     window.dataLayer = window.dataLayer || [];
@@ -153,7 +154,7 @@ function getPiiSafeQueryString(queryString: string): string | null {
         return null;
     }
 
-    postcode = postcode.replace(/[a-zA-Z]+$/, '');
+    postcode = toOutcode(postcode);
     queryParams.set('postcode', postcode);
     queryParams.delete('latitude');
     queryParams.delete('longitude');

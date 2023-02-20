@@ -3,8 +3,8 @@
 /*import 'govuk-frontend/govuk/vendor/polyfills/Function/prototype/bind'*/
 /*todo: i think we're ok for this too (see above about ie8), but we _might_ need it for >8 ie (use? https://www.npmjs.com/package/events-polyfill)*/
 /*import 'govuk-frontend/govuk/vendor/polyfills/Event'*/
-import { nodeListForEach } from './helpers.js'
-import { sendPageViewEvent, sendFilterPageCustomEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics.js';
+import { nodeListForEach } from './helpers'
+import { sendPageViewEvent, sendFilterPageCustomEvent, sendAnalyticsCustomEvent, updateAnalyticsStorageConsent } from './analytics';
 
 const cookieBannerAcceptSelector = '.js-cookie-banner-accept'
 const cookieBannerRejectSelector = '.js-cookie-banner-reject'
