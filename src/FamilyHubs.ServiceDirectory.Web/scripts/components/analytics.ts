@@ -1,6 +1,5 @@
 ﻿
 //todo: consent mode debugging/check: https://developers.google.com/tag-platform/devguides/consent-debugging
-// denied event doesn't always seem to reach google - race condition? is wait_for_update for default only?
 
 import { getConsentCookie, isValidConsentCookie } from './cookie-functions.js'
 
