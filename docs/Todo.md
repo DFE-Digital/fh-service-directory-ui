@@ -43,4 +43,4 @@ swapped from node-sass (libsass) to sass (dart sass)
 see... https://frontend.design-system.service.gov.uk/installing-with-npm/#install-with-node-js-package-manager-npm
 `Do not use either LibSass or Ruby Sass, which are deprecated, for new projects.`
 
-* pick up govuk js from node_modules??
+* pick up govuk js from node_modules and only initialize import what we need: https://frontend.design-system.service.gov.uk/importing-css-assets-and-javascript/#select-and-initialise-an-individual-component
