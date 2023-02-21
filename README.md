@@ -58,7 +58,7 @@ Run Lighthouse.
 
 ## Google Analytics
 
-[GA4 documentation](docs/GoogleAanalytics.md).
+[GA4 documentation](docs/GoogleAnalytics.md).
 
 ## Useful test data
 
