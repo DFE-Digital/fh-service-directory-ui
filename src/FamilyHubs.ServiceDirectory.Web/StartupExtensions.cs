@@ -36,6 +36,7 @@ public static class StartupExtensions
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApplicationInsightsTelemetry();
+        services.AddApplicationInsightsTelemetryProcessor<AppInsightsPiiCleanser>();
 
         // Add services to the container.
         services.AddRazorPages();
