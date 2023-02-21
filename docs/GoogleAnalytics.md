@@ -29,12 +29,14 @@ Here’s a breakdown of each parameter:
 | search_within   | The (single) selected ‘Search within’ option.<BR><BR>The possible values are:<BR>1, 2, 5, 10, 20<BR> | 20 |
 | children_and_young-option-selected | Whether the user has checked the ‘For children and young people’ checkbox under ‘Children and young people’.<BR><BR>The possible values are:<BR>true, false | true |
 | children_and_young | The (single) selected ‘For children and young people’ value.<BR><BR>Possible values are:<BR>all, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 | 0 |
-| frompostcodesearch | Whether the user has just entered the filter page from the postcode search page. Is absent from the moment the user performs an ‘Apply filters’ or removes any filters.<BR><BR>Possible values are:<BR>True, False | True |
+| frompostcodesearch* | Whether the user has just entered the filter page from the postcode search page. Is absent from the moment the user performs an ‘Apply filters’ or removes any filters.<BR><BR>Possible values are:<BR>True, False | True |
 | pageNum         | The page number of the results being viewed, corresponding to the number clicked in the pagination control (1 being the first page) | 1 |
 
 #### Notes
 
 The URL in the address bar will show the full postcode and also the latitude and longitude. Before the URL is sent to GA, the latitude and longitude is removed and the postcode shortened to comply with the GDPR. 
+
+*Examining the referrer on the filter page page_view (or filter_page) event, will allow us to see if the user has been through the standard journey and entered a postcode, or if they’ve navigated straight to a results page (e.g. via a bookmark). This will be more reliable than looking for the query param ‘frompostcodesearch’, as that could be part of the bookmark.
 
 ## Postcode Search
 

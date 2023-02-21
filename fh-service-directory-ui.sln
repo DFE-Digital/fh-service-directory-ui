@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{864FF09C-8273-4AF8-9DD4-7A290114CE6F}"
 	ProjectSection(SolutionItems) = preProject
-		GoogleAnalytics.md = GoogleAnalytics.md
+		docs\GoogleAnalytics.md = docs\GoogleAnalytics.md
 		README.md = README.md
 		docs\Todo.md = docs\Todo.md
 	EndProjectSection

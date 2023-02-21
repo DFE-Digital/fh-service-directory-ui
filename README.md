@@ -56,6 +56,10 @@ Switch to a different profile and then back to the FamilyHubs.ServiceDirectoryUI
 
 Run Lighthouse.
 
+## Google Analytics
+
+[GA4 documentation](docs/GoogleAanalytics.md).
+
 ## Useful test data
 
 Example Salford LA postcode:
