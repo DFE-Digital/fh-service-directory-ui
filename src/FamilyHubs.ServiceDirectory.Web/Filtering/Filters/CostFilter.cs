@@ -10,7 +10,7 @@ public class CostFilter : Filter
     public CostFilter() : base("cost", "Cost", CheckboxesPartialName, new IFilterAspect[]
     {
         new FilterAspect("free", "Free"),
-        new FilterAspect(PayToUseId, "Pay to ue")
+        new FilterAspect(PayToUseId, "Pay to use")
     })
     {
     }

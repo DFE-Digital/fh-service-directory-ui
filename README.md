@@ -42,6 +42,24 @@ To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript file
 
 (Note, we might switch to [environment-based bundling and minification at a later point](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-6.0).)
 
+## Running Lighthouse
+
+Disable any extensions that might interfere with the Lighthouse report, such as Axe Accessibility, WAVE, Google Analytics Debugger etc.
+
+Edit launchsettings.json and add this to the FamilyHubs.ServiceDirectoryUI profile:
+
+```json
+        "hotReloadEnabled": false,
+```
+
+Switch to a different profile and then back to the FamilyHubs.ServiceDirectoryUI profile, for the change to take affect.
+
+Run Lighthouse.
+
+## Google Analytics
+
+[GA4 documentation](docs/GoogleAnalytics.md).
+
 ## Useful test data
 
 Example Salford LA postcode:
