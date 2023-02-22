@@ -23,6 +23,9 @@ public static class StartupExtensions
 
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
+            var config = services.GetRequiredService<TelemetryConfiguration>();
+            config.TelemetryChannel.DeveloperMode = true;
+
             loggerConfiguration.WriteTo.ApplicationInsights(
                 services.GetRequiredService<TelemetryConfiguration>(), 
                 TelemetryConverter.Traces, 

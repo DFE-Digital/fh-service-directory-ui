@@ -20,13 +20,24 @@ public class AppInsightsPiiCleanser : ITelemetryProcessor
 
         //if (item.Sanitize())
 
+        // order by least common for efficiency
         if (item is TraceTelemetry traceTelemetry
-            && traceTelemetry.Properties.TryGetValue("path", out string? path)
-            && path is "/ServiceFilter")
+            && traceTelemetry.Properties.TryGetValue("Path", out string? path)
+            && path is "/ServiceFilter"
+            && traceTelemetry.Properties.TryGetValue("Method", out string? method)
+            && method is "GET")
         {
             // make pii safe
 #pragma warning disable
-            traceTelemetry.Properties["message"] = traceTelemetry.Properties["message"];
+            if (traceTelemetry.Properties.TryGetValue("QueryString", out string? queryString))
+            {
+                traceTelemetry.Properties["QueryString"] = Sanitize(queryString);
+            }
+
+            if (traceTelemetry.Properties.TryGetValue("HostingRequestStartingLog", out string? hostingRequestStartingLog))
+            {
+                traceTelemetry.Properties["HostingRequestStartingLog"] = Sanitize(hostingRequestStartingLog);
+            }
         }
 
         //if (!OKtoSend(item))
@@ -35,6 +46,14 @@ public class AppInsightsPiiCleanser : ITelemetryProcessor
         //}
 
         Next.Process(item);
+    }
+
+    // regex to handle all, or different methods for each?
+    // Request starting HTTP/2 GET https://localhost:7199/ServiceFilter?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True - -
+    // ?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True
+    private string Sanitize(string value)
+    {
+        return $"Test-{value}";
     }
 
 //#pragma warning disable
