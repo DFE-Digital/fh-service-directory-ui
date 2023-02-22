@@ -24,10 +24,10 @@ public static class StartupExtensions
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
             var config = services.GetRequiredService<TelemetryConfiguration>();
-            config.TelemetryChannel.DeveloperMode = true;
+            config.TelemetryInitializers.Add(new RedactPiiInitializer());
 
             loggerConfiguration.WriteTo.ApplicationInsights(
-                services.GetRequiredService<TelemetryConfiguration>(), 
+                config, 
                 TelemetryConverter.Traces, 
                 parsed ? logLevel : LogEventLevel.Warning);
 
@@ -39,7 +39,7 @@ public static class StartupExtensions
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApplicationInsightsTelemetry();
-        services.AddApplicationInsightsTelemetryProcessor<AppInsightsPiiCleanser>();
+        //services.AddApplicationInsightsTelemetryProcessor<AppInsightsPiiCleanser>();
 
         // Add services to the container.
         services.AddRazorPages();

@@ -11,6 +11,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Security;
 // how much will this slow things down?
 // can we do it earlier
 // remove values/properties or the whole trace instead if it's too slow
+#if cant_modify_only_filter
 public class AppInsightsPiiCleanser : ITelemetryProcessor
 {
     private static readonly Regex PiiRegex = new Regex(@"(?<=(postcode|latitude|longitude)=)[^&\s]+", RegexOptions.Compiled);
@@ -101,4 +102,47 @@ public class AppInsightsPiiCleanser : ITelemetryProcessor
 //        //return dependency.Success != true;
 //        return true;
 //    }
+}
+#endif
+
+public class RedactPiiInitializer : ITelemetryInitializer
+{
+    private static readonly Regex PiiRegex = new(@"(?<=(postcode|latitude|longitude)=)[^&\s]+", RegexOptions.Compiled);
+
+    private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog" };
+
+    public void Initialize(ITelemetry telemetry)
+    {
+        //todo: https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling
+        // RequestTelemetry??
+
+        // order by least common for efficiency
+        if (telemetry is TraceTelemetry traceTelemetry
+            && traceTelemetry.Properties.TryGetValue("Path", out string? path)
+            && path is "/ServiceFilter"
+            && traceTelemetry.Properties.TryGetValue("Method", out string? method)
+            && method is "GET")
+        {
+            traceTelemetry.Message = Sanitize(traceTelemetry.Message);
+            foreach (string propertyKey in PropertiesToRedact)
+            {
+                SanitizeProperty(traceTelemetry.Properties, propertyKey);
+            }
+        }
+    }
+
+    private void SanitizeProperty(IDictionary<string, string> properties, string key)
+    {
+        if (properties.TryGetValue(key, out string? value))
+        {
+            properties[key] = Sanitize(value);
+        }
+    }
+
+    private string Sanitize(string value)
+    {
+        return PiiRegex.Replace(value, "REDACTED");
+        //return $"Test-{value}";
+    }
+
 }
