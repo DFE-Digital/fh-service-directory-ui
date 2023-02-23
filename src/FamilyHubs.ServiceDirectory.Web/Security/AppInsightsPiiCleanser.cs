@@ -115,7 +115,7 @@ public class RedactPiiInitializer : ITelemetryInitializer
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
 
     // is this going to slow things down too much, just exclude the logs instead (not nice!)
-    private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "Dependency", "HostingRequestFinishedLog" };
+    private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
     public void Initialize(ITelemetry telemetry)
     {
@@ -151,7 +151,7 @@ public class RedactPiiInitializer : ITelemetryInitializer
                     //&& method is "GET")
                 {
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
-                    foreach (string propertyKey in PropertiesToRedact)
+                    foreach (string propertyKey in TracePropertiesToRedact)
                     {
                         SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, propertyKey);
                     }
@@ -195,7 +195,7 @@ public class RedactPiiInitializer : ITelemetryInitializer
         //todo: inject exceptions around filtering page
         if (telemetry is ExceptionTelemetry exceptionTelemetry)
         {
-            DebugCheckForUnredactedData(exceptionTelemetry.Properties, exceptionTelemetry.Message);
+            DebugCheckForUnredactedData(exceptionTelemetry.Properties, exceptionTelemetry.Message, exceptionTelemetry.Exception?.Message);
         }
         // don't think so, so remove soon
         if (telemetry is MetricTelemetry metricTelemetry)
@@ -216,66 +216,68 @@ public class RedactPiiInitializer : ITelemetryInitializer
         }
         if (telemetry is TraceTelemetry traceTelemetry)
         {
+            //todo: {[RequestPath, /ServiceFilter]}
+            // Message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
+            // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
+            // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
             DebugCheckForUnredactedData(traceTelemetry.Properties, traceTelemetry.Message);
         }
     }
 
-    private void DebugCheckForUnredactedData(IDictionary<string, string> properties, params string[] rootProperties)
+    private void DebugCheckForUnredactedData(IDictionary<string, string> properties, params string?[] rootPropertyValues)
     {
-        foreach (var rootProperty in rootProperties)
+        foreach (string? rootProperty in rootPropertyValues.Where(v => v != null))
         {
-            if (rootProperty.Contains("postcode=")
-                && !rootProperty.Contains("postcode=REDACTED"))
-            {
-                Debugger.Break();
-            }
-
-            if (rootProperty.Contains("latitude=")
-                && !rootProperty.Contains("latitude=REDACTED"))
-            {
-                Debugger.Break();
-            }
-
-            if (rootProperty.Contains("longitude=")
-                && !rootProperty.Contains("longitude=REDACTED"))
-            {
-                Debugger.Break();
-            }
-
-            if (rootProperty.Contains("longtitude=")
-                && !rootProperty.Contains("longtitude=REDACTED"))
-            {
-                Debugger.Break();
-            }
+            DebugCheckForUnredactedData(rootProperty!);
         }
 
-#pragma warning disable S3267
         foreach (var property in properties)
-#pragma warning restore S3267
         {
-            if (property.Value.Contains("postcode=")
-                && !property.Value.Contains("postcode=REDACTED"))
-            {
-                Debugger.Break();
-            }
+            DebugCheckForUnredactedData(property.Value);
         }
     }
 
-    //private void SanitizeQueryStringProperty(IDictionary<string, string> properties, string key)
-    //{
-    //    if (properties.TryGetValue(key, out string? value))
-    //    {
-    //        properties[key] = SanitizeQueryString(value);
-    //    }
-    //}
+    private void DebugCheckForUnredactedData(string value)
+    {
+        if ((value.Contains("postcode=")||value.Contains("postcodes/"))
+            && !(value.Contains("postcode=REDACTED")||value.Contains("postcodes/REDACTED")))
+        {
+            Debugger.Break();
+        }
 
-    //private string SanitizeQueryString(string value)
-    //{
-    //    return QueryStringRegex.Replace(value, "REDACTED");
-    //}
+        if (value.Contains("latitude=")
+            && !value.Contains("latitude=REDACTED"))
+        {
+            Debugger.Break();
+        }
 
-    //private string SanitizePath(string value)
-    //{
-    //    return PathRegex.Replace(value, "REDACTED");
-    //}
+        if (value.Contains("longitude=")
+            && !value.Contains("longitude=REDACTED"))
+        {
+            Debugger.Break();
+        }
+
+        if (value.Contains("longtitude=")
+            && !value.Contains("longtitude=REDACTED"))
+        {
+            Debugger.Break();
+        }
+    }
 }
+
+// do we also need to redact from serilog??
+
+/*
+ *Yes, if you redact sensitive information from what gets sent to Application Insights, you should also remove the sensitive data from Serilog logs as well. This is because Serilog can also send logs to Application Insights, and if the sensitive data is included in the Serilog logs, it can still end up in Application Insights.
+
+To ensure that sensitive data is not included in your logs, you can use Serilog's filtering capabilities to remove or replace sensitive data before it is logged. For example, you can use the WithSensitiveData() method to specify properties that should be treated as sensitive, and then use the Destructure.ByTransforming() method to redact those properties:
+
+csharp
+Copy code
+Log.Logger = new LoggerConfiguration()
+    .Destructure.ByTransforming<MySensitiveData>(x => new MySensitiveData { Password = "****" }) // replace password with "****"
+    .WriteTo.ApplicationInsights(...)
+    .CreateLogger();
+In this example, MySensitiveData is a custom class that contains sensitive information (in this case, a Password property). The Destructure.ByTransforming() method is used to transform instances of MySensitiveData by creating a new instance with the sensitive information redacted (replaced with "****"). This ensures that the redacted data is not included in the logs that are sent to Application Insights.
+ *
+ */
