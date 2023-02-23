@@ -108,7 +108,10 @@ public class RedactPiiInitializer : ITelemetryInitializer
     //todo: do we handle the user changing the case in the url??
 
     // longtit... is due to the spelling error in the API. at some point, should fix that (and all the consumers)
-    private static readonly Regex QueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
+    //private static readonly Regex QueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
+    // having a single more complex regex might be faster, as its more likely to be in caches
+    private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
+    private static readonly Regex ApiQueryStringRegex = new(@"(?<=(latitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
 
     // is this going to slow things down too much, just exclude the logs instead (not nice!)
@@ -125,16 +128,16 @@ public class RedactPiiInitializer : ITelemetryInitializer
                 {
                     // command name is obsolete and has been replaced by Data, but should contain the same as Data
 #pragma warning disable CS0618
-                    dependencyTelemetry.CommandName = dependencyTelemetry.Data = SanitizeQueryString(dependencyTelemetry.Data);
+                    dependencyTelemetry.CommandName = dependencyTelemetry.Data = Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
 #pragma warning restore CS0618
                 }
                 else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
                 {
                     //todo: hardcode replacement at index - faster than a regex
 #pragma warning disable CS0618
-                    dependencyTelemetry.CommandName = dependencyTelemetry.Data = SanitizePath(dependencyTelemetry.Data);
+                    dependencyTelemetry.CommandName = dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
 #pragma warning restore CS0618
-                    dependencyTelemetry.Name = SanitizePath(dependencyTelemetry.Name);
+                    dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
                 }
                 break;
             case TraceTelemetry traceTelemetry:
@@ -147,10 +150,10 @@ public class RedactPiiInitializer : ITelemetryInitializer
                     //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
                     //&& method is "GET")
                 {
-                    traceTelemetry.Message = SanitizeQueryString(traceTelemetry.Message);
+                    traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                     foreach (string propertyKey in PropertiesToRedact)
                     {
-                        SanitizeQueryStringProperty(traceTelemetry.Properties, propertyKey);
+                        SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, propertyKey);
                     }
                 }
                 break;
@@ -158,6 +161,19 @@ public class RedactPiiInitializer : ITelemetryInitializer
         }
 
         DebugCheckForUnredactedData(telemetry);
+    }
+
+    private void SanitizeProperty(Regex regex, IDictionary<string, string> properties, string key)
+    {
+        if (properties.TryGetValue(key, out string? value))
+        {
+            properties[key] = Sanitize(regex, value);
+        }
+    }
+
+    private string Sanitize(Regex regex, string value)
+    {
+        return regex.Replace(value, "REDACTED");
     }
 
     private void DebugCheckForUnredactedData(ITelemetry telemetry)
@@ -206,7 +222,7 @@ public class RedactPiiInitializer : ITelemetryInitializer
 
     private void DebugCheckForUnredactedData(IDictionary<string, string> properties, params string[] rootProperties)
     {
-        foreach (string rootProperty in rootProperties)
+        foreach (var rootProperty in rootProperties)
         {
             if (rootProperty.Contains("postcode=")
                 && !rootProperty.Contains("postcode=REDACTED"))
@@ -245,21 +261,21 @@ public class RedactPiiInitializer : ITelemetryInitializer
         }
     }
 
-    private void SanitizeQueryStringProperty(IDictionary<string, string> properties, string key)
-    {
-        if (properties.TryGetValue(key, out string? value))
-        {
-            properties[key] = SanitizeQueryString(value);
-        }
-    }
+    //private void SanitizeQueryStringProperty(IDictionary<string, string> properties, string key)
+    //{
+    //    if (properties.TryGetValue(key, out string? value))
+    //    {
+    //        properties[key] = SanitizeQueryString(value);
+    //    }
+    //}
 
-    private string SanitizeQueryString(string value)
-    {
-        return QueryStringRegex.Replace(value, "REDACTED");
-    }
+    //private string SanitizeQueryString(string value)
+    //{
+    //    return QueryStringRegex.Replace(value, "REDACTED");
+    //}
 
-    private string SanitizePath(string value)
-    {
-        return PathRegex.Replace(value, "REDACTED");
-    }
+    //private string SanitizePath(string value)
+    //{
+    //    return PathRegex.Replace(value, "REDACTED");
+    //}
 }
