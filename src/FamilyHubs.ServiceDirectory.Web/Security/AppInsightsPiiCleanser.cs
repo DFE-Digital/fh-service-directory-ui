@@ -36,10 +36,6 @@ public class AppInsightsPiiCleanser : ITelemetryProcessor
         //todo: we don't want to keep doing this repeatedly for all the traces in a request
         // can we come in earlier? do the properties get passed on to the next trace?
 
-        //todo: why don't these match the url in the browser?
-        // we seem to get a flow through here for the dev env!!
-        //message: Start processing HTTP request GET https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1
-
         //properties
         // {[Uri, https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1]}
 
@@ -116,9 +112,11 @@ public class RedactPiiInitializer : ITelemetryInitializer
         //todo: https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling
         // RequestTelemetry??
 
+        //{[RequestPath, /ServiceFilter]}
+
         // order by least common for efficiency
         if (telemetry is TraceTelemetry traceTelemetry
-            && traceTelemetry.Properties.TryGetValue("Path", out string? path)
+            && traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
             && path is "/ServiceFilter"
             && traceTelemetry.Properties.TryGetValue("Method", out string? method)
             && method is "GET")
