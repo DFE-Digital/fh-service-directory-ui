@@ -24,7 +24,7 @@ public static class StartupExtensions
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
             var config = services.GetRequiredService<TelemetryConfiguration>();
-            config.TelemetryInitializers.Add(new RedactPiiInitializer());
+            //config.TelemetryInitializers.Add(new RedactPiiInitializer());
 
             loggerConfiguration.WriteTo.ApplicationInsights(
                 config, 
@@ -38,6 +38,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<ITelemetryInitializer, RedactPiiInitializer>();
         services.AddApplicationInsightsTelemetry();
         //services.AddApplicationInsightsTelemetryProcessor<AppInsightsPiiCleanser>();
 

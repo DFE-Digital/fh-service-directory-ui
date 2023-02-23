@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ServiceDirectory.Web.Security;
 
-//todo: looks like might a ITelemetryInitializer instead of a ITelemetryProcessor
-
 //todo: doesn't belong in security
 // how much will this slow things down?
 // can we do it earlier
@@ -102,37 +100,61 @@ public class AppInsightsPiiCleanser : ITelemetryProcessor
 }
 #endif
 
+/// <remarks>
+/// See https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling
+/// </remarks>>
 public class RedactPiiInitializer : ITelemetryInitializer
 {
     //todo: do we handle the user changing the case in the url??
 
-    private static readonly Regex PiiRegex = new(@"(?<=(postcode|latitude|longitude)=)[^&\s]+", RegexOptions.Compiled);
+    // longtit... is due to the spelling error in the API. at some point, should fix that (and all the consumers)
+    private static readonly Regex QueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
+    private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
 
     // is this going to slow things down too much, just exclude the logs instead (not nice!)
     private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "Dependency", "HostingRequestFinishedLog" };
 
     public void Initialize(ITelemetry telemetry)
     {
-        //todo: https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling
-        // RequestTelemetry??
-
-        //{[RequestPath, /ServiceFilter]}
-
-        // order by least common for efficiency
-        if (telemetry is TraceTelemetry traceTelemetry
-            && traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
-            && path is "/ServiceFilter")
-        // when calling the API, we need to redact on GET
-        // when the request is for the web, we only need to redact on POST
-        //todo: try some different ways of doing this and see which is fastest
-        //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
-        //&& method is "GET")
+        switch (telemetry)
         {
-            traceTelemetry.Message = Sanitize(traceTelemetry.Message);
-            foreach (string propertyKey in PropertiesToRedact)
-            {
-                SanitizeProperty(traceTelemetry.Properties, propertyKey);
-            }
+            //todo: shared const with client
+            //todo: is longtitude in trace, as well as dependency, or can we just check for it in dependency?
+            case DependencyTelemetry dependencyTelemetry:
+                if (dependencyTelemetry.Name is "GET /api/services")
+                {
+                    // command name is obsolete and has been replaced by Data, but should contain the same as Data
+#pragma warning disable CS0618
+                    dependencyTelemetry.CommandName = dependencyTelemetry.Data = SanitizeQueryString(dependencyTelemetry.Data);
+#pragma warning restore CS0618
+                }
+                else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
+                {
+                    //todo: hardcode replacement at index - faster than a regex
+#pragma warning disable CS0618
+                    dependencyTelemetry.CommandName = dependencyTelemetry.Data = SanitizePath(dependencyTelemetry.Data);
+#pragma warning restore CS0618
+                    dependencyTelemetry.Name = SanitizePath(dependencyTelemetry.Name);
+                }
+                break;
+            case TraceTelemetry traceTelemetry:
+                // order by least common for efficiency
+                if (traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
+                    && path is "/ServiceFilter")
+                    // when calling the API, we need to redact on GET
+                    // when the request is for the web, we only need to redact on POST
+                    //todo: try some different ways of doing this and see which is fastest
+                    //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
+                    //&& method is "GET")
+                {
+                    traceTelemetry.Message = SanitizeQueryString(traceTelemetry.Message);
+                    foreach (string propertyKey in PropertiesToRedact)
+                    {
+                        SanitizeQueryStringProperty(traceTelemetry.Properties, propertyKey);
+                    }
+                }
+                break;
+
         }
 
         DebugCheckForUnredactedData(telemetry);
@@ -140,37 +162,104 @@ public class RedactPiiInitializer : ITelemetryInitializer
 
     private void DebugCheckForUnredactedData(ITelemetry telemetry)
     {
+        if (telemetry is AvailabilityTelemetry availabilityTelemetry)
+        {
+            DebugCheckForUnredactedData(availabilityTelemetry.Properties, availabilityTelemetry.Message);
+        }
+        if (telemetry is DependencyTelemetry dependencyTelemetry)
+        {
+#pragma warning disable CS0618
+            DebugCheckForUnredactedData(dependencyTelemetry.Properties, dependencyTelemetry.Name, dependencyTelemetry.CommandName, dependencyTelemetry.Data);
+#pragma warning restore CS0618
+        }
+        if (telemetry is EventTelemetry eventTelemetry)
+        {
+            DebugCheckForUnredactedData(eventTelemetry.Properties, eventTelemetry.Name);
+        }
+        //todo: inject exceptions around filtering page
+        if (telemetry is ExceptionTelemetry exceptionTelemetry)
+        {
+            DebugCheckForUnredactedData(exceptionTelemetry.Properties, exceptionTelemetry.Message);
+        }
+        // don't think so, so remove soon
+        if (telemetry is MetricTelemetry metricTelemetry)
+        {
+            DebugCheckForUnredactedData(metricTelemetry.Properties);
+        }
+        if (telemetry is PageViewPerformanceTelemetry pageViewPerformanceTelemetry)
+        {
+            DebugCheckForUnredactedData(pageViewPerformanceTelemetry.Properties);
+        }
+        if (telemetry is PageViewTelemetry pageViewTelemetry)
+        {
+            DebugCheckForUnredactedData(pageViewTelemetry.Properties);
+        }
+        if (telemetry is RequestTelemetry requestTelemetry)
+        {
+            DebugCheckForUnredactedData(requestTelemetry.Properties, requestTelemetry.Name);
+        }
         if (telemetry is TraceTelemetry traceTelemetry)
         {
-            if (traceTelemetry.Message.Contains("postcode=")
-                && !traceTelemetry.Message.Contains("postcode=REDACTED"))
+            DebugCheckForUnredactedData(traceTelemetry.Properties, traceTelemetry.Message);
+        }
+    }
+
+    private void DebugCheckForUnredactedData(IDictionary<string, string> properties, params string[] rootProperties)
+    {
+        foreach (string rootProperty in rootProperties)
+        {
+            if (rootProperty.Contains("postcode=")
+                && !rootProperty.Contains("postcode=REDACTED"))
             {
                 Debugger.Break();
             }
 
-#pragma warning disable S3267
-            foreach (var property in traceTelemetry.Properties)
-#pragma warning restore S3267
+            if (rootProperty.Contains("latitude=")
+                && !rootProperty.Contains("latitude=REDACTED"))
             {
-                if (property.Value.Contains("postcode=")
-                    && !property.Value.Contains("postcode=REDACTED"))
-                {
-                    Debugger.Break();
-                }
+                Debugger.Break();
+            }
+
+            if (rootProperty.Contains("longitude=")
+                && !rootProperty.Contains("longitude=REDACTED"))
+            {
+                Debugger.Break();
+            }
+
+            if (rootProperty.Contains("longtitude=")
+                && !rootProperty.Contains("longtitude=REDACTED"))
+            {
+                Debugger.Break();
+            }
+        }
+
+#pragma warning disable S3267
+        foreach (var property in properties)
+#pragma warning restore S3267
+        {
+            if (property.Value.Contains("postcode=")
+                && !property.Value.Contains("postcode=REDACTED"))
+            {
+                Debugger.Break();
             }
         }
     }
 
-    private void SanitizeProperty(IDictionary<string, string> properties, string key)
+    private void SanitizeQueryStringProperty(IDictionary<string, string> properties, string key)
     {
         if (properties.TryGetValue(key, out string? value))
         {
-            properties[key] = Sanitize(value);
+            properties[key] = SanitizeQueryString(value);
         }
     }
 
-    private string Sanitize(string value)
+    private string SanitizeQueryString(string value)
     {
-        return PiiRegex.Replace(value, "REDACTED");
+        return QueryStringRegex.Replace(value, "REDACTED");
+    }
+
+    private string SanitizePath(string value)
+    {
+        return PathRegex.Replace(value, "REDACTED");
     }
 }
