@@ -105,7 +105,7 @@ public class RedactPiiInitializer : ITelemetryInitializer
 {
     private static readonly Regex PiiRegex = new(@"(?<=(postcode|latitude|longitude)=)[^&\s]+", RegexOptions.Compiled);
 
-    private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog" };
+    private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "Dependency" };
 
     public void Initialize(ITelemetry telemetry)
     {
@@ -117,9 +117,12 @@ public class RedactPiiInitializer : ITelemetryInitializer
         // order by least common for efficiency
         if (telemetry is TraceTelemetry traceTelemetry
             && traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
-            && path is "/ServiceFilter"
-            && traceTelemetry.Properties.TryGetValue("Method", out string? method)
-            && method is "GET")
+            && path is "/ServiceFilter")
+            // when calling the API, we need to redact on GET
+            // when the request is for the web, we only need to redact on POST
+            //todo: try some different ways of doing this and see which is fastest
+            //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
+            //&& method is "GET")
         {
             traceTelemetry.Message = Sanitize(traceTelemetry.Message);
             foreach (string propertyKey in PropertiesToRedact)
@@ -140,7 +143,5 @@ public class RedactPiiInitializer : ITelemetryInitializer
     private string Sanitize(string value)
     {
         return PiiRegex.Replace(value, "REDACTED");
-        //return $"Test-{value}";
     }
-
 }
