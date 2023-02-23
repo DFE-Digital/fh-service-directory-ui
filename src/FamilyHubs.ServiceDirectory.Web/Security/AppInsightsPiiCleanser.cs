@@ -1,4 +1,5 @@
-﻿using Microsoft.ApplicationInsights.Channel;
+﻿using System.Diagnostics;
+using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
 using System.Text.RegularExpressions;
@@ -103,6 +104,8 @@ public class AppInsightsPiiCleanser : ITelemetryProcessor
 
 public class RedactPiiInitializer : ITelemetryInitializer
 {
+    //todo: do we handle the user changing the case in the url??
+
     private static readonly Regex PiiRegex = new(@"(?<=(postcode|latitude|longitude)=)[^&\s]+", RegexOptions.Compiled);
 
     private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "Dependency" };
@@ -118,16 +121,39 @@ public class RedactPiiInitializer : ITelemetryInitializer
         if (telemetry is TraceTelemetry traceTelemetry
             && traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
             && path is "/ServiceFilter")
-            // when calling the API, we need to redact on GET
-            // when the request is for the web, we only need to redact on POST
-            //todo: try some different ways of doing this and see which is fastest
-            //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
-            //&& method is "GET")
+        // when calling the API, we need to redact on GET
+        // when the request is for the web, we only need to redact on POST
+        //todo: try some different ways of doing this and see which is fastest
+        //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
+        //&& method is "GET")
         {
             traceTelemetry.Message = Sanitize(traceTelemetry.Message);
             foreach (string propertyKey in PropertiesToRedact)
             {
                 SanitizeProperty(traceTelemetry.Properties, propertyKey);
+            }
+        }
+
+        DebugCheckForUnredactedData(telemetry);
+    }
+
+    private void DebugCheckForUnredactedData(ITelemetry telemetry)
+    {
+        if (telemetry is TraceTelemetry traceTelemetry)
+        {
+            if (traceTelemetry.Message.Contains("postcode=")
+                && !traceTelemetry.Message.Contains("postcode=REDACTED"))
+            {
+                Debugger.Break();
+            }
+
+            foreach (var value in traceTelemetry.Properties.Values)
+            {
+                if (value.Contains("postcode=")
+                    && !value.Contains("postcode=REDACTED"))
+                {
+                    Debugger.Break();
+                }
             }
         }
     }
