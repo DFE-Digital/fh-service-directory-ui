@@ -108,7 +108,8 @@ public class RedactPiiInitializer : ITelemetryInitializer
 
     private static readonly Regex PiiRegex = new(@"(?<=(postcode|latitude|longitude)=)[^&\s]+", RegexOptions.Compiled);
 
-    private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "Dependency" };
+    // is this going to slow things down too much, just exclude the logs instead (not nice!)
+    private static readonly string[] PropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "Dependency", "HostingRequestFinishedLog" };
 
     public void Initialize(ITelemetry telemetry)
     {
@@ -147,10 +148,12 @@ public class RedactPiiInitializer : ITelemetryInitializer
                 Debugger.Break();
             }
 
-            foreach (var value in traceTelemetry.Properties.Values)
+#pragma warning disable S3267
+            foreach (var property in traceTelemetry.Properties)
+#pragma warning restore S3267
             {
-                if (value.Contains("postcode=")
-                    && !value.Contains("postcode=REDACTED"))
+                if (property.Value.Contains("postcode=")
+                    && !property.Value.Contains("postcode=REDACTED"))
                 {
                     Debugger.Break();
                 }
