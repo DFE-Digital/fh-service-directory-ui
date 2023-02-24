@@ -49,7 +49,7 @@
 
         <p>Some services are only available to local residents.</p>
 
-        <form method="post">
+        <form method="post" asp-page="/ServiceFilter/Index">
 
             @if (Model.PostcodeError == PostcodeError.None)
             {

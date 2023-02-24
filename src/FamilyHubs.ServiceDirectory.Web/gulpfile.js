@@ -9,8 +9,9 @@ var gulp = require("gulp"),
     csso = require('gulp-csso'),
     terser = require('gulp-terser'),
     ts = require("gulp-typescript"),
+    //typescript = require('typescript'),
     rollup = require('gulp-better-rollup'),
-    concat = require('gulp-concat'),
+    //concat = require('gulp-concat'),
     del = require('del');
 
 gulp.task('sass-to-min-css', async function () {
@@ -44,6 +45,8 @@ gulp.task('transpile-ts', function () {
             checkJs: true
         });
     }
+
+    //console.log(`TypeScript version: ${typescript.version}`);
 
     var reporter = ts.reporter.fullReporter();
 

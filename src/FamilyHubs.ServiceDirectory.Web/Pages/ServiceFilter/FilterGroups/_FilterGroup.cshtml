@@ -1,0 +1,10 @@
+﻿@model IFilter
+
+<div class="govuk-form-group app-filter-group">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            @Model.Description
+        </legend>
+        <partial name="FilterGroups/@Model.PartialName" model="Model" />
+    </fieldset>
+</div>

@@ -6,7 +6,7 @@ public interface IPostcodeLookup
 {
     /// <returns>
     /// PostcodeError 
-    /// PostCodeInfo or null if there was an error.
+    /// IPostcodeInfo or null if there was an error.
     /// </returns>
-    Task<(PostcodeError, PostcodeInfo?)> Get(string? postcode, CancellationToken cancellationToken = default);
+    Task<(PostcodeError, IPostcodeInfo?)> Get(string? postcode, CancellationToken cancellationToken = default);
 }

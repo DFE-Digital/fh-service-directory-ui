@@ -23,18 +23,13 @@
     }
 }
 
-/*todo: we've copied the prototype for the header html & css, but it's not ideal.
-    the prototype doesn't match the ideal design. i'll add a story to match the ideal design
-    e.g.
-    * bar '|' lives on its own. should it belong to the product name?
-      we could implement this by having a bar to the left of the 2 span elements and effectively hiding it on the first
-    see: https://stackoverflow.com/questions/45309860/flexbox-target-wrapped-items
-    * product name within govuk-header__logo div
-*/
+.govuk-header__container {
+    border-bottom: 10px solid #4c7aa8; //rgb(76, 122, 168, 0.99);
+}
 
-.app-header {
+.govuk-header {
     background-color: #003a69;
-    border-bottom: 10px solid #347ca9;
+    border-bottom: 10px solid #4c7aa8; //rgb(76, 122, 168, 0.99);
 
     .govuk-header__container {
         @include govuk-responsive-padding(5, "top");

@@ -1,14 +1,13 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.HealthCheck;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -29,46 +28,25 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     }
 
     public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        string districtCode,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+        ServicesParams servicesParams,
         CancellationToken cancellationToken = default)
     {
-        var services = await GetServices(
-            districtCode, latitude, longitude, maximumProximityMeters, givenAge, isPaidFor, maxFamilyHubs, familyHub, taxonomyIds, pageNumber, pageSize, cancellationToken);
+        var services = await GetServices(servicesParams, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
-                new ServiceWithOrganisation(s, await GetOrganisation(s.OpenReferralOrganisationId, cancellationToken))));
+                new ServiceWithOrganisation(s, await GetOrganisation(s.OrganisationId, cancellationToken))));
 
         return new PaginatedList<ServiceWithOrganisation>(
             servicesWithOrganisations.ToList(),
             services.TotalCount,
             services.PageNumber,
             //todo: not nice to hard-code default from api
-            pageSize ?? 10);
+            servicesParams.PageSize ?? 10);
     }
 
-    public async Task<PaginatedList<OpenReferralServiceDto>> GetServices(
-        string districtCode,
-        float latitude,
-        float longitude,
-        int? maximumProximityMeters = null,
-        int? givenAge = null,
-        bool? isPaidFor = null,
-        int? maxFamilyHubs = null,
-        bool? familyHub = null,
-        IEnumerable<string>? taxonomyIds = null,
-        int? pageNumber = null,
-        int? pageSize = null,
+    public async Task<PaginatedList<ServiceDto>> GetServices(
+        ServicesParams servicesParams,
         CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -76,21 +54,21 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         // mandatory params
         var queryParams = new Dictionary<string, string?>
         {
-            {"districtCode", districtCode},
-            {"latitude", latitude.ToString(CultureInfo.InvariantCulture)},
-            {"longtitude", longitude.ToString(CultureInfo.InvariantCulture)}
+            {"districtCode", servicesParams.AdminArea},
+            {"latitude", servicesParams.Latitude.ToString(CultureInfo.InvariantCulture)},
+            {"longtitude", servicesParams.Longitude.ToString(CultureInfo.InvariantCulture)}
         };
 
         // optional params
         queryParams
-            .AddOptionalQueryParams("proximity", maximumProximityMeters)
-            .AddOptionalQueryParams("given_age", givenAge)
-            .AddOptionalQueryParams("isPaidFor", isPaidFor)
-            .AddOptionalQueryParams("pageNumber", pageNumber)
-            .AddOptionalQueryParams("pageSize", pageSize)
-            .AddOptionalQueryParams("isFamilyHub", familyHub)
-            .AddOptionalQueryParams("maxFamilyHubs", maxFamilyHubs)
-            .AddOptionalQueryParams("taxonmyIds", taxonomyIds);
+            .AddOptionalQueryParams("proximity", servicesParams.MaximumProximityMeters)
+            .AddOptionalQueryParams("given_age", servicesParams.GivenAge)
+            .AddOptionalQueryParams("isPaidFor", servicesParams.IsPaidFor)
+            .AddOptionalQueryParams("pageNumber", servicesParams.PageNumber)
+            .AddOptionalQueryParams("pageSize", servicesParams.PageSize)
+            .AddOptionalQueryParams("isFamilyHub", servicesParams.FamilyHub)
+            .AddOptionalQueryParams("maxFamilyHubs", servicesParams.MaxFamilyHubs)
+            .AddOptionalQueryParams("taxonmyIds", servicesParams.TaxonomyIds);
 
         var getServicesUri = queryParams.CreateUriWithQueryString(GetServicesBaseUri);
 
@@ -101,7 +79,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
         }
 
-        var services = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(
+        var services = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(
             await response.Content.ReadAsStreamAsync(cancellationToken),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
             cancellationToken);
@@ -118,20 +96,19 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return services;
     }
 
-    public Task<OpenReferralOrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
+    public Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(id);
 
         return GetOrganisationTryCache(id, cancellationToken);
     }
 
-    //todo: priority for a (multi-threaded) unit test
     // based on code from https://sahansera.dev/in-memory-caching-aspcore-dotnet/
-    private async Task<OpenReferralOrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
+    private async Task<OrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
     {
         var semaphore = new SemaphoreSlim(1, 1);
 
-        if (_memoryCache.TryGetValue(id, out OpenReferralOrganisationDto? organisation))
+        if (_memoryCache.TryGetValue(id, out OrganisationDto? organisation))
             return organisation!;
 
         try
@@ -152,7 +129,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return organisation;
     }
 
-    private async Task<OpenReferralOrganisationDto> GetOrganisationFromApi(string id, CancellationToken cancellationToken)
+    private async Task<OrganisationDto> GetOrganisationFromApi(string id, CancellationToken cancellationToken)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -163,7 +140,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
         }
 
-        var organisation = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationDto>(
+        var organisation = await JsonSerializer.DeserializeAsync<OrganisationDto>(
             await response.Content.ReadAsStreamAsync(cancellationToken),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
             cancellationToken);

@@ -6,11 +6,8 @@
 
     if (gaMeasurementId != "")
     {
-        var gaMeasurementUrl = $"https://www.googletagmanager.com/gtag/js?id={gaMeasurementId}";
-
         <script>
             window.GA_MEASUREMENT_ID = '@gaMeasurementId';
-            window.GA_MEASUREMENT_URL = '@gaMeasurementUrl';
             window.GA_CONTAINER_ID = '@gaContainerId';
         </script>
     }

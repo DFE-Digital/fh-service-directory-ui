@@ -15,15 +15,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoWarn>1701;1702;S1135</NoWarn>
+    <NoWarn>1701;1702;S1135;S125</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="scripts\components\analytics.js" />
-    <Content Include="scripts\components\cookie-banner.js" />
-    <Content Include="scripts\components\cookie-functions.js" />
-    <Content Include="scripts\components\cookies-page.js" />
-    <Content Include="scripts\components\helpers.js" />
+	  <Content Include="scripts\**\*.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +33,7 @@
     <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.51.0.59060">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.52.0.60960">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

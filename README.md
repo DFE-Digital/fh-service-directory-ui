@@ -34,13 +34,31 @@ The bundling process supports the use of ECMAScript modules.
 
 To manually transpile, bundle and minify the js files, run the `js` gulp task, or run the `js:watch` gulp task to initiate a watcher that will automatically run the process when the ts/js files are changed.
 
-The entry point for the site's JavaScript is `scripts\app.ts`. This file imports the other modules that make up the site's JavaScript. That is then bundled with GOVUK's JavaScript.
+The entry point for the site's JavaScript is `scripts\app.ts`. This file imports the modules that make up the site's JavaScript.
 
 ## Debugging the JavaScript in Visual Studio
 
 To debug the JavaScript in Visual Studio, set breakpoints in the JavaScript files under the `Script documents` folder in the Solution Explorer when debugging.
 
 (Note, we might switch to [environment-based bundling and minification at a later point](https://learn.microsoft.com/en-us/aspnet/core/client-side/bundling-and-minification?view=aspnetcore-6.0).)
+
+## Running Lighthouse
+
+Disable any extensions that might interfere with the Lighthouse report, such as Axe Accessibility, WAVE, Google Analytics Debugger etc.
+
+Edit launchsettings.json and add this to the FamilyHubs.ServiceDirectoryUI profile:
+
+```json
+        "hotReloadEnabled": false,
+```
+
+Switch to a different profile and then back to the FamilyHubs.ServiceDirectoryUI profile, for the change to take affect.
+
+Run Lighthouse.
+
+## Google Analytics
+
+[GA4 documentation](docs/GoogleAnalytics.md).
 
 ## Useful test data
 

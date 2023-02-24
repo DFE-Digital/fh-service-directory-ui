@@ -3,10 +3,9 @@ using System.Diagnostics;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Constants;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -15,21 +14,20 @@ public static class ServiceMapper
 {
     private static readonly NumberFormatInfo UkNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
 
-    public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceWithOrganisation> servicesWithOrganisation)
+    public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceDto> services)
     {
-        return servicesWithOrganisation.Select(ToViewModel);
+        return services.Select(ToViewModel);
     }
 
-    private static Service ToViewModel(ServiceWithOrganisation serviceWithOrganisation)
+    private static Service ToViewModel(ServiceDto service)
     {
-        var service = serviceWithOrganisation.Service;
-
         Debug.Assert(service.ServiceType.Name == "Family Experience");
 
-        var serviceAtLocation = service.Service_at_locations?.FirstOrDefault();
+        var serviceAtLocation = service.ServiceAtLocations?.FirstOrDefault();
         var eligibility = service.Eligibilities?.FirstOrDefault();
 
-        string name = service.Name;
+        var name = service.Name;
+        var contact = service.GetContact();
 
         return new Service(
             IsFamilyHub(serviceAtLocation) ? ServiceType.FamilyHub : ServiceType.Service,
@@ -39,28 +37,22 @@ public static class ServiceMapper
             GetAddress(serviceAtLocation),
             GetWhen(serviceAtLocation),
             GetCategories(service),
-            serviceWithOrganisation.Organisation.Name,
             GetAgeRange(eligibility),
-            GetPhone(service),
-            service.Email,
+            contact?.Telephone,
+            contact?.Email,
             name,
-            GetWebsiteUrl(service.Url));
+            GetWebsiteUrl(contact?.Url));
     }
 
-    private static string? GetAgeRange(OpenReferralEligibilityDto? eligibility)
+    private static string? GetAgeRange(EligibilityDto? eligibility)
     {
-        return eligibility == null ? null : $"{AgeToString(eligibility.Minimum_age)} to {AgeToString(eligibility.Maximum_age)}";
+        return eligibility == null ? null : $"{AgeToString(eligibility.MinimumAge)} to {AgeToString(eligibility.MaximumAge)}";
     }
 
-    private static string? GetPhone(OpenReferralServiceDto service)
-    {
-        return service.Contacts?.FirstOrDefault(c => !string.Equals(c.Name, "Textphone", StringComparison.OrdinalIgnoreCase))?.Telephone;
-    }
-
-    private static bool IsFamilyHub(OpenReferralServiceAtLocationDto? serviceAtLocation)
+    private static bool IsFamilyHub(ServiceAtLocationDto? serviceAtLocation)
     {
         return serviceAtLocation?.Location.LinkTaxonomies
-            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
+            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, TaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
     }
 
     private static string? GetWebsiteUrl(string? url)
@@ -75,9 +67,9 @@ public static class ServiceMapper
         return $"http://{url}";
     }
 
-    private static IEnumerable<string> GetCategories(OpenReferralServiceDto service)
+    private static IEnumerable<string> GetCategories(ServiceDto service)
     {
-        var serviceTaxonomies = service.Service_taxonomys;
+        var serviceTaxonomies = service.ServiceTaxonomies;
         if (serviceTaxonomies == null)
         {
             return Enumerable.Empty<string>();
@@ -87,41 +79,41 @@ public static class ServiceMapper
             .Select(st => st.Taxonomy!.Name);
     }
 
-    private static IEnumerable<string> GetAddress(OpenReferralServiceAtLocationDto? serviceAtLocation)
+    private static IEnumerable<string> GetAddress(ServiceAtLocationDto? serviceAtLocation)
     {
-        var address = serviceAtLocation?.Location.Physical_addresses?.FirstOrDefault();
+        var address = serviceAtLocation?.Location.PhysicalAddresses?.FirstOrDefault();
 
-        var splitAddress1 = address?.Address_1.Split('|');
+        var splitAddress1 = address?.Address1.Split('|');
 
         return RemoveEmpty(serviceAtLocation?.Location.Name)
             .Concat(RemoveEmpty(splitAddress1 ?? Array.Empty<string>()))
-            .Concat(RemoveEmpty(address?.City, address?.State_province, address?.Postal_code));
+            .Concat(RemoveEmpty(address?.City, address?.StateProvince, address?.PostCode));
     }
 
-    private static IEnumerable<string> GetWhen(OpenReferralServiceAtLocationDto? serviceAtLocation)
+    private static IEnumerable<string> GetWhen(ServiceAtLocationDto? serviceAtLocation)
     {
         var when =
-            serviceAtLocation?.Regular_schedule?.FirstOrDefault()?.Description.Split('\n').Select(l => l.Trim())
+            serviceAtLocation?.RegularSchedules?.FirstOrDefault()?.Description.Split('\n').Select(l => l.Trim())
             ?? Enumerable.Empty<string>();
         return when;
     }
 
-    private static IEnumerable<string> GetCost(OpenReferralServiceDto service)
+    private static IEnumerable<string> GetCost(ServiceDto service)
     {
         const string free = "Free";
 
-        if (service.Cost_options?.Any() == false)
+        if (service.CostOptions?.Any() == false)
         {
             return new[] { free };
         }
 
         var cost = new List<string>();
-        var firstCost = service.Cost_options!.First();
+        var firstCost = service.CostOptions!.First();
 
         if (firstCost.Amount != decimal.Zero)
         {
             string amount = firstCost.Amount.ToString(firstCost.Amount == (int)firstCost.Amount ? "C0" : "C", UkNumberFormat);
-            cost.Add($"{amount} every {firstCost.Amount_description.ToLowerInvariant()}");
+            cost.Add($"{amount} every {firstCost.AmountDescription.ToLowerInvariant()}");
         }
 
         if (!string.IsNullOrWhiteSpace(firstCost.Option))

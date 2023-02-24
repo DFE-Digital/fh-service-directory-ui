@@ -1,14 +1,27 @@
 # Todo
 
+* package up filter framework into a razor class library
+
+* default filter values not in url
+
+* govuk-frontend 4.5 has switched to terser, so should now be compatible with our gulpfile, as we already use terser
+
+* resharper is warning about security vulnerabilities in FamilyHubs.ServiceDirectory.Shared
+
+* update url paths to match prototype
+
 * js in tmp/components/components
 
 * environment tags for non-optimised js
 
-* use stringvalues for multi-params?
+* pick up standard libraries such as jQuery from one of the big CDN's (Google/MS/jQuery) with fallback to fetching a local copy.
+
+* fix extra whitespace in filter tag sometimes when text wraps
+* fix incorrect colour of bottom border of header in chromium browsers
 
 * add js tests for govuk-design-system sourced js (https://github.com/alphagov/govuk-design-system)
 
-* we could read the categories from the db (OpenReferralTaxonomy) and automatically pick up any changes to the categories
+* we could read the categories from the db (Taxonomy) and automatically pick up any changes to the categories
  (reuse old service to update data on the fly)
 
 * this looks useful for exception testing: https://github.com/dotnet/aspnetcore/blob/ed1ac4285213158a85f69449dba448ef0c65fbf4/src/Testing/src/ExceptionAssertions.cs
@@ -30,4 +43,4 @@ swapped from node-sass (libsass) to sass (dart sass)
 see... https://frontend.design-system.service.gov.uk/installing-with-npm/#install-with-node-js-package-manager-npm
 `Do not use either LibSass or Ruby Sass, which are deprecated, for new projects.`
 
-* pick up govuk js from node_modules??
+* pick up govuk js from node_modules and only initialize import what we need: https://frontend.design-system.service.gov.uk/importing-css-assets-and-javascript/#select-and-initialise-an-individual-component

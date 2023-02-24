@@ -1,47 +1,22 @@
-﻿using System.Text.Json.Serialization;
+﻿using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 
-public sealed class PostcodeInfo
+public sealed record PostcodeInfo(
+    [property: JsonPropertyName("postcode")] string Postcode,
+    [property: JsonPropertyName("latitude")] float? Latitude,
+    [property: JsonPropertyName("longitude")] float? Longitude,
+    [property: JsonPropertyName("codes")] Codes Codes) : IPostcodeInfo
 {
-    /// <summary>
-    /// Searched postcode in canonical format. 2, 3 or 4-character outward code, single space and 3-character inward code.
-    /// </summary>
-    [JsonPropertyName("postcode")]
-    public string Postcode { get; set; } = default!;
-
-    public string AdminArea => string.Equals(Codes.AdminCounty, "E99999999", StringComparison.InvariantCultureIgnoreCase) ? Codes.AdminDistrict : Codes.AdminCounty;
-
-    /// <summary>
-    /// The WGS84 latitude given the postcode's national grid reference. May be null if geolocation not available.
-    /// </summary>
-    [JsonPropertyName("latitude")]
-    public double Latitude { get; set; }
-
-    /// <summary>
-    /// The WGS84 longitude given the postcode's national grid reference. May be null if geolocation not available.
-    /// </summary>
-    [JsonPropertyName("longitude")]
-    public double Longitude { get; set; }
-
-    /// <summary>
-    /// The outward code is the part of the postcode before the single space in the middle. It is between two and four characters long. A few outward codes are non-geographic, not divulging where mail is to be sent. Examples of outward codes include "L1", "W1A", "RH1", "RH10" or "SE1P".
-    /// </summary>
-    [JsonPropertyName("outcode")]
-    public string? OutCode { get; set; }
-    
-    [JsonPropertyName("codes")]
-    public Codes Codes { get; set; } = default!;
+    public string? AdminArea => string.Equals(Codes.AdminCounty, "E99999999", StringComparison.InvariantCultureIgnoreCase)
+        ? Codes.AdminDistrict : Codes.AdminCounty;
 }
 
-public sealed class Codes
-{
-    /// <summary>
-    /// The current district/unitary authority to which the postcode has been assigned. (ID version)
-    /// </summary>
-    [JsonPropertyName("admin_district")]
-    public string AdminDistrict { get; set; } = default!;
+//todo: docs say admin_district & admin_county are nullable. when do we get a null?
 
-    [JsonPropertyName("admin_county")]
-    public string AdminCounty { get; set; } = default!;
-}
+/// <param name="AdminDistrict">The current district/unitary authority to which the postcode has been assigned. (ID version)</param>
+/// <param name="AdminCounty">The current county to which the postcode has been assigned. (ID version)</param>
+public sealed record Codes(
+    [property: JsonPropertyName("admin_district")] string? AdminDistrict,
+    [property: JsonPropertyName("admin_county")] string? AdminCounty);

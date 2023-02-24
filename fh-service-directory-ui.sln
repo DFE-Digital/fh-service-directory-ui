@@ -22,9 +22,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{864FF09C-8273-4AF8-9DD4-7A290114CE6F}"
 	ProjectSection(SolutionItems) = preProject
+		docs\GoogleAnalytics.md = docs\GoogleAnalytics.md
 		README.md = README.md
 		docs\Todo.md = docs\Todo.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.JavascriptUnitTests", "tests\FamilyHubs.ServiceDirectory.JavascriptUnitTests\FamilyHubs.ServiceDirectory.JavascriptUnitTests.csproj", "{8DC9E679-152C-4F77-BE16-90588B251259}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +51,10 @@ Global
 		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C77AFB52-EE09-4937-9850-A5B8D7A6359C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC9E679-152C-4F77-BE16-90588B251259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC9E679-152C-4F77-BE16-90588B251259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC9E679-152C-4F77-BE16-90588B251259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC9E679-152C-4F77-BE16-90588B251259}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +64,7 @@ Global
 		{F79B7AAF-FEBD-4F2B-B2CD-2C7339456111} = {1C76539E-7E4B-473F-B0F1-558C7623F3E0}
 		{CA263BDB-1BC1-433B-A763-B79DA87E3D9F} = {1C76539E-7E4B-473F-B0F1-558C7623F3E0}
 		{C77AFB52-EE09-4937-9850-A5B8D7A6359C} = {0C84D792-F7A4-469D-8C71-D2FA6D446581}
+		{8DC9E679-152C-4F77-BE16-90588B251259} = {0C84D792-F7A4-469D-8C71-D2FA6D446581}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {966CDAA6-2F97-4532-A521-87C4F07561E9}

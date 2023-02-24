@@ -1,0 +1,17 @@
+﻿@model IFilterSubGroups
+
+<div class="app-sub-filters">
+    <div class="app-sub-filters-scrollable">
+    @foreach (var subFilter in Model.SubFilters)
+    {
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    @subFilter.Description
+                </legend>
+                    <partial name="FilterGroups/@subFilter.PartialName" model="subFilter" />
+            </fieldset>
+        </div>
+    }
+    </div>
+</div>

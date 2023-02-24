@@ -16,11 +16,16 @@
 }
 
 @*todo: doesn't let user unselect default 'within 20 miles'!*@
-@if (Model.IsGet && !Model.Services.Any()) {
+@if (Model.FromPostcodeSearch && !Model.Services.Any()) {
     <partial name="_ServiceFilterNoResults" />
 }
 else {
-    <form method="post">
+    <form method="post" asp-page="/ServiceFilter/Index">
+
+        <input type="hidden" asp-for="Postcode" name="postcode" value="@Model.Postcode" />
+        <input type="hidden" asp-for="AdminArea" name="adminarea" value="@Model.AdminArea" />
+        <input type="hidden" asp-for="Latitude" name="latitude" value="@Model.Latitude" />
+        <input type="hidden" asp-for="Longitude" name="longitude" value="@Model.Longitude" />
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
@@ -45,36 +50,33 @@ else {
                                 </div>
 
                                 <div class="moj-filter__heading-action">
-                                    <p><button type="submit" class="app-button-link govuk-!-font-size-16" name="remove" value="@IFilter.RemoveAll">Clear filters</button></p>
+                                    <p><button type="submit" class="app-button-link govuk-!-font-size-16" name="@IFilter.RemoveKey" value="@IFilter.RemoveAllValue">Clear filters</button></p>
                                 </div>
                             </div>
-                    
-                            @if (Model.TypeOfSupportFilter.SelectedAspects.Any())
+
+                            @foreach (var filter in Model.Filters.Where(f => f.SelectedAspects.Any()))
                             {
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.TypeOfSupportFilter.Description</h3>
-
-                                @foreach (var selectedAspect in Model.TypeOfSupportFilter.SelectedAspects)
-                                {
-                                    @*todo: partial for this and above?*@
-                                    <ul class="moj-filter-tags">
-                                        <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter </span>@selectedAspect.Description</button></li>
-                                    </ul>
-                                }
-                            }
-
-                            @foreach (var filter in Model.Filters)
-                            {
-                                if (filter.SelectedAspects.Any())
-                                {
-                                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
-
-                                    @foreach (var selectedAspect in filter.SelectedAspects)
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@filter.Description</h3>
+                                <ul class="moj-filter-tags">
+                                    @* we could do this generically, if we had added a reference to the filter in the filteraspect *@
+                                    @if (filter is IFilterSubGroups filterSubGroups)
                                     {
-                                        <ul class="moj-filter-tags">
-                                            <li><button type="submit" class="moj-filter__tag app-icon-cross app-remove-filter-tag" name="remove" value="@selectedAspect.Id"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
-                                        </ul>
+                                        foreach (var subFilter in filterSubGroups.SubFilters)
+                                        {
+                                            foreach (var selectedAspect in subFilter.SelectedAspects)
+                                            {
+                                                <li><button type="submit" class="moj-filter__tag app-icon-cross" name="@IFilter.RemoveKey" value="@(subFilter.Name)--@selectedAspect.Value"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                            }
+                                        }
                                     }
-                                }
+                                    else
+                                    {
+                                        foreach (var selectedAspect in filter.SelectedAspects)
+                                        {
+                                            <li><button type="submit" class="moj-filter__tag app-icon-cross" name="@IFilter.RemoveKey" value="@(filter.Name)--@selectedAspect.Value"><span class="govuk-visually-hidden">Remove this filter</span>@selectedAspect.Description</button></li>
+                                        }
+                                    }
+                                </ul>
                             }
                         </div>
                 
@@ -82,19 +84,16 @@ else {
                             <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true">
                                 Apply filters
                             </button>
-                        
-                            @*todo: store name of partial in filter?*@
-                            <partial name="_FilterGroupSubGroups" model="Model.TypeOfSupportFilter" />
 
                             @foreach (var filterGroup in Model.Filters)
                             {
-                                <partial name="_FilterGroup" model="filterGroup" />
+                                <partial name="FilterGroups/_FilterGroup" model="filterGroup" />
                             }
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="results" class="govuk-grid-column-two-thirds">
+            <div id="results" class="govuk-grid-column-two-thirds" data-total-results="@Model.TotalResults">
                 @if (!Model.Services.Any())
                 {
                     <h2 class="govuk-heading-m">

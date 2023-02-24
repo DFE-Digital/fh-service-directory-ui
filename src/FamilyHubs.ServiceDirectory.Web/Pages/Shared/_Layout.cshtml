@@ -21,11 +21,9 @@
 
     <!-- Pending further research e.g. location. etc. -->
     <!-- <link href="/public/css/accessible-autocomplete.min.css" rel="stylesheet" type="text/css">-->
-    <!--[if !IE 8]><!-->
     <link rel="stylesheet" href="~/css/application.css" asp-append-version="true"/>
-    <!--<![endif]-->
     <!--[if IE 8]>
-        <link href="~/css/govuk-frontend-ie8-4.4.0.min.css" rel="stylesheet">
+        <link href="~/css/govuk-frontend-ie8-4.5.0.min.css" rel="stylesheet">
     <![endif]-->
 
     <meta property="og:image" content="~/lib/govuk/assets/images/govuk-opengraph-image.png">
@@ -41,16 +39,7 @@
     <partial name="_Header.cshtml" />
 
     <div class="govuk-width-container">
-        <div class="govuk-phase-banner">
-            <p class="govuk-phase-banner__content">
-                <strong class="govuk-tag govuk-phase-banner__content__tag">
-                    beta
-                </strong>
-                <span class="govuk-phase-banner__text">
-                    This is a new service, your <a href="https://qfreeaccountssjc1.az1.qualtrics.com/jfe/form/SV_3aXYQWE1MKuhSya">feedback</a> will help us improve it.
-                </span>
-            </p>
-        </div>
+        <partial name="_PhaseBanner.cshtml" />
 
         @await RenderSectionAsync("Back", required: false)
 
@@ -62,7 +51,7 @@
     <partial name="_Footer.cshtml" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/govuk-frontend-4.4.1.min.js"></script>
+    <script src="~/js/govuk-frontend-4.5.0.min.js"></script>
     <script src="~/js/app.js" asp-append-version="true"></script>
 
     <script>
