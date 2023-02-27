@@ -26,11 +26,14 @@ public static class StartupExtensions
             var config = services.GetRequiredService<TelemetryConfiguration>();
             //config.TelemetryInitializers.Add(new RedactPiiInitializer());
 
+            //loggerConfiguration.Destructure.ByTransforming<MySensitiveData>(x => new MySensitiveData { Password = "****" }) // replace password with "****"
+
             loggerConfiguration.WriteTo.ApplicationInsights(
                 config, 
                 TelemetryConverter.Traces, 
                 parsed ? logLevel : LogEventLevel.Warning);
 
+            //todo: does console logging get stored on the app service?
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });

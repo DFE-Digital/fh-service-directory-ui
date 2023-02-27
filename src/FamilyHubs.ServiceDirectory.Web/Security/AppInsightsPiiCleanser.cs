@@ -165,6 +165,13 @@ public class RedactPiiInitializer : ITelemetryInitializer
                     }
                 }
                 break;
+            case RequestTelemetry requestTelemetry:
+                if (requestTelemetry.Name == "GET /ServiceFilter/Index")
+                {
+                    //todo: cut down regex??
+                    requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
+                }
+                break;
 
         }
 
@@ -182,6 +189,14 @@ public class RedactPiiInitializer : ITelemetryInitializer
     private string Sanitize(Regex regex, string value)
     {
         return regex.Replace(value, "REDACTED");
+    }
+
+    private Uri Sanitize(Regex regex, Uri uri)
+    {
+        //todo: better to use equals or contains and only create a uri if necessary (might be slower, but should stop memory churn)
+        string unredactedUri = uri.ToString();
+        string redactedUri = regex.Replace(unredactedUri, "REDACTED");
+        return redactedUri != unredactedUri ? new Uri(redactedUri) : uri;
     }
 
     private void DebugCheckForUnredactedData(ITelemetry telemetry)
@@ -220,7 +235,7 @@ public class RedactPiiInitializer : ITelemetryInitializer
         }
         if (telemetry is RequestTelemetry requestTelemetry)
         {
-            DebugCheckForUnredactedData(requestTelemetry.Properties, requestTelemetry.Name);
+            DebugCheckForUnredactedData(requestTelemetry.Properties, requestTelemetry.Name, requestTelemetry.Url.ToString());
         }
         if (telemetry is TraceTelemetry traceTelemetry)
         {
