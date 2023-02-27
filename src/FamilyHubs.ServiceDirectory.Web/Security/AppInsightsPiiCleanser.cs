@@ -141,6 +141,12 @@ public class RedactPiiInitializer : ITelemetryInitializer
                 }
                 break;
             case TraceTelemetry traceTelemetry:
+                //todo: {[RequestPath, /ServiceFilter]}
+                // Message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
+                // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
+                // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
+
+
                 // order by least common for efficiency
                 if (traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
                     && path is "/ServiceFilter")
@@ -151,9 +157,11 @@ public class RedactPiiInitializer : ITelemetryInitializer
                     //&& method is "GET")
                 {
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
+                    traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
                     foreach (string propertyKey in TracePropertiesToRedact)
                     {
                         SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, propertyKey);
+                        SanitizeProperty(PathRegex, traceTelemetry.Properties, propertyKey);
                     }
                 }
                 break;
