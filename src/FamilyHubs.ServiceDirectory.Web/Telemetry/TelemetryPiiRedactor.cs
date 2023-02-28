@@ -1,4 +1,4 @@
-﻿#define DEBUG_REDACTOR
+﻿//#define DEBUG_REDACTOR
 
 using System.Diagnostics;
 using Microsoft.ApplicationInsights.Channel;
@@ -8,12 +8,6 @@ using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 
-// note we don't redact the console log output as that doesn't get persisted anywhere
-
-//todo: doesn't belong in security
-// how much will this slow things down?
-// remove values/properties or the whole trace instead if it's too slow
-//properties
 // {[Uri, https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1]}
 
 // {[Scope, ["HTTP GET https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1"]]}
@@ -23,10 +17,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
 // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
 
-//todo: check properties on exception telemetry (on filter page)
-
-
-// regex to handle all, or different methods for each?
 // Request starting HTTP/2 GET https://localhost:7199/ServiceFilter?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True - -
 // ?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True
 
@@ -36,8 +26,10 @@ namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 ///     postcode: a postcode can map to a single residential address, so can be used to identify an individual
 ///     latitude & longitude: can be used to map to the postcode
 ///
-/// Note, ExceptionTelemetry is left alone (no PII currently comes through ExceptionTelemetry).
-/// We have to ensure we don't add any PII to exceptions.
+/// Notes
+/// * ExceptionTelemetry is left alone (no PII currently comes through ExceptionTelemetry).
+///   We have to ensure we don't add any PII to exceptions.
+/// * We don't redact the console log output as that doesn't get persisted anywhere.
 /// </summary>
 /// <remarks>
 /// See
@@ -46,11 +38,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 /// </remarks>>
 public class TelemetryPiiRedactor : ITelemetryInitializer
 {
-    //todo: do we handle the user changing the case in the url??
-
     // longtitude is due to the spelling error in the API. at some point, we should fix that (and all the consumers)
-    private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
-    private static readonly Regex ApiQueryStringRegex = new(@"(?<=(latitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
+    private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&]+", RegexOptions.Compiled);
+    private static readonly Regex ApiQueryStringRegex = new(@"(?<=(latitude|longtitude)=)[^&]+", RegexOptions.Compiled);
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
     private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
