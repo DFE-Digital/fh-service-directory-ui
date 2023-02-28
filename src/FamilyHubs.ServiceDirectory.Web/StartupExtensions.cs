@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Security;
+using FamilyHubs.ServiceDirectory.Web.Telemetry;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -24,7 +25,7 @@ public static class StartupExtensions
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
             var config = services.GetRequiredService<TelemetryConfiguration>();
-            //config.TelemetryInitializers.Add(new RedactPiiInitializer());
+            //config.TelemetryInitializers.Add(new TelemetryPiiRedactor());
 
             //loggerConfiguration.Destructure.ByTransforming<MySensitiveData>(x => new MySensitiveData { Password = "****" }) // replace password with "****"
 
@@ -41,7 +42,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<ITelemetryInitializer, RedactPiiInitializer>();
+        services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
         //services.AddApplicationInsightsTelemetryProcessor<AppInsightsPiiCleanser>();
 

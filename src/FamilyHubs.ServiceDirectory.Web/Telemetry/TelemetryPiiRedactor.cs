@@ -4,39 +4,46 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
 using System.Text.RegularExpressions;
 
-namespace FamilyHubs.ServiceDirectory.Web.Security;
+namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 
 // note we don't redact the console log output as that doesn't get persisted anywhere
 
 //todo: doesn't belong in security
 // how much will this slow things down?
 // remove values/properties or the whole trace instead if it's too slow
-        //properties
-        // {[Uri, https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1]}
+//properties
+// {[Uri, https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1]}
 
-        // {[Scope, ["HTTP GET https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1"]]}
+// {[Scope, ["HTTP GET https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1"]]}
 
-        //postcodes.io
-        // message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
-        // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
-        // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
+//postcodes.io
+// message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
+// {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
+// {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
 
-        //todo: check properties on exception telemetry (on filter page)
+//todo: check properties on exception telemetry (on filter page)
 
 
-    // regex to handle all, or different methods for each?
-    // Request starting HTTP/2 GET https://localhost:7199/ServiceFilter?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True - -
-    // ?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True
+// regex to handle all, or different methods for each?
+// Request starting HTTP/2 GET https://localhost:7199/ServiceFilter?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True - -
+// ?postcode=M27%208SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True
 
+/// <summary>
+/// Redacts Personally Identifiable Information (PII) from telemetry data we send to App Insights.
+/// What's redacted:
+///     postcode: a postcode can map to a single residential address, so can be used to identify an individual
+///     latitude & longitude: can be used to map to the postcode
+/// </summary>
 /// <remarks>
-/// See https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling
+/// See
+/// https://learn.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling
+/// https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/key-definitions/what-is-personal-data/
 /// </remarks>>
-public class RedactPiiInitializer : ITelemetryInitializer
+public class TelemetryPiiRedactor : ITelemetryInitializer
 {
     //todo: do we handle the user changing the case in the url??
 
-    // longtit... is due to the spelling error in the API. at some point, should fix that (and all the consumers)
-    //private static readonly Regex QueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
+    // longtitude is due to the spelling error in the API. at some point, we should fix that (and all the consumers)
     // having a single more complex regex might be faster, as its more likely to be in caches
     private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
     private static readonly Regex ApiQueryStringRegex = new(@"(?<=(latitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
@@ -78,11 +85,11 @@ public class RedactPiiInitializer : ITelemetryInitializer
                 // order by least common for efficiency
                 if (traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
                     && path is "/ServiceFilter")
-                    // when calling the API, we need to redact on GET
-                    // when the request is for the web, we only need to redact on POST
-                    //todo: try some different ways of doing this and see which is fastest
-                    //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
-                    //&& method is "GET")
+                // when calling the API, we need to redact on GET
+                // when the request is for the web, we only need to redact on POST
+                //todo: try some different ways of doing this and see which is fastest
+                //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
+                //&& method is "GET")
                 {
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                     traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
@@ -190,8 +197,8 @@ public class RedactPiiInitializer : ITelemetryInitializer
 
     private void DebugCheckForUnredactedData(string value)
     {
-        if ((value.Contains("postcode=")||value.Contains("postcodes/"))
-            && !(value.Contains("postcode=REDACTED")||value.Contains("postcodes/REDACTED")))
+        if ((value.Contains("postcode=") || value.Contains("postcodes/"))
+            && !(value.Contains("postcode=REDACTED") || value.Contains("postcodes/REDACTED")))
         {
             Debugger.Break();
         }
