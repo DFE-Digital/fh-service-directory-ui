@@ -65,77 +65,68 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
             //todo: shared const with client
             //todo: is longtitude in trace, as well as dependency, or can we just check for it in dependency?
             case DependencyTelemetry dependencyTelemetry:
-                if (!dependencyTelemetry.Properties.ContainsKey("dependencyTelemetry"))
+                if (dependencyTelemetry.Name is "GET /api/services")
                 {
-                    if (dependencyTelemetry.Name is "GET /api/services")
-                    {
-                        // command name is obsolete and has been replaced by Data, but should contain the same as Data
+                    // command name is obsolete and has been replaced by Data, but should contain the same as Data
 #pragma warning disable CS0618
-                        dependencyTelemetry.CommandName = dependencyTelemetry.Data =
-                            Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
+                    dependencyTelemetry.CommandName = dependencyTelemetry.Data =
+                        Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
 #pragma warning restore CS0618
-                    }
-                    else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
-                    {
-                        //todo: hardcode replacement at index - faster than a regex
-#pragma warning disable CS0618
-                        dependencyTelemetry.CommandName =
-                            dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
-#pragma warning restore CS0618
-                        dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
-                    }
-
-                    properties = dependencyTelemetry.Properties;
                 }
-                else Debugger.Break();
+                else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
+                {
+                    //todo: hardcode replacement at index - faster than a regex
+#pragma warning disable CS0618
+                    dependencyTelemetry.CommandName =
+                        dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
+#pragma warning restore CS0618
+                    dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
+                }
+
+                properties = dependencyTelemetry.Properties;
                 break;
             case TraceTelemetry traceTelemetry:
-                if (!traceTelemetry.Properties.ContainsKey("dependencyTelemetry"))
+                //todo: {[RequestPath, /ServiceFilter]}
+                // Message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
+                // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
+                // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
+
+                // order by least common for efficiency
+                if (traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
+                    && path is "/ServiceFilter")
+                    // when calling the API, we need to redact on GET
+                    // when the request is for the web, we only need to redact on POST
+                    //todo: try some different ways of doing this and see which is fastest
+                    //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
+                    //&& method is "GET")
                 {
-                    //todo: {[RequestPath, /ServiceFilter]}
-                    // Message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
-                    // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
-                    // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
-
-                    // order by least common for efficiency
-                    if (traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
-                        && path is "/ServiceFilter")
-                        // when calling the API, we need to redact on GET
-                        // when the request is for the web, we only need to redact on POST
-                        //todo: try some different ways of doing this and see which is fastest
-                        //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
-                        //&& method is "GET")
+                    traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
+                    traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
+                    foreach (string propertyKey in TracePropertiesToRedact)
                     {
-                        traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
-                        traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
-                        foreach (string propertyKey in TracePropertiesToRedact)
-                        {
-                            SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, propertyKey);
-                            SanitizeProperty(PathRegex, traceTelemetry.Properties, propertyKey);
-                        }
+                        SanitizeProperty(SiteQueryStringRegex, traceTelemetry.Properties, propertyKey);
+                        SanitizeProperty(PathRegex, traceTelemetry.Properties, propertyKey);
                     }
-
-                    properties = traceTelemetry.Properties;
                 }
-                else Debugger.Break();
+
+                properties = traceTelemetry.Properties;
                 break;
             case RequestTelemetry requestTelemetry:
-                if (!requestTelemetry.Properties.ContainsKey("dependencyTelemetry"))
+                if (requestTelemetry.Name == "GET /ServiceFilter/Index")
                 {
-                    if (requestTelemetry.Name == "GET /ServiceFilter/Index")
-                    {
-                        //todo: cut down regex??
-                        requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
-                    }
-
-                    properties = requestTelemetry.Properties;
+                    //todo: cut down regex??
+                    requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
                 }
-                else Debugger.Break();
+
+                properties = requestTelemetry.Properties;
                 break;
         }
 
         watch.Stop();
-        properties?.Add("TelemetryPiiRedactor", watch.ElapsedMilliseconds.ToString());
+        if (properties != null)
+        {
+            properties["TelemetryPiiRedactor"] = $"{watch.ElapsedTicks}:{telemetry.GetType().Name}";
+        }
 
         DebugCheckForUnredactedData(telemetry);
     }
