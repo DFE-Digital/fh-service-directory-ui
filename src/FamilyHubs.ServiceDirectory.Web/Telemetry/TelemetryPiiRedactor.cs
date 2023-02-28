@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿#define DEBUG_REDACTOR
+
+using System.Diagnostics;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
@@ -134,6 +136,7 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
         return redactedUri != unredactedUri ? new Uri(redactedUri) : uri;
     }
 
+    [Conditional("DEBUG_REDACTOR")]
     private void DebugCheckForUnredactedData(ITelemetry telemetry)
     {
         if (telemetry is AvailabilityTelemetry availabilityTelemetry)
@@ -182,6 +185,7 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
         }
     }
 
+    [Conditional("DEBUG_REDACTOR")]
     private void DebugCheckForUnredactedData(IDictionary<string, string> properties, params string?[] rootPropertyValues)
     {
         foreach (string? rootProperty in rootPropertyValues.Where(v => v != null))
@@ -195,6 +199,7 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
         }
     }
 
+    [Conditional("DEBUG_REDACTOR")]
     private void DebugCheckForUnredactedData(string value)
     {
         if ((value.Contains("postcode=") || value.Contains("postcodes/"))
