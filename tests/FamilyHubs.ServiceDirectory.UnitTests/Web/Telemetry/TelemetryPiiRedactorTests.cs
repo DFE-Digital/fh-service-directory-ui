@@ -1,6 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Web.Telemetry;
-using FluentAssertions;
-using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
@@ -39,6 +37,12 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Telemetry
         [InlineData("DN551PT")]
         [InlineData("W1P1HQ")]
         [InlineData("EC1A1BB")]
+        [InlineData("m1 1aa")]
+        [InlineData("m60 1nw")]
+        [InlineData("cr2 6xh")]
+        [InlineData("dn55 1pt")]
+        [InlineData("w1p 1hq")]
+        [InlineData("ec1a 1bb")]
         public void RequestTelemetry_PostcodeFormats_RedactPiiTest(string postcode)
         {
             TestRequestTelemetry("https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", $"https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode={postcode}&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True");
