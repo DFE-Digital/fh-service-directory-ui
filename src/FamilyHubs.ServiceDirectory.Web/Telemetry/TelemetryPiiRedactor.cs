@@ -56,10 +56,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
 
     public void Initialize(ITelemetry telemetry)
     {
-        var watch = new Stopwatch();
-        watch.Start();
-        IDictionary<string, string>? properties = null;
-
         switch (telemetry)
         {
             //todo: shared const with client
@@ -82,8 +78,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
 #pragma warning restore CS0618
                     dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
                 }
-
-                properties = dependencyTelemetry.Properties;
                 break;
             case TraceTelemetry traceTelemetry:
                 //todo: {[RequestPath, /ServiceFilter]}
@@ -108,8 +102,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
                         SanitizeProperty(PathRegex, traceTelemetry.Properties, propertyKey);
                     }
                 }
-
-                properties = traceTelemetry.Properties;
                 break;
             case RequestTelemetry requestTelemetry:
                 if (requestTelemetry.Name == "GET /ServiceFilter/Index")
@@ -117,15 +109,7 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
                     //todo: cut down regex??
                     requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
                 }
-
-                properties = requestTelemetry.Properties;
                 break;
-        }
-
-        watch.Stop();
-        if (properties != null)
-        {
-            properties["TelemetryPiiRedactor"] = $"{watch.ElapsedTicks}:{telemetry.GetType().Name}";
         }
 
         DebugCheckForUnredactedData(telemetry);
