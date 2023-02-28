@@ -35,6 +35,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 /// What's redacted:
 ///     postcode: a postcode can map to a single residential address, so can be used to identify an individual
 ///     latitude & longitude: can be used to map to the postcode
+///
+/// Note, ExceptionTelemetry is left alone (no PII currently comes through ExceptionTelemetry).
+/// We have to ensure we don't add any PII to exceptions.
 /// </summary>
 /// <remarks>
 /// See
@@ -46,20 +49,15 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
     //todo: do we handle the user changing the case in the url??
 
     // longtitude is due to the spelling error in the API. at some point, we should fix that (and all the consumers)
-    // having a single more complex regex might be faster, as its more likely to be in caches
     private static readonly Regex SiteQueryStringRegex = new(@"(?<=(postcode|latitude|longitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
     private static readonly Regex ApiQueryStringRegex = new(@"(?<=(latitude|longtitude)=)[^&\s]+", RegexOptions.Compiled);
     private static readonly Regex PathRegex = new(@"(?<=postcodes\/)[\w% ]+", RegexOptions.Compiled);
-
-    // is this going to slow things down too much, just exclude the logs instead (not nice!)
     private static readonly string[] TracePropertiesToRedact = { "Uri", "Scope", "QueryString", "HostingRequestStartingLog", "HostingRequestFinishedLog" };
 
     public void Initialize(ITelemetry telemetry)
     {
         switch (telemetry)
         {
-            //todo: shared const with client
-            //todo: is longtitude in trace, as well as dependency, or can we just check for it in dependency?
             case DependencyTelemetry dependencyTelemetry:
                 if (dependencyTelemetry.Name is "GET /api/services")
                 {
@@ -71,7 +69,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
                 }
                 else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
                 {
-                    //todo: hardcode replacement at index - faster than a regex
 #pragma warning disable CS0618
                     dependencyTelemetry.CommandName =
                         dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
@@ -85,14 +82,8 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
                 // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
                 // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
 
-                // order by least common for efficiency
                 if (traceTelemetry.Properties.TryGetValue("RequestPath", out string? path)
                     && path is "/ServiceFilter")
-                    // when calling the API, we need to redact on GET
-                    // when the request is for the web, we only need to redact on POST
-                    //todo: try some different ways of doing this and see which is fastest
-                    //&& traceTelemetry.Properties.TryGetValue("Method", out string? method)
-                    //&& method is "GET")
                 {
                     traceTelemetry.Message = Sanitize(SiteQueryStringRegex, traceTelemetry.Message);
                     traceTelemetry.Message = Sanitize(PathRegex, traceTelemetry.Message);
@@ -130,7 +121,7 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
 
     private Uri Sanitize(Regex regex, Uri uri)
     {
-        //todo: better to use equals or contains and only create a uri if necessary (might be slower, but should stop memory churn)
+        // only create a uri if necessary (might be slower, but should stop memory churn)
         string unredactedUri = uri.ToString();
         string redactedUri = regex.Replace(unredactedUri, "REDACTED");
         return redactedUri != unredactedUri ? new Uri(redactedUri) : uri;
@@ -158,7 +149,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
         {
             DebugCheckForUnredactedData(exceptionTelemetry.Properties, exceptionTelemetry.Message, exceptionTelemetry.Exception?.Message);
         }
-        // don't think so, so remove soon
         if (telemetry is MetricTelemetry metricTelemetry)
         {
             DebugCheckForUnredactedData(metricTelemetry.Properties);
