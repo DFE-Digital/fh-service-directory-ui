@@ -18,6 +18,8 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Telemetry
         [InlineData("https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", "https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M27 8SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True")]
         // redactable parameter at the end (in case url changes)
         [InlineData("https://find-support-for-your-family.education.gov.uk/ServiceFilter?frompostcodesearch=True&postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED", "https://find-support-for-your-family.education.gov.uk/ServiceFilter?frompostcodesearch=True&postcode=M27 8SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605")]
+        // different host
+        [InlineData("https://example.com:123/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", "https://example.com:123/ServiceFilter?postcode=M27 8SS&adminarea=E08000006&latitude=53.508884&longitude=-2.294605&frompostcodesearch=True")]
         public void RequestTelemetry_RedactPiiTest(string expectedUrl, string initialUrl)
         {
             TestRequestTelemetry(expectedUrl, initialUrl);
@@ -80,6 +82,16 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Telemetry
         public void RequestTelemetry_Longitude_RedactPiiTest(string longitude)
         {
             TestRequestTelemetry("https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", $"https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M1 1AA&adminarea=E08000006&latitude=53.508884&longitude={longitude}&frompostcodesearch=True");
+        }
+
+        [Fact]
+        public void RequestTelemetry_NoRedactionForOtherPages_RedactPiiTest()
+        {
+            const string urlWithPostcode = "http://example.com/?postcode=B1 2AA";
+            var requestTelemetry = CreateRequestTelemetry("GET /Index", urlWithPostcode);
+            TelemetryPiiRedactor.Initialize(requestTelemetry);
+
+            Assert.Equal(urlWithPostcode, requestTelemetry.Url.ToString());
         }
 
         private void TestRequestTelemetry(string expectedUrl, string initialUrl)
