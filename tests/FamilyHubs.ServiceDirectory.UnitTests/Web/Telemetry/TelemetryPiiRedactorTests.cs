@@ -60,8 +60,26 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web.Telemetry
         [InlineData("61.123456789")]
         [InlineData("90")]
         [InlineData("90.000")]
-        public void RequestTelemetry_Latitudes_RedactPiiTest(string latitude) {
+        public void RequestTelemetry_Latitudes_RedactPiiTest(string latitude)
+        {
             TestRequestTelemetry("https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", $"https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M1 1AA&adminarea=E08000006&latitude={latitude}&longitude=-2.294605&frompostcodesearch=True");
+        }
+
+        [Theory]
+        [InlineData("-180")]
+        [InlineData("-180.001")]
+        [InlineData("-8")]
+        [InlineData("-8.0")]
+        [InlineData("0")]
+        [InlineData("0.07")]
+        [InlineData("2")]
+        [InlineData("2.999")]
+        [InlineData("61.123456789")]
+        [InlineData("180")]
+        [InlineData("180.000")]
+        public void RequestTelemetry_Longitude_RedactPiiTest(string longitude)
+        {
+            TestRequestTelemetry("https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", $"https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M1 1AA&adminarea=E08000006&latitude=53.508884&longitude={longitude}&frompostcodesearch=True");
         }
 
         private void TestRequestTelemetry(string expectedUrl, string initialUrl)
