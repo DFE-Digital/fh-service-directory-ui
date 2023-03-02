@@ -11,7 +11,7 @@ public class TelemetryPiiRedactor_RequestTelemetryTests
     public TelemetryPiiRedactor_RequestTelemetryTests()
     {
         TelemetryPiiRedactor = new TelemetryPiiRedactor();
-    }
+    }   
 
     [Theory]
     // actual url

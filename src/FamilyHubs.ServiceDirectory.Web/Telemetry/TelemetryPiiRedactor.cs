@@ -67,8 +67,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
                 }
                 break;
             case TraceTelemetry traceTelemetry:
-                //todo: {[RequestPath, /ServiceFilter]}
-                // Message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
                 // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
                 // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
 
