@@ -118,7 +118,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
         {
             DebugCheckForUnredactedData(eventTelemetry.Properties, eventTelemetry.Name);
         }
-        //todo: inject exceptions around filtering page
         if (telemetry is ExceptionTelemetry exceptionTelemetry)
         {
             DebugCheckForUnredactedData(exceptionTelemetry.Properties, exceptionTelemetry.Message, exceptionTelemetry.Exception?.Message);
