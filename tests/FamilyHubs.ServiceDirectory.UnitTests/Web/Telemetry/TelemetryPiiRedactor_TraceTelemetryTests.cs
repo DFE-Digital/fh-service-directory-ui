@@ -27,11 +27,18 @@ public class TelemetryPiiRedactor_TraceTelemetryTests
     }
 
     [Theory]
+    // redacting
     [InlineData("HTTP GET https://api.postcodes.io/postcodes/REDACTED", "Scope", "HTTP GET https://api.postcodes.io/postcodes/M27%208SS")]
     [InlineData("https://api.postcodes.io/postcodes/REDACTED", "Uri", "https://api.postcodes.io/postcodes/M27%208SS")]
     [InlineData("Request starting HTTP/2 GET https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True - -", "HostingRequestStartingLog", "Request starting HTTP/2 GET https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M27%206NF&adminarea=E08000006&latitude=53.53087&longitude=-2.349673&frompostcodesearch=True - -")]
     [InlineData("?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True", "QueryString", "?postcode=M27%206NF&adminarea=E08000006&latitude=53.53087&longitude=-2.349673&frompostcodesearch=True")]
     [InlineData("HTTP GET https://find-support-for-your-family.education.gov.uk/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=REDACTED&longtitude=REDACTED&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1", "Scope", "HTTP GET https://find-support-for-your-family.education.gov.uk/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.53087&longtitude=-2.349673&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1")]
+    [InlineData("https://example.com/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=REDACTED&longtitude=REDACTED&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1", "Uri", "https://example.com/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.53087&longtitude=-2.349673&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1")]
+    [InlineData("Request finished HTTP/2 GET https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True - - - 500 - text/html;+charset=utf-8 230345.9221ms", "HostingRequestFinishedLog", "Request finished HTTP/2 GET https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M27%206NF&adminarea=E08000006&latitude=53.53087&longitude=-2.349673&frompostcodesearch=True - - - 500 - text/html;+charset=utf-8 230345.9221ms")]
+    // non redacting known properties
+    [InlineData("HTTP GET https://example.com/jam", "Scope", "HTTP GET https://example.com/jam")]
+    // non redacting unknown properties
+    [InlineData("Gobble Gobble", "Turkey", "Gobble Gobble")]
     public void RedactPiiFromPropertiesTest(string expectedPropertyValue, string propertyName, string propertyValue)
     {
         var traceTelemetry = CreateTraceTelemetry("");
