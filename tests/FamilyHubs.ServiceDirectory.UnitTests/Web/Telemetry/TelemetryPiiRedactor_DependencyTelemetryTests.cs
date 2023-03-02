@@ -25,8 +25,8 @@ public class TelemetryPiiRedactor_DependencyTelemetryTests
     }
 
     [Theory]
-    [InlineData("", "", "GET /postcodes/B1 1AA")]
-    [InlineData("", "", "GET /api/services")]
+    [InlineData("https://api.postcodes.io/postcodes/REDACTED", "https://api.postcodes.io/postcodes/M27 6NF", "GET /postcodes/B1 1AA")]
+    [InlineData("https://example.com/api/services?serviceType=Family Experience&districtCode=E08000006&latitude=REDACTED&longtitude=REDACTED&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1", "https://example.com/api/services?serviceType=Family Experience&districtCode=E08000006&latitude=53.53087&longtitude=-2.349673&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1", "GET /api/services")]
     public void RedactPiiFromDataTest(string expectedData, string data, string name)
     {
         var dependencyTelemetry = CreateDependencyTelemetry(name, data);
@@ -36,8 +36,8 @@ public class TelemetryPiiRedactor_DependencyTelemetryTests
     }
 
     [Theory]
-    [InlineData("", "", "GET /postcodes/B1 1AA")]
-    [InlineData("", "", "GET /api/services")]
+    [InlineData("https://api.postcodes.io/postcodes/REDACTED", "https://api.postcodes.io/postcodes/M27 6NF", "GET /postcodes/B1 1AA")]
+    [InlineData("https://example.com/api/services?serviceType=Family Experience&districtCode=E08000006&latitude=REDACTED&longtitude=REDACTED&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1", "https://example.com/api/services?serviceType=Family Experience&districtCode=E08000006&latitude=53.53087&longtitude=-2.349673&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1", "GET /api/services")]
     public void RedactPiiFromCommandNameTest(string expectedCommandName, string data, string name)
     {
         var dependencyTelemetry = CreateDependencyTelemetry(name, data);
