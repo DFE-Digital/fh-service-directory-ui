@@ -24,17 +24,11 @@ public static class StartupExtensions
 
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
-            var config = services.GetRequiredService<TelemetryConfiguration>();
-            //config.TelemetryInitializers.Add(new TelemetryPiiRedactor());
-
-            //loggerConfiguration.Destructure.ByTransforming<MySensitiveData>(x => new MySensitiveData { Password = "****" }) // replace password with "****"
-
             loggerConfiguration.WriteTo.ApplicationInsights(
-                config, 
-                TelemetryConverter.Traces, 
+                services.GetRequiredService<TelemetryConfiguration>(),
+                TelemetryConverter.Traces,
                 parsed ? logLevel : LogEventLevel.Warning);
 
-            //todo: does console logging get stored on the app service?
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
@@ -44,7 +38,6 @@ public static class StartupExtensions
     {
         services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
-        //services.AddApplicationInsightsTelemetryProcessor<AppInsightsPiiCleanser>();
 
         // Add services to the container.
         services.AddRazorPages();
