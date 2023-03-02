@@ -71,7 +71,6 @@ public class TelemetryPiiRedactor : ITelemetryInitializer
             case RequestTelemetry requestTelemetry:
                 if (requestTelemetry.Name == "GET /ServiceFilter/Index")
                 {
-                    //todo: cut down regex??
                     requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
                 }
                 break;
