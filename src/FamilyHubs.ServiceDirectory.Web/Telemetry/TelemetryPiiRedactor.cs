@@ -13,7 +13,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Telemetry;
 // {[Scope, ["HTTP GET https://s181d01-as-fh-sd-api-dev.azurewebsites.net/api/services?serviceType=Family%20Experience&districtCode=E08000006&latitude=53.508884&longtitude=-2.294605&proximity=32186&pageNumber=1&pageSize=10&maxFamilyHubs=1"]]}
 
 //postcodes.io
-// message: "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS"
 // {[Scope, ["HTTP GET https://api.postcodes.io/postcodes/M27%208SS"]]}
 // {[Uri, https://api.postcodes.io/postcodes/M27%208SS]}
 
