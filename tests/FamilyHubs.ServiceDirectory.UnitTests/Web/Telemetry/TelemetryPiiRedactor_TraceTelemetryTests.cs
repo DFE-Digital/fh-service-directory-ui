@@ -16,10 +16,23 @@ public class TelemetryPiiRedactor_TraceTelemetryTests
     [Theory]
     [InlineData("Start processing HTTP request GET https://api.postcodes.io/postcodes/REDACTED", "Start processing HTTP request GET https://api.postcodes.io/postcodes/M27%208SS")]
     [InlineData("Request starting HTTP/2 GET https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=REDACTED&adminarea=E08000006&latitude=REDACTED&longitude=REDACTED&frompostcodesearch=True - ", "Request starting HTTP/2 GET https://find-support-for-your-family.education.gov.uk/ServiceFilter?postcode=M27%206NF&adminarea=E08000006&latitude=53.53087&longitude=-2.349673&frompostcodesearch=True - ")]
-    public void RedactPiiTest(string expectedMessage, string message)
+    public void RedactPiiFromMessageTest(string expectedMessage, string message)
     {
         TestTraceTelemetry(expectedMessage, message);
     }
+
+    [Theory]
+    [InlineData("HTTP GET https://api.postcodes.io/postcodes/REDACTED", "Scope", "HTTP GET https://api.postcodes.io/postcodes/M27%208SS")]
+    [InlineData("https://api.postcodes.io/postcodes/REDACTED", "Uri", "https://api.postcodes.io/postcodes/M27%208SS")]
+    public void RedactPiiFromPropertiesTest(string expectedPropertyValue, string propertyName, string propertyValue)
+    {
+        var traceTelemetry = CreateTraceTelemetry("");
+        traceTelemetry.Properties.Add(propertyName, propertyValue);
+        TelemetryPiiRedactor.Initialize(traceTelemetry);
+
+        Assert.Equal(expectedPropertyValue, traceTelemetry.Properties[propertyName]);
+    }
+
 
     private void TestTraceTelemetry(string expectedMessage, string message)
     {
