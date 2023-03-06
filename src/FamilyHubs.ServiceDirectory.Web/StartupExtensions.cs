@@ -3,7 +3,7 @@ using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Security;
-using FamilyHubs.ServiceDirectory.Web.Telemetry;
+using FamilyHubs.SharedKernel.Telemetry;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
