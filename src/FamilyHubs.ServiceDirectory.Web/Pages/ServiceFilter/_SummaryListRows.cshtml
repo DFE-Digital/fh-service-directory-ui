@@ -7,13 +7,13 @@
     var values = string.Join("<br/>", Model.Values);
     @if (!string.IsNullOrEmpty(values))
     {
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                @Model.Key
-                </dt>
-                <dd class="govuk-summary-list__value">
-                @Html.Raw(string.Join("<br/>", Model.Values)) 
-                </dd>
-            </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @Model.Key
+            </dt>
+            <dd class="govuk-summary-list__value">
+            @Html.Raw(string.Join("<br/>", values)) 
+            </dd>
+        </div>
     }
 }
