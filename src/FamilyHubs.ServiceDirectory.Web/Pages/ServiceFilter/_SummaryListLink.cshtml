@@ -2,30 +2,33 @@
 
 @*todo: move to SummaryList folder, and remove sl from start of partials*@
 
-<div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-        @Model.Key
-    </dt>
-    <dd class="govuk-summary-list__value">
-        @if (!string.IsNullOrEmpty(Model.Value))
-        {
-            @switch (Model.LinkType)
+@if (!string.IsNullOrEmpty(Model.Value))
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            @Model.Key
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @if (!string.IsNullOrEmpty(Model.Value))
             {
-                case LinkType.WebPage:
-                    <a href="@(Model.Value)">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description)</a>
-                    break;
-                case LinkType.WebPageInNewTab:
-                    <a href="@(Model.Value)" rel="noreferrer noopener" target="_blank">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description) (opens in new tab)</a>
-                    break;
-                case LinkType.Email:
-                    <a href="mailto:@(Model.Value)">@Model.Value</a>
-                    break;
-                case LinkType.Phone:
-                    @*todo: 2 separate fields? should be global number (+), but do we have that, should we construct it. is 'remove spaces' enough?*@
-                    @*see https://www.rfc-editor.org/rfc/rfc3966#page-6*@
-                    <a href="tel:@Model.Value.Replace(" ", "")">@Model.Value</a>
-                    break;
+                @switch (Model.LinkType)
+                {
+                    case LinkType.WebPage:
+                        <a href="@(Model.Value)">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description)</a>
+                        break;
+                    case LinkType.WebPageInNewTab:
+                        <a href="@(Model.Value)" rel="noreferrer noopener" target="_blank">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description) (opens in new tab)</a>
+                        break;
+                    case LinkType.Email:
+                        <a href="mailto:@(Model.Value)">@Model.Value</a>
+                        break;
+                    case LinkType.Phone:
+                        @*todo: 2 separate fields? should be global number (+), but do we have that, should we construct it. is 'remove spaces' enough?*@
+                        @*see https://www.rfc-editor.org/rfc/rfc3966#page-6*@
+                        <a href="tel:@Model.Value.Replace(" ", "")">@Model.Value</a>
+                        break;
+                }
             }
-        }
-    </dd>
-</div>
+        </dd>
+    </div>
+}
