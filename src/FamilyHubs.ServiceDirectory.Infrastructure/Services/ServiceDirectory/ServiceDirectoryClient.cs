@@ -17,7 +17,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     private readonly IMemoryCache _memoryCache;
     private static string? _endpoint;
     internal const string HttpClientName = "servicedirectory";
-    private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience";
+    private static readonly string GetServicesBaseUri = "api/services?serviceType=FamilyExperience";
 
     public ServiceDirectoryClient(
         IHttpClientFactory httpClientFactory,
@@ -96,15 +96,16 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return services;
     }
 
-    public Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
+    public Task<OrganisationDto> GetOrganisation(long id, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrEmpty(id);
+        if (id == 0) throw new ArgumentOutOfRangeException(nameof(id), "Organisation Id must not be zero");
+        
 
         return GetOrganisationTryCache(id, cancellationToken);
     }
 
     // based on code from https://sahansera.dev/in-memory-caching-aspcore-dotnet/
-    private async Task<OrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
+    private async Task<OrganisationDto> GetOrganisationTryCache(long id, CancellationToken cancellationToken = default)
     {
         var semaphore = new SemaphoreSlim(1, 1);
 
@@ -129,11 +130,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return organisation;
     }
 
-    private async Task<OrganisationDto> GetOrganisationFromApi(string id, CancellationToken cancellationToken)
+    private async Task<OrganisationDto> GetOrganisationFromApi(long id, CancellationToken cancellationToken)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        var response = await httpClient.GetAsync($"api/organizations/{id}", cancellationToken);
+        var response = await httpClient.GetAsync($"api/organisations/{id}", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {

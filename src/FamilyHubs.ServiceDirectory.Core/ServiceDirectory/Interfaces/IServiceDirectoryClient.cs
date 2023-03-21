@@ -20,7 +20,7 @@ public interface IServiceDirectoryClient
     /// <remarks>
     /// Organisations are cached for 1 hour.
     /// </remarks>
-    Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
+    Task<OrganisationDto> GetOrganisation(long id, CancellationToken cancellationToken = default);
 
     Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
         ServicesParams servicesParams,
