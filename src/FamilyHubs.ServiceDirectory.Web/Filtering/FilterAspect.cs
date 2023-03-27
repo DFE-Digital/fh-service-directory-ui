@@ -10,5 +10,5 @@ public sealed record FilterAspect(
     string? Name = null,
     bool SelectedByDefault = false) : IFilterAspect
 {
-    public string Value => Name ?? Id;
+    public string Value => Name ?? Id.ToString();
 }

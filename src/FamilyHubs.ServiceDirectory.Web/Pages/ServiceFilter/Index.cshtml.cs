@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using FamilyHubs.ServiceDirectory.Core.Pagination;
 using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
@@ -19,14 +18,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
-    public static readonly IEnumerable<IFilter> DefaultFilters = new IFilter[]
-    {
-        new CategoryFilter(),
-        new CostFilter(),
-        new ShowFilter(),
-        new SearchWithinFilter(),
-        new ChildrenAndYoungPeopleFilter()
-    };
+    private readonly ICollection<IFilter> _defaultFilters;
 
     // simpler than asking all the filters to remove themselves
     private static HashSet<string> _parametersWhitelist = new()
@@ -57,10 +49,22 @@ public class ServiceFilterModel : PageModel
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
-        Filters = DefaultFilters;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
+        
+        var taxonomies = _serviceDirectoryClient.GetTaxonomies().GetAwaiter().GetResult();
+        
+        _defaultFilters = new List<IFilter>
+        {
+            new CategoryFilter(taxonomies.Items),
+            new CostFilter(),
+            new ShowFilter(),
+            new SearchWithinFilter(),
+            new ChildrenAndYoungPeopleFilter(),
+        };
+
+        Filters = _defaultFilters;
     }
 
     public async Task<IActionResult> OnPost(string? postcode, string? adminArea)
@@ -83,18 +87,19 @@ public class ServiceFilterModel : PageModel
 
             // remove key/values we don't want to keep
             var filteredForm = Request.Form
-                .Where(kvp => KeepParam(kvp.Key, remove.Key));
+                .Where(kvp => KeepParam(kvp.Key, remove.Key))
+                .ToList();
 
             //todo: hacky: ask optional filters (or all filters), to manipulate form
-            if (!filteredForm.Any(kvp => kvp.Key == "children_and_young-option-selected"))
+            if (filteredForm.All(kvp => kvp.Key != "children_and_young-option-selected"))
             {
-                filteredForm = filteredForm.Where(KeyValuePair => KeyValuePair.Key != "children_and_young");
+                filteredForm = filteredForm.Where(keyValuePair => keyValuePair.Key != "children_and_young").ToList();
             }
 
             if (remove.Value != null)
             {
                 // remove values we don't want to keep
-                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove));
+                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove)).ToList();
             }
 
             routeValues = ToRouteValues(filteredForm);
@@ -148,8 +153,7 @@ public class ServiceFilterModel : PageModel
         return new KeyValuePair<string?, string?>(remove[..filterNameEndPos], remove[(filterNameEndPos + 2)..]);
     }
 
-    private static KeyValuePair<string, StringValues> RemoveFilterValue(
-        KeyValuePair<string, StringValues> kvp, KeyValuePair<string?, string?> remove)
+    private static KeyValuePair<string, StringValues> RemoveFilterValue(KeyValuePair<string, StringValues> kvp, KeyValuePair<string?, string?> remove)
     {
         if (kvp.Key != remove.Key)
             return kvp;
@@ -220,7 +224,7 @@ public class ServiceFilterModel : PageModel
         // otherwise, apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
-            Filters = DefaultFilters.Select(fd => fd.Apply(Request.Query));
+            Filters = _defaultFilters.Select(fd => fd.Apply(Request.Query));
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
