@@ -19,7 +19,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 public class ServiceFilterModel : PageModel
 {
     // simpler than asking all the filters to remove themselves
-    private static HashSet<string> _parametersWhitelist = new()
+    private static HashSet<string> _parametersWhitelist = new HashSet<string>
     {
         "postcode",
         "adminarea",
