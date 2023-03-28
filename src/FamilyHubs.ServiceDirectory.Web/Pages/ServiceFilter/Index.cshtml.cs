@@ -6,7 +6,6 @@ using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
-using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -41,12 +40,14 @@ public class ServiceFilterModel : PageModel
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private readonly IPostcodeLookup _postcodeLookup;
+    private readonly IPageFilterFactory _pageFilterFactory;
     private const int PageSize = 10;
 
-    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient, IPostcodeLookup postcodeLookup)
+    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient, IPostcodeLookup postcodeLookup, IPageFilterFactory pageFilterFactory)
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
+        _pageFilterFactory = pageFilterFactory;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -206,14 +207,7 @@ public class ServiceFilterModel : PageModel
         CurrentPage = pageNum ?? 1;
 
         // before each page load we need to initialise default filter options
-        Filters = new List<IFilter>
-        {
-            new CategoryFilter((await _serviceDirectoryClient.GetTaxonomies()).Items),
-            new CostFilter(),
-            new ShowFilter(),
-            new SearchWithinFilter(),
-            new ChildrenAndYoungPeopleFilter(),
-        };
+        Filters = await _pageFilterFactory.GetDefaultFilters();
 
         // if we got here from PostCode search then just used above Default filters else apply the filters from the query parameters
         if (!FromPostcodeSearch)
@@ -250,3 +244,4 @@ public class ServiceFilterModel : PageModel
         return (ServiceMapper.ToViewModel(services.Items), pagination);
     }
 }
+
