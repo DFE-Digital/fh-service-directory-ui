@@ -18,8 +18,6 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
-    private readonly ICollection<IFilter> _defaultFilters;
-
     // simpler than asking all the filters to remove themselves
     private static HashSet<string> _parametersWhitelist = new()
     {
@@ -29,7 +27,7 @@ public class ServiceFilterModel : PageModel
         "longitude",
     };
 
-    public IEnumerable<IFilter> Filters { get; set; }
+    public IEnumerable<IFilter> Filters { get; set; } = null!;
     public string? Postcode { get; set; }
     public string? AdminArea { get; set; }
     public float? Latitude { get; set; }
@@ -52,19 +50,6 @@ public class ServiceFilterModel : PageModel
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
-        
-        var taxonomies = _serviceDirectoryClient.GetTaxonomies().GetAwaiter().GetResult();
-        
-        _defaultFilters = new List<IFilter>
-        {
-            new CategoryFilter(taxonomies.Items),
-            new CostFilter(),
-            new ShowFilter(),
-            new SearchWithinFilter(),
-            new ChildrenAndYoungPeopleFilter(),
-        };
-
-        Filters = _defaultFilters;
     }
 
     public async Task<IActionResult> OnPost(string? postcode, string? adminArea)
@@ -124,7 +109,7 @@ public class ServiceFilterModel : PageModel
     private static dynamic ToRouteValues(IEnumerable<KeyValuePair<string, StringValues>> values)
     {
         dynamic routeValues = new ExpandoObject();
-        var routeValuesDictionary = (IDictionary<string, object>) routeValues;
+        var routeValuesDictionary = (IDictionary<string, object>)routeValues;
 
         foreach (var keyValuePair in values)
         {
@@ -220,11 +205,20 @@ public class ServiceFilterModel : PageModel
         Longitude = longitude;
         CurrentPage = pageNum ?? 1;
 
-        // if we've just come from the postcode search, go with the configured default filter options
-        // otherwise, apply the filters from the query parameters
+        // before each page load we need to initialise default filter options
+        Filters = new List<IFilter>
+        {
+            new CategoryFilter((await _serviceDirectoryClient.GetTaxonomies()).Items),
+            new CostFilter(),
+            new ShowFilter(),
+            new SearchWithinFilter(),
+            new ChildrenAndYoungPeopleFilter(),
+        };
+
+        // if we got here from PostCode search then just used above Default filters else apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
-            Filters = _defaultFilters.Select(fd => fd.Apply(Request.Query));
+            Filters = Filters.Select(fd => fd.Apply(Request.Query));
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
