@@ -1,6 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.SharedKernel;
+using FamilyHubs.ServiceDirectory.Shared.Models;
     
 namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 

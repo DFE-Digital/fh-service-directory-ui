@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
-using FamilyHubs.SharedKernel;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -209,12 +209,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
     internal static string GetEndpoint(IConfiguration configuration)
     {
-        const string endpointConfigKey = "ServiceDirectoryAPI:Endpoint";
+        const string EndpointConfigKey = "ServiceDirectoryAPI:Endpoint";
 
         // as long as the config isn't changed, the worst that can happen is we fetch more than once
         return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
-            endpointConfigKey,
-            configuration[endpointConfigKey],
+            EndpointConfigKey,
+            configuration[EndpointConfigKey],
             "The service directory URL");
     }
 
