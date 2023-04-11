@@ -12,10 +12,6 @@
     border-bottom: 1px solid $govuk-border-colour;
     @include govuk-responsive-padding(5, "bottom");
 
-    /*    .govuk-checkboxes__input {
-        accent-color: govuk-colour("white");
-    }*/
-
     .govuk-checkboxes__label::before, .govuk-radios__label::before {
         background-color: govuk-colour("white");
     }
@@ -92,7 +88,6 @@
 li.govuk-pagination__item--current {
     .app-button-link {
         color: govuk-colour("white");
-        @include govuk-typography-weight-bold(false);
     }
 }
 
@@ -103,10 +98,6 @@ li.govuk-pagination__item--current {
         &:hover {
             @include govuk-link-decoration;
             @include govuk-link-hover-decoration;
-        }
-
-        &:active:hover {
-            text-decoration: none;
         }
     }
 }

@@ -2,13 +2,13 @@
 
 @*todo: move to SummaryList folder, and remove sl from start of partials*@
 
-<div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
-        @Model.Key
-    </dt>
-    <dd class="govuk-summary-list__value">
-        @if (!string.IsNullOrEmpty(Model.Value))
-        {
+@if (!string.IsNullOrWhiteSpace(Model.Value))
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            @Model.Key
+        </dt>
+        <dd class="govuk-summary-list__value">
             @switch (Model.LinkType)
             {
                 case LinkType.WebPage:
@@ -26,6 +26,6 @@
                     <a href="tel:@Model.Value.Replace(" ", "")">@Model.Value</a>
                     break;
             }
-        }
-    </dd>
-</div>
+        </dd>
+    </div>
+}
