@@ -98,7 +98,7 @@ public static class ServiceMapper
         var cost = new List<string>();
         var firstCost = service.CostOptions.First();
 
-        if (firstCost.Amount is not null && firstCost.Amount == decimal.Zero)
+        if (firstCost.Amount is null or decimal.Zero)
         {
             return new[] { Free };
         }
