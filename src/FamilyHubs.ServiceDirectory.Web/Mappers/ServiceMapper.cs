@@ -66,7 +66,7 @@ public static class ServiceMapper
 
     private static IEnumerable<string> GetCategories(ServiceDto service)
     {
-        return  service.Taxonomies.Select(st => st.Name);
+        return  service.Taxonomies.OrderBy(st => st.Id).Select(st => st.Name);
     }
 
     private static IEnumerable<string> GetAddress(LocationDto location)
