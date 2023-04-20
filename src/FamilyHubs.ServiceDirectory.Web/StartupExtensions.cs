@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 using FamilyHubs.ServiceDirectory.Web.Security;
+using FamilyHubs.SharedKernel.Telemetry;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -25,8 +26,8 @@ public static class StartupExtensions
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
             loggerConfiguration.WriteTo.ApplicationInsights(
-                services.GetRequiredService<TelemetryConfiguration>(), 
-                TelemetryConverter.Traces, 
+                services.GetRequiredService<TelemetryConfiguration>(),
+                TelemetryConverter.Traces,
                 parsed ? logLevel : LogEventLevel.Warning);
 
             loggerConfiguration.WriteTo.Console(
@@ -36,6 +37,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
         // Add services to the container.
