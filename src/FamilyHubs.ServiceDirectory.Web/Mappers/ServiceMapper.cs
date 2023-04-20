@@ -33,7 +33,7 @@ public static class ServiceMapper
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
             GetAddress(serviceAtLocation),
-            GetWhen(serviceAtLocation),
+            GetWhen(service),
             GetCategories(service),
             GetAgeRange(eligibility),
             contact?.Telephone,
@@ -78,26 +78,31 @@ public static class ServiceMapper
             .Concat(RemoveEmpty(location.City, location.StateProvince, location.PostCode));
     }
 
-    private static IEnumerable<string> GetWhen(LocationDto location)
+    private static IEnumerable<string> GetWhen(ServiceDto service)
     {
         var when =
-            location.RegularSchedules.FirstOrDefault()?.Description?.Split('\n').Select(l => l.Trim())
+            service.RegularSchedules.FirstOrDefault()?.Description?.Split('\n').Select(l => l.Trim())
             ?? Enumerable.Empty<string>();
         return when;
     }
 
     private static IEnumerable<string> GetCost(ServiceDto service)
     {
-        const string free = "Free";
+        const string Free = "Free";
 
         if (!service.CostOptions.Any())
         {
-            return new[] { free };
+            return new[] { Free };
         }
 
         var cost = new List<string>();
         var firstCost = service.CostOptions.First();
 
+        if (firstCost.Amount is not null && firstCost.Amount == decimal.Zero)
+        {
+            return new[] { Free };
+        }
+        
         if (firstCost.Amount is not null && firstCost.Amount != decimal.Zero)
         {
             var ukNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
