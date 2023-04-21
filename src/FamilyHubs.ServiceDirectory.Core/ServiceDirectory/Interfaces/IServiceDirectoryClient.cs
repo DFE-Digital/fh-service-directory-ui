@@ -1,15 +1,14 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.SharedKernel;
+using FamilyHubs.ServiceDirectory.Shared.Models;
     
 namespace FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 
 public interface IServiceDirectoryClient
 {
     // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
-    Task<PaginatedList<ServiceDto>> GetServices(
-        ServicesParams servicesParams,
-        CancellationToken cancellationToken = default);
+    Task<PaginatedList<TaxonomyDto>> GetTaxonomies(CancellationToken cancellationToken = default);
+    Task<PaginatedList<ServiceDto>> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches an organisation from the service directory
@@ -20,9 +19,7 @@ public interface IServiceDirectoryClient
     /// <remarks>
     /// Organisations are cached for 1 hour.
     /// </remarks>
-    Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default);
+    Task<OrganisationDto> GetOrganisation(long id, CancellationToken cancellationToken = default);
 
-    Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        ServicesParams servicesParams,
-        CancellationToken cancellationToken = default);
+    Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(ServicesParams servicesParams, CancellationToken cancellationToken = default);
 }

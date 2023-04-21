@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
-using FamilyHubs.SharedKernel;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
@@ -8,28 +7,26 @@ using Microsoft.Extensions.Configuration;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
 public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGroup
 {
+    private static readonly Guid TaxonomyCacheId = Guid.NewGuid();
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IMemoryCache _memoryCache;
     private static string? _endpoint;
     internal const string HttpClientName = "servicedirectory";
-    private static readonly string GetServicesBaseUri = "api/services?serviceType=Family Experience";
+    private static readonly string GetServicesBaseUri = "api/services?serviceType=FamilyExperience";
 
-    public ServiceDirectoryClient(
-        IHttpClientFactory httpClientFactory,
-        IMemoryCache memoryCache)
+    public ServiceDirectoryClient(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
     {
         _httpClientFactory = httpClientFactory;
         _memoryCache = memoryCache;
     }
 
-    public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(
-        ServicesParams servicesParams,
-        CancellationToken cancellationToken = default)
+    public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(ServicesParams servicesParams, CancellationToken cancellationToken = default)
     {
         var services = await GetServices(servicesParams, cancellationToken);
 
@@ -45,9 +42,61 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             servicesParams.PageSize ?? 10);
     }
 
-    public async Task<PaginatedList<ServiceDto>> GetServices(
-        ServicesParams servicesParams,
-        CancellationToken cancellationToken = default)
+    public Task<PaginatedList<TaxonomyDto>> GetTaxonomies(CancellationToken cancellationToken = default)
+    {
+        return GetTaxonomiesTryCache(cancellationToken);
+    }
+
+    private async Task<PaginatedList<TaxonomyDto>> GetTaxonomiesTryCache(CancellationToken cancellationToken = default)
+    {
+        var semaphore = new SemaphoreSlim(1, 1);
+
+        if (_memoryCache.TryGetValue(TaxonomyCacheId, out PaginatedList<TaxonomyDto>? taxonomies))
+            return taxonomies!;
+
+        try
+        {
+            await semaphore.WaitAsync(cancellationToken);
+
+            // recheck to make sure it didn't populate before entering semaphore
+            if (_memoryCache.TryGetValue(TaxonomyCacheId, out taxonomies))
+                return taxonomies!;
+
+            taxonomies = await GetTaxonomiesFromApi(cancellationToken);
+            _memoryCache.Set(TaxonomyCacheId, taxonomies, TimeSpan.FromHours(1));
+        }
+        finally
+        {
+            semaphore.Release();
+        }
+        return taxonomies;
+    }
+
+    public async Task<PaginatedList<TaxonomyDto>> GetTaxonomiesFromApi(CancellationToken cancellationToken = default)
+    {
+        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        var response = await httpClient.GetAsync("api/taxonomies?taxonomyType=ServiceCategory&pageSize=99999", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+
+        var taxonomies = await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            cancellationToken);
+
+        if (taxonomies is null)
+        {
+            throw new ServiceDirectoryClientException(response, "null");
+        }
+
+        return taxonomies;
+    }
+
+    public async Task<PaginatedList<ServiceDto>> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -56,19 +105,19 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         {
             {"districtCode", servicesParams.AdminArea},
             {"latitude", servicesParams.Latitude.ToString(CultureInfo.InvariantCulture)},
-            {"longtitude", servicesParams.Longitude.ToString(CultureInfo.InvariantCulture)}
+            {"longitude", servicesParams.Longitude.ToString(CultureInfo.InvariantCulture)}
         };
 
         // optional params
         queryParams
             .AddOptionalQueryParams("proximity", servicesParams.MaximumProximityMeters)
-            .AddOptionalQueryParams("given_age", servicesParams.GivenAge)
+            .AddOptionalQueryParams("givenAge", servicesParams.GivenAge)
             .AddOptionalQueryParams("isPaidFor", servicesParams.IsPaidFor)
             .AddOptionalQueryParams("pageNumber", servicesParams.PageNumber)
             .AddOptionalQueryParams("pageSize", servicesParams.PageSize)
             .AddOptionalQueryParams("isFamilyHub", servicesParams.FamilyHub)
             .AddOptionalQueryParams("maxFamilyHubs", servicesParams.MaxFamilyHubs)
-            .AddOptionalQueryParams("taxonmyIds", servicesParams.TaxonomyIds);
+            .AddOptionalQueryParams("taxonomyIds", servicesParams.TaxonomyIds);
 
         var getServicesUri = queryParams.CreateUriWithQueryString(GetServicesBaseUri);
 
@@ -96,15 +145,16 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return services;
     }
 
-    public Task<OrganisationDto> GetOrganisation(string id, CancellationToken cancellationToken = default)
+    public Task<OrganisationDto> GetOrganisation(long id, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrEmpty(id);
+        if (id == 0) throw new ArgumentOutOfRangeException(nameof(id), "Organisation Id must not be zero");
+        
 
         return GetOrganisationTryCache(id, cancellationToken);
     }
 
     // based on code from https://sahansera.dev/in-memory-caching-aspcore-dotnet/
-    private async Task<OrganisationDto> GetOrganisationTryCache(string id, CancellationToken cancellationToken = default)
+    private async Task<OrganisationDto> GetOrganisationTryCache(long id, CancellationToken cancellationToken = default)
     {
         var semaphore = new SemaphoreSlim(1, 1);
 
@@ -129,11 +179,11 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return organisation;
     }
 
-    private async Task<OrganisationDto> GetOrganisationFromApi(string id, CancellationToken cancellationToken)
+    private async Task<OrganisationDto> GetOrganisationFromApi(long id, CancellationToken cancellationToken)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        var response = await httpClient.GetAsync($"api/organizations/{id}", cancellationToken);
+        var response = await httpClient.GetAsync($"api/organisations/{id}", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -159,12 +209,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
     internal static string GetEndpoint(IConfiguration configuration)
     {
-        const string endpointConfigKey = "ServiceDirectoryAPI:Endpoint";
+        const string EndpointConfigKey = "ServiceDirectoryAPI:Endpoint";
 
         // as long as the config isn't changed, the worst that can happen is we fetch more than once
         return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
-            endpointConfigKey,
-            configuration[endpointConfigKey],
+            EndpointConfigKey,
+            configuration[EndpointConfigKey],
             "The service directory URL");
     }
 

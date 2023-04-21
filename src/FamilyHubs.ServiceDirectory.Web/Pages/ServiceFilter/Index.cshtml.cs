@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using FamilyHubs.ServiceDirectory.Core.Pagination;
 using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
@@ -7,7 +6,6 @@ using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
-using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -19,17 +17,8 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
 public class ServiceFilterModel : PageModel
 {
-    public static readonly IEnumerable<IFilter> DefaultFilters = new IFilter[]
-    {
-        new CategoryFilter(),
-        new CostFilter(),
-        new ShowFilter(),
-        new SearchWithinFilter(),
-        new ChildrenAndYoungPeopleFilter()
-    };
-
     // simpler than asking all the filters to remove themselves
-    private static HashSet<string> _parametersWhitelist = new()
+    private static HashSet<string> _parametersWhitelist = new HashSet<string>
     {
         "postcode",
         "adminarea",
@@ -37,7 +26,7 @@ public class ServiceFilterModel : PageModel
         "longitude",
     };
 
-    public IEnumerable<IFilter> Filters { get; set; }
+    public IEnumerable<IFilter> Filters { get; set; } = null!;
     public string? Postcode { get; set; }
     public string? AdminArea { get; set; }
     public float? Latitude { get; set; }
@@ -51,13 +40,14 @@ public class ServiceFilterModel : PageModel
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private readonly IPostcodeLookup _postcodeLookup;
+    private readonly IPageFilterFactory _pageFilterFactory;
     private const int PageSize = 10;
 
-    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient, IPostcodeLookup postcodeLookup)
+    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient, IPostcodeLookup postcodeLookup, IPageFilterFactory pageFilterFactory)
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
-        Filters = DefaultFilters;
+        _pageFilterFactory = pageFilterFactory;
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -83,18 +73,19 @@ public class ServiceFilterModel : PageModel
 
             // remove key/values we don't want to keep
             var filteredForm = Request.Form
-                .Where(kvp => KeepParam(kvp.Key, remove.Key));
+                .Where(kvp => KeepParam(kvp.Key, remove.Key))
+                .ToList();
 
             //todo: hacky: ask optional filters (or all filters), to manipulate form
-            if (!filteredForm.Any(kvp => kvp.Key == "children_and_young-option-selected"))
+            if (filteredForm.All(kvp => kvp.Key != "children_and_young-option-selected"))
             {
-                filteredForm = filteredForm.Where(KeyValuePair => KeyValuePair.Key != "children_and_young");
+                filteredForm = filteredForm.Where(keyValuePair => keyValuePair.Key != "children_and_young").ToList();
             }
 
             if (remove.Value != null)
             {
                 // remove values we don't want to keep
-                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove));
+                filteredForm = filteredForm.Select(kvp => RemoveFilterValue(kvp, remove)).ToList();
             }
 
             routeValues = ToRouteValues(filteredForm);
@@ -119,7 +110,7 @@ public class ServiceFilterModel : PageModel
     private static dynamic ToRouteValues(IEnumerable<KeyValuePair<string, StringValues>> values)
     {
         dynamic routeValues = new ExpandoObject();
-        var routeValuesDictionary = (IDictionary<string, object>) routeValues;
+        var routeValuesDictionary = (IDictionary<string, object>)routeValues;
 
         foreach (var keyValuePair in values)
         {
@@ -148,8 +139,7 @@ public class ServiceFilterModel : PageModel
         return new KeyValuePair<string?, string?>(remove[..filterNameEndPos], remove[(filterNameEndPos + 2)..]);
     }
 
-    private static KeyValuePair<string, StringValues> RemoveFilterValue(
-        KeyValuePair<string, StringValues> kvp, KeyValuePair<string?, string?> remove)
+    private static KeyValuePair<string, StringValues> RemoveFilterValue(KeyValuePair<string, StringValues> kvp, KeyValuePair<string?, string?> remove)
     {
         if (kvp.Key != remove.Key)
             return kvp;
@@ -216,11 +206,13 @@ public class ServiceFilterModel : PageModel
         Longitude = longitude;
         CurrentPage = pageNum ?? 1;
 
-        // if we've just come from the postcode search, go with the configured default filter options
-        // otherwise, apply the filters from the query parameters
+        // before each page load we need to initialise default filter options
+        Filters = await _pageFilterFactory.GetDefaultFilters();
+
+        // if we got here from PostCode search then just used above Default filters else apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
-            Filters = DefaultFilters.Select(fd => fd.Apply(Request.Query));
+            Filters = Filters.Select(fd => fd.Apply(Request.Query));
         }
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
@@ -252,3 +244,4 @@ public class ServiceFilterModel : PageModel
         return (ServiceMapper.ToViewModel(services.Items), pagination);
     }
 }
+

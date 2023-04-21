@@ -2,18 +2,16 @@
 using System.Diagnostics;
 using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Distance;
-using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Constants;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Extensions;
+using ServiceType = FamilyHubs.ServiceDirectory.Web.Models.ServiceType;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
 //todo: use extension methods?
 public static class ServiceMapper
 {
-    private static readonly NumberFormatInfo UkNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
-
     public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceDto> services)
     {
         return services.Select(ToViewModel);
@@ -21,10 +19,10 @@ public static class ServiceMapper
 
     private static Service ToViewModel(ServiceDto service)
     {
-        Debug.Assert(service.ServiceType.Name == "Family Experience");
+        Debug.Assert(service.ServiceType == Shared.Enums.ServiceType.FamilyExperience);
 
-        var serviceAtLocation = service.ServiceAtLocations?.FirstOrDefault();
-        var eligibility = service.Eligibilities?.FirstOrDefault();
+        var serviceAtLocation = service.Locations.First();
+        var eligibility = service.Eligibilities.FirstOrDefault();
 
         var name = service.Name;
         var contact = service.GetContact();
@@ -35,7 +33,7 @@ public static class ServiceMapper
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
             GetAddress(serviceAtLocation),
-            GetWhen(serviceAtLocation),
+            GetWhen(service),
             GetCategories(service),
             GetAgeRange(eligibility),
             contact?.Telephone,
@@ -49,10 +47,9 @@ public static class ServiceMapper
         return eligibility == null ? null : $"{AgeToString(eligibility.MinimumAge)} to {AgeToString(eligibility.MaximumAge)}";
     }
 
-    private static bool IsFamilyHub(ServiceAtLocationDto? serviceAtLocation)
+    private static bool IsFamilyHub(LocationDto location)
     {
-        return serviceAtLocation?.Location.LinkTaxonomies
-            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, TaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
+        return location.LocationType == LocationType.FamilyHub;
     }
 
     private static string? GetWebsiteUrl(string? url)
@@ -69,51 +66,48 @@ public static class ServiceMapper
 
     private static IEnumerable<string> GetCategories(ServiceDto service)
     {
-        var serviceTaxonomies = service.ServiceTaxonomies;
-        if (serviceTaxonomies == null)
-        {
-            return Enumerable.Empty<string>();
-        }
-
-        return serviceTaxonomies.Where(st => st.Taxonomy != null)
-            .Select(st => st.Taxonomy!.Name);
+        return  service.Taxonomies.OrderBy(st => st.ParentId).ThenBy(st => st.Id).Select(st => st.Name);
     }
 
-    private static IEnumerable<string> GetAddress(ServiceAtLocationDto? serviceAtLocation)
+    private static IEnumerable<string> GetAddress(LocationDto location)
     {
-        var address = serviceAtLocation?.Location.PhysicalAddresses?.FirstOrDefault();
+        var splitAddress1 = location.Address1.Split('|');
 
-        var splitAddress1 = address?.Address1.Split('|');
-
-        return RemoveEmpty(serviceAtLocation?.Location.Name)
-            .Concat(RemoveEmpty(splitAddress1 ?? Array.Empty<string>()))
-            .Concat(RemoveEmpty(address?.City, address?.StateProvince, address?.PostCode));
+        return RemoveEmpty(location.Name)
+            .Concat(RemoveEmpty(splitAddress1))
+            .Concat(RemoveEmpty(location.City, location.StateProvince, location.PostCode));
     }
 
-    private static IEnumerable<string> GetWhen(ServiceAtLocationDto? serviceAtLocation)
+    private static IEnumerable<string> GetWhen(ServiceDto service)
     {
         var when =
-            serviceAtLocation?.RegularSchedules?.FirstOrDefault()?.Description.Split('\n').Select(l => l.Trim())
+            service.RegularSchedules.FirstOrDefault()?.Description?.Split('\n').Select(l => l.Trim())
             ?? Enumerable.Empty<string>();
         return when;
     }
 
     private static IEnumerable<string> GetCost(ServiceDto service)
     {
-        const string free = "Free";
+        const string Free = "Free";
 
-        if (service.CostOptions?.Any() == false)
+        if (!service.CostOptions.Any())
         {
-            return new[] { free };
+            return new[] { Free };
         }
 
         var cost = new List<string>();
-        var firstCost = service.CostOptions!.First();
+        var firstCost = service.CostOptions.First();
 
-        if (firstCost.Amount != decimal.Zero)
+        if (firstCost.Amount is null or decimal.Zero)
         {
-            string amount = firstCost.Amount.ToString(firstCost.Amount == (int)firstCost.Amount ? "C0" : "C", UkNumberFormat);
-            cost.Add($"{amount} every {firstCost.AmountDescription.ToLowerInvariant()}");
+            return new[] { Free };
+        }
+        
+        if (firstCost.Amount is not null && firstCost.Amount != decimal.Zero)
+        {
+            var ukNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
+            var amount = firstCost.Amount.Value.ToString("C0", ukNumberFormat);
+            cost.Add($"{amount} every {firstCost.AmountDescription?.ToLowerInvariant()}");
         }
 
         if (!string.IsNullOrWhiteSpace(firstCost.Option))

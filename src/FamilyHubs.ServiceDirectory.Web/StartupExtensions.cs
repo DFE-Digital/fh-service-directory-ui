@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
+using FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 using FamilyHubs.ServiceDirectory.Web.Security;
 using FamilyHubs.SharedKernel.Telemetry;
 using HealthChecks.UI.Client;
@@ -51,7 +52,7 @@ public static class StartupExtensions
 #if hsts_localhost
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
-
+        services.AddSingleton<IPageFilterFactory, PageFilterFactory>();
         services.AddPostcodesIoClient(configuration);
         services.AddServiceDirectoryClient(configuration);
     }
