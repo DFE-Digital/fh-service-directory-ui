@@ -1,3 +1,4 @@
+using FamilyHubs.SharedKernel.Loging;
 using Serilog;
 
 namespace FamilyHubs.ServiceDirectory.Web;
@@ -18,7 +19,7 @@ public static class Program
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.ConfigureHost();
+            builder.SharedConfigureHost();
 
             builder.Services.ConfigureServices(builder.Configuration);
 
