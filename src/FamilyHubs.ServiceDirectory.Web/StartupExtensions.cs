@@ -25,13 +25,19 @@ public static class StartupExtensions
 
             var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
 
+            var blobStorrageConnectionString = builder.Configuration["BlobStorageConnectionString"];
+            ArgumentNullException.ThrowIfNull(blobStorrageConnectionString);
+            var storageFileName = builder.Configuration["BlobStorageFilename"];
+            ArgumentNullException.ThrowIfNull(storageFileName);
+            loggerConfiguration.WriteTo.AzureBlobStorage(connectionString: blobStorrageConnectionString, restrictedToMinimumLevel: parsed ? logLevel : LogEventLevel.Warning, storageFileName: storageFileName);
+            
             loggerConfiguration.WriteTo.ApplicationInsights(
                 services.GetRequiredService<TelemetryConfiguration>(),
                 TelemetryConverter.Traces,
                 parsed ? logLevel : LogEventLevel.Warning);
 
             loggerConfiguration.WriteTo.Console(
-                parsed ? logLevel : LogEventLevel.Warning);
+                parsed ? logLevel : LogEventLevel.Warning);            
         });
 
         builder.Logging.AddAzureWebAppDiagnostics();

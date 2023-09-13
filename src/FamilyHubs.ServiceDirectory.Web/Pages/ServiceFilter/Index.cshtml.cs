@@ -77,7 +77,7 @@ public class ServiceFilterModel : PageModel
                 .ToList();
 
             //todo: hacky: ask optional filters (or all filters), to manipulate form
-            if (filteredForm.All(kvp => kvp.Key != "children_and_young-option-selected"))
+            if (filteredForm.TrueForAll(kvp => kvp.Key != "children_and_young-option-selected"))
             {
                 filteredForm = filteredForm.Where(keyValuePair => keyValuePair.Key != "children_and_young").ToList();
             }
