@@ -10,39 +10,11 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
-using Serilog.Events;
 
 namespace FamilyHubs.ServiceDirectory.Web;
 
 public static class StartupExtensions
 {
-    public static void ConfigureHost(this WebApplicationBuilder builder)
-    {
-        // ApplicationInsights
-        builder.Host.UseSerilog((_, services, loggerConfiguration) =>
-        {
-            var logLevelString = builder.Configuration["LogLevel"];
-
-            var parsed = Enum.TryParse<LogEventLevel>(logLevelString, out var logLevel);
-
-            var blobStorrageConnectionString = builder.Configuration["BlobStorageConnectionString"];
-            ArgumentNullException.ThrowIfNull(blobStorrageConnectionString);
-            var storageFileName = builder.Configuration["BlobStorageFilename"];
-            ArgumentNullException.ThrowIfNull(storageFileName);
-            loggerConfiguration.WriteTo.AzureBlobStorage(connectionString: blobStorrageConnectionString, restrictedToMinimumLevel: parsed ? logLevel : LogEventLevel.Warning, storageFileName: storageFileName);
-            
-            loggerConfiguration.WriteTo.ApplicationInsights(
-                services.GetRequiredService<TelemetryConfiguration>(),
-                TelemetryConverter.Traces,
-                parsed ? logLevel : LogEventLevel.Warning);
-
-            loggerConfiguration.WriteTo.Console(
-                parsed ? logLevel : LogEventLevel.Warning);            
-        });
-
-        builder.Logging.AddAzureWebAppDiagnostics();
-    }
-
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
