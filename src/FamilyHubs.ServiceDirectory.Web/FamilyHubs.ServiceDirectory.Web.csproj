@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="7.0.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="7.0.0" />
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.20.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="6.0.5" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="6.0.5" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="6.0.3" />
+    <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="4.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.9.0.77355">
       <PrivateAssets>all</PrivateAssets>
