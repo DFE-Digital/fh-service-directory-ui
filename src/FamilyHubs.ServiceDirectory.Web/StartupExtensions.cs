@@ -34,6 +34,7 @@ public static class StartupExtensions
                 parsed ? logLevel : LogEventLevel.Warning);
         });
 
+        builder.Logging.ClearProviders();
         builder.Logging.AddAzureWebAppDiagnostics();
     }
 
