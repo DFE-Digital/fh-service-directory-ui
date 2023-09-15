@@ -9,6 +9,7 @@ using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using Serilog;
 using Serilog.Events;
 
@@ -42,6 +43,12 @@ public static class StartupExtensions
     {
         services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
+
+        services.Configure<AzureBlobLoggerOptions>(options =>
+        {
+            //set the last section of log blob name
+            options.BlobName = "applog.txt";
+        });
 
         // Add services to the container.
         services.AddRazorPages();
