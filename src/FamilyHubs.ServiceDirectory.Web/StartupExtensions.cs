@@ -33,6 +33,8 @@ public static class StartupExtensions
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
+
+        builder.Logging.AddAzureWebAppDiagnostics();
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
