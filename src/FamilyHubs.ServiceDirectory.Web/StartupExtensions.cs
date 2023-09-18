@@ -35,7 +35,7 @@ public static class StartupExtensions
                 parsed ? logLevel : LogEventLevel.Warning);
         });
 
-        builder.Logging.ClearProviders();
+        //builder.Logging.ClearProviders();
         builder.Logging.AddAzureWebAppDiagnostics();
     }
 
@@ -47,7 +47,7 @@ public static class StartupExtensions
         services.Configure<AzureBlobLoggerOptions>(options =>
         {
             //set the last section of log blob name
-            options.BlobName = "applog.txt";
+            options.BlobName = "sduilog.txt";
         });
 
         // Add services to the container.
