@@ -6,7 +6,7 @@
 
     if (gaMeasurementId != "")
     {
-        <script>
+        <script asp-add-nonce>
             window.GA_MEASUREMENT_ID = '@gaMeasurementId';
             window.GA_CONTAINER_ID = '@gaContainerId';
         </script>

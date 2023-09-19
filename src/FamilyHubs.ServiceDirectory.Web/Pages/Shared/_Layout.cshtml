@@ -30,7 +30,7 @@
 </head>
 
 <body class="govuk-template__body">
-    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <script asp-add-nonce>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
     <partial name="_CookieBanner.cshtml"/>
 
@@ -54,7 +54,7 @@
     <script src="~/js/govuk-frontend-4.5.0.min.js"></script>
     <script src="~/js/app.js" asp-append-version="true"></script>
 
-    <script>
+    <script asp-add-nonce>
         //todo: initialize just the components we use
         window.GOVUKFrontend.initAll();
     </script>
