@@ -1,22 +1,11 @@
 ﻿@page
-@model FamilyHubs.ServiceDirectory.Web.Pages.Contact_Us.IndexModel
-
+@model FamilyHubs.ServiceDirectory.Web.Pages.Shared.FamilyHubsUiPageModel
 @{
     ViewData["Title"] = "Contact us";
 }
 
 @section Back {
-    <a class="govuk-back-link app-js-show fh-back-link">Back</a>
+    <a class="govuk-back-link fh-back-link">Back</a>
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-5 govuk-!-margin-top-2">Contact us</h1>
-    
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Email</h2>
-        <ul class="govuk-list">
-            <li><a href="mailto:find-support-for-your-family.service@education.gov.uk">find-support-for-your-family.service@education.gov.uk</a></li>
-            <li>We aim to respond within 5 working days.</li>
-        </ul>
-    </div>
-</div>
+<partial name="_ContactUs" model="Model.FamilyHubsUiOptions" />
