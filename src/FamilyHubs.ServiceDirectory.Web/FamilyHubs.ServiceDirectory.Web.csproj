@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Shared\" />
     <Folder Include="wwwroot\lib\govuk\assets\js\" />
   </ItemGroup>
 
