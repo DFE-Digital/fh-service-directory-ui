@@ -50,7 +50,7 @@ else {
                                 </div>
 
                                 <div class="moj-filter__heading-action">
-                                    <p><button type="submit" class="app-button-link govuk-!-font-size-16" name="@IFilter.RemoveKey" value="@IFilter.RemoveAllValue">Clear filters</button></p>
+                                    <p><button type="submit" class="fh-button-link govuk-!-font-size-16" name="@IFilter.RemoveKey" value="@IFilter.RemoveAllValue">Clear filters</button></p>
                                 </div>
                             </div>
 
@@ -137,7 +137,7 @@ else {
                         <partial name="_Service" model='service'/>
                     }
 
-                    <partial name="_Pagination" model='Model.Pagination'/>
+                    <partial name="_LargeSetPaginationForm" model='Model.Pagination' />
                 }
             </div>
         </div>

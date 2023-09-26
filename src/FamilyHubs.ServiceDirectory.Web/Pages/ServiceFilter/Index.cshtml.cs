@@ -1,6 +1,4 @@
 using System.Dynamic;
-using FamilyHubs.ServiceDirectory.Core.Pagination;
-using FamilyHubs.ServiceDirectory.Core.Pagination.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
@@ -9,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
+using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
@@ -18,7 +17,7 @@ namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 public class ServiceFilterModel : PageModel
 {
     // simpler than asking all the filters to remove themselves
-    private static HashSet<string> _parametersWhitelist = new HashSet<string>
+    private static HashSet<string> _parametersWhitelist = new()
     {
         "postcode",
         "adminarea",
@@ -43,7 +42,10 @@ public class ServiceFilterModel : PageModel
     private readonly IPageFilterFactory _pageFilterFactory;
     private const int PageSize = 10;
 
-    public ServiceFilterModel(IServiceDirectoryClient serviceDirectoryClient, IPostcodeLookup postcodeLookup, IPageFilterFactory pageFilterFactory)
+    public ServiceFilterModel(
+        IServiceDirectoryClient serviceDirectoryClient,
+        IPostcodeLookup postcodeLookup,
+        IPageFilterFactory pageFilterFactory)
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
@@ -209,7 +211,7 @@ public class ServiceFilterModel : PageModel
         // before each page load we need to initialise default filter options
         Filters = await _pageFilterFactory.GetDefaultFilters();
 
-        // if we got here from PostCode search then just used above Default filters else apply the filters from the query parameters
+        // if we got here from PostCode search, then just used above Default filters else apply the filters from the query parameters
         if (!FromPostcodeSearch)
         {
             Filters = Filters.Select(fd => fd.Apply(Request.Query));
@@ -244,4 +246,3 @@ public class ServiceFilterModel : PageModel
         return (ServiceMapper.ToViewModel(services.Items), pagination);
     }
 }
-

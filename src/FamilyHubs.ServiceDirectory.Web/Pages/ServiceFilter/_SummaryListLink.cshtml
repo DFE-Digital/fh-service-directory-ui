@@ -15,7 +15,7 @@
                     <a href="@(Model.Value)">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description)</a>
                     break;
                 case LinkType.WebPageInNewTab:
-                    <a href="@(Model.Value)" rel="noreferrer noopener" target="_blank">@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description) (opens in new tab)</a>
+                    <a href="@(Model.Value)" fh-new-tab>@(string.IsNullOrEmpty(Model.Description) ? Model.Value : Model.Description)</a>
                     break;
                 case LinkType.Email:
                     <a href="mailto:@(Model.Value)">@Model.Value</a>
