@@ -1,7 +1,25 @@
-using System.Globalization;
-using FamilyHubs.ServiceDirectory.Web.Cookies;
+using FamilyHubs.SharedKernel.Razor.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+namespace FamilyHubs.ServiceDirectory.Web.Pages.cookies;
+
+public class IndexModel : PageModel
+{
+    public readonly ICookiePage CookiePage;
+
+    public IndexModel(ICookiePage cookiePage)
+    {
+        CookiePage = cookiePage;
+    }
+
+    public void OnPost(bool analytics)
+    {
+        CookiePage.OnPost(analytics, Request, Response);
+    }
+}
+
+//todo: add javascript disabled version to fh components
+#if false
 namespace FamilyHubs.ServiceDirectory.Web.Pages.Cookies;
 
 //todo: use post redirect get?
@@ -92,3 +110,4 @@ public class IndexModel : PageModel
         }
     }
 }
+#endif
