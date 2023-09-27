@@ -44,3 +44,78 @@ see... https://frontend.design-system.service.gov.uk/installing-with-npm/#instal
 `Do not use either LibSass or Ruby Sass, which are deprecated, for new projects.`
 
 * pick up govuk js from node_modules and only initialize import what we need: https://frontend.design-system.service.gov.uk/importing-css-assets-and-javascript/#select-and-initialise-an-individual-component
+
+* _service using new th has encoding issues...
+
+@using Microsoft.AspNetCore.Html
+@model Service
+
+<div class="app-service">
+    <div class="govuk-summary-list__row">
+        <div class="govuk-summary-list__key">
+            @*todo: description on view enum? - think it will come from db*@
+            <span class="govuk-caption-m govuk-!-margin-top-3">@(Model.Type == ServiceType.FamilyHub ? "Family hub" : "Service and groups")</span>
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-0">@Model.Name <span class="govuk-!-font-weight-regular"> (@Model.Distance?.ToString("0.0") miles)</span></h3>
+        </div>
+    </div>
+    
+    <summary-list border="false">
+            
+        @if (Model.Type == ServiceType.Service)
+        {
+            <summary-list-row key="Category">@ToBreakHtml(Model.Categories)</summary-list-row>
+            <summary-list-row key="Age range">@Model.AgeRange</summary-list-row>
+            <summary-list-row key="When">@ToBreakHtml(Model.When)</summary-list-row>
+
+            <partial name="_SummaryListRows" model='("Category", Model.Categories)' />
+            <partial name="_SummaryListRow" model='("Age range", Model.AgeRange)' />
+            <partial name="_SummaryListRows" model='("When", Model.When)' />
+        }
+
+        <summary-list-row key="Where">@ToBreakHtml(Model.Where)</summary-list-row>
+        <partial name="_SummaryListRows" model='("Where", Model.Where)' />
+        
+        @*todo: how best to handle when these are missing *@
+        @if (!string.IsNullOrEmpty(Model.Phone))
+        {
+            <summary-list-row key="Phone"><a phone="@Model.Phone"></a></summary-list-row>
+        }
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <summary-list-row key="Email"><a email="@Model.Email"></a></summary-list-row>
+        }
+        @if (!string.IsNullOrEmpty(Model.WebsiteUrl))
+        {
+            <summary-list-row key="Website"><a web-page="@Model.WebsiteUrl" new-tab>@Model.WebsiteName</a></summary-list-row>
+        }
+        @*todo: default not nice*@
+        <partial name="_SummaryListLink" model='("Phone", Model.Phone, LinkType.Phone, default(string?))' />
+        <partial name="_SummaryListLink" model='("Email", Model.Email, LinkType.Email, default(string?))' />
+        <partial name="_SummaryListLink" model='("Website", Model.WebsiteUrl, LinkType.WebPageInNewTab, Model.WebsiteName)' />
+
+        @if (Model.Type == ServiceType.FamilyHub)
+        {
+            <summary-list-row key="Opening hours">@ToBreakHtml(Model.When)</summary-list-row>
+            <partial name="_SummaryListRows" model='("Opening hours", Model.When)' />
+        }
+        else
+        {
+            <summary-list-row key="Cost">@ToBreakHtml(Model.Cost)</summary-list-row>
+            <partial name="_SummaryListRows" model='("Cost", Model.Cost)' />
+        }
+    </summary-list>
+</div>
+
+@functions
+{
+    //todo: give better name and move to components?
+    private IHtmlContent ToBreakHtml(IEnumerable<string> lines)
+    {
+        // var html = string.Join("<br/>", lines.Select(line => System.Text.Encodings.Web.HtmlEncoder.Default.Encode(line)));
+        // return new HtmlString(html);
+
+        //return Html.Raw(string.Join("<br />", lines));
+        return new HtmlString(string.Join("<br />", lines));
+
+    }
+}
