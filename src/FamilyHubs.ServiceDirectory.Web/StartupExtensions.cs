@@ -19,6 +19,7 @@ public static class StartupExtensions
 {
     public static void ConfigureHost(this WebApplicationBuilder builder)
     {
+#if USE_SERILOGINAPP
         // ApplicationInsights
         builder.Host.UseSerilog((_, services, loggerConfiguration) =>
         {
@@ -36,7 +37,9 @@ public static class StartupExtensions
         });
 
         //builder.Logging.ClearProviders();
+        //builder.Logging.AddConsole();
         builder.Logging.AddAzureWebAppDiagnostics();
+#endif
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
@@ -69,7 +72,9 @@ public static class StartupExtensions
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
+#if USE_SERILOGINAPP
         app.UseSerilogRequestLogging();
+#endif
 
         app.UseAppSecurityHeaders();
 

@@ -18,6 +18,10 @@
     <NoWarn>1701;1702;S1135;S125</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);USE_SERILOGINAPP</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
 	  <Content Include="scripts\**\*.ts" />
   </ItemGroup>
