@@ -18,7 +18,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     private readonly IMemoryCache _memoryCache;
     private static string? _endpoint;
     internal const string HttpClientName = "servicedirectory";
-    private static readonly string GetServicesBaseUri = "api/services?serviceType=FamilyExperience";
+    private static readonly string GetServicesBaseUri = "api/services-simple?serviceType=FamilyExperience";
 
     public ServiceDirectoryClient(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
     {
