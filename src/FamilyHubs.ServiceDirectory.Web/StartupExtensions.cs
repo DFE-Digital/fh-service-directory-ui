@@ -40,6 +40,8 @@ public static class StartupExtensions
         services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
+        services.AddAntiforgery(o => o.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+
         // Add services to the container.
         services.AddRazorPages();
 
