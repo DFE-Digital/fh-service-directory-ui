@@ -111,6 +111,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         // optional params
         queryParams
             .AddOptionalQueryParams("proximity", servicesParams.MaximumProximityMeters)
+            .AddOptionalQueryParams("allChildrenYoungPeople", servicesParams.AllChildrenYoungPeople)
             .AddOptionalQueryParams("givenAge", servicesParams.GivenAge)
             .AddOptionalQueryParams("isPaidFor", servicesParams.IsPaidFor)
             .AddOptionalQueryParams("pageNumber", servicesParams.PageNumber)

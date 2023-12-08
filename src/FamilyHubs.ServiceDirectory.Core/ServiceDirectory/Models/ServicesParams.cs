@@ -14,6 +14,7 @@ public class ServicesParams
     public float Latitude { get; set; }
     public float Longitude { get; set; }
     public int? MaximumProximityMeters { get; set; }
+    public bool? AllChildrenYoungPeople { get; set; }
     public int? GivenAge { get; set; }
     public bool? IsPaidFor { get; set; }
     public int? MaxFamilyHubs { get; set; }
