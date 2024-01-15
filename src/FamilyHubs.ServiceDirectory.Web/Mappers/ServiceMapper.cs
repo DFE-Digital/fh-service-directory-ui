@@ -93,30 +93,10 @@ public static class ServiceMapper
         if (!service.CostOptions.Any())
         {
             return new[] { Free };
-        }
-
-        var cost = new List<string>();
-        var firstCost = service.CostOptions.First();
-
-        if (firstCost.Amount is null or decimal.Zero)
+        }else
         {
-            return new[] { Free };
-        }
-        
-        if (firstCost.Amount is not null && firstCost.Amount != decimal.Zero)
-        {
-            var ukNumberFormat = new CultureInfo("en-GB", false).NumberFormat;
-            var amount = firstCost.Amount.Value.ToString("C0", ukNumberFormat);
-            cost.Add($"{amount} every {firstCost.AmountDescription?.ToLowerInvariant()}");
-        }
-
-        if (!string.IsNullOrWhiteSpace(firstCost.Option))
-        {
-            var splitCostOptions = firstCost.Option.Split("\n");
-            cost.AddRange(splitCostOptions);
-        }
-
-        return cost;
+            return new[] { "Yes, it costs money to use. " + service.CostOptions.First().AmountDescription };
+        }       
     }
 
     private static string AgeToString(int age)
