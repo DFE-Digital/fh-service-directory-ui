@@ -1,7 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Web.Models;
 using System.Diagnostics;
-using System.Globalization;
 using FamilyHubs.ServiceDirectory.Core.Distance;
+using FamilyHubs.ServiceDirectory.Shared.Display;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Extensions;
@@ -33,7 +33,7 @@ public static class ServiceMapper
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
             GetAddress(serviceAtLocation),
-            GetWhen(service),
+            service.GetServiceAvailability(),
             GetCategories(service),
             GetAgeRange(eligibility),
             contact?.Telephone,
@@ -76,14 +76,6 @@ public static class ServiceMapper
         return RemoveEmpty(location.Name)
             .Concat(RemoveEmpty(splitAddress1))
             .Concat(RemoveEmpty(location.City, location.StateProvince, location.PostCode));
-    }
-
-    private static IEnumerable<string> GetWhen(ServiceDto service)
-    {
-        var when =
-            service.Schedules.FirstOrDefault()?.Description?.Split('\n').Select(l => l.Trim())
-            ?? Enumerable.Empty<string>();
-        return when;
     }
 
     private static IEnumerable<string> GetCost(ServiceDto service)
