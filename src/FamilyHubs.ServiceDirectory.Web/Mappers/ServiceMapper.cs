@@ -81,7 +81,7 @@ public static class ServiceMapper
     private static IEnumerable<string> GetWhen(ServiceDto service)
     {
         var when =
-            service.RegularSchedules.FirstOrDefault()?.Description?.Split('\n').Select(l => l.Trim())
+            service.Schedules.FirstOrDefault()?.Description?.Split('\n').Select(l => l.Trim())
             ?? Enumerable.Empty<string>();
         return when;
     }
