@@ -1,4 +1,4 @@
-using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
+using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.PostcodeSearch;
