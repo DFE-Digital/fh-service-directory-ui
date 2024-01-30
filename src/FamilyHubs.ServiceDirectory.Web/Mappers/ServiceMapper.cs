@@ -80,15 +80,13 @@ public static class ServiceMapper
 
     private static IEnumerable<string> GetCost(ServiceDto service)
     {
-        const string Free = "Free";
+        const string free = "Free";
 
         if (!service.CostOptions.Any())
         {
-            return new[] { Free };
-        }else
-        {
-            return new[] { "Yes, it costs money to use. " + service.CostOptions.First().AmountDescription };
-        }       
+            return new[] { free };
+        }
+        return new[] { "Yes, it costs money to use. " + service.CostOptions.First().AmountDescription };
     }
 
     private static string AgeToString(int age)
