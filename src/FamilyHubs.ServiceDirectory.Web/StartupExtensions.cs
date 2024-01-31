@@ -1,9 +1,8 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.PostcodesIo.Extensions;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
-using FamilyHubs.SharedKernel.Razor.Security;
+using FamilyHubs.SharedKernel.Services.PostcodesIo;
+using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
 using FamilyHubs.SharedKernel.Telemetry;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;

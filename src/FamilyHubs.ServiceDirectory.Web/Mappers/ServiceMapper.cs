@@ -21,18 +21,18 @@ public static class ServiceMapper
     {
         Debug.Assert(service.ServiceType == Shared.Enums.ServiceType.FamilyExperience);
 
-        var serviceAtLocation = service.Locations.First();
+        var location = service.Locations.First();
         var eligibility = service.Eligibilities.FirstOrDefault();
 
         var name = service.Name;
         var contact = service.GetContact();
 
         return new Service(
-            IsFamilyHub(serviceAtLocation) ? ServiceType.FamilyHub : ServiceType.Service,
+            IsFamilyHub(location) ? ServiceType.FamilyHub : ServiceType.Service,
             name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
-            GetAddress(serviceAtLocation),
+            location.GetAddress(),
             service.GetServiceAvailability(),
             GetCategories(service),
             GetAgeRange(eligibility),
@@ -69,35 +69,19 @@ public static class ServiceMapper
         return  service.Taxonomies.OrderBy(st => st.ParentId).ThenBy(st => st.Id).Select(st => st.Name);
     }
 
-    private static IEnumerable<string> GetAddress(LocationDto location)
-    {
-        var splitAddress1 = location.Address1.Split('|');
-
-        return RemoveEmpty(location.Name)
-            .Concat(RemoveEmpty(splitAddress1))
-            .Concat(RemoveEmpty(location.City, location.StateProvince, location.PostCode));
-    }
-
     private static IEnumerable<string> GetCost(ServiceDto service)
     {
-        const string Free = "Free";
+        const string free = "Free";
 
         if (!service.CostOptions.Any())
         {
-            return new[] { Free };
-        }else
-        {
-            return new[] { "Yes, it costs money to use. " + service.CostOptions.First().AmountDescription };
-        }       
+            return new[] { free };
+        }
+        return new[] { "Yes, it costs money to use. " + service.CostOptions.First().AmountDescription };
     }
 
     private static string AgeToString(int age)
     {
         return age == 127 ? "25+" : age.ToString();
-    }
-
-    private static IEnumerable<string> RemoveEmpty(params string?[] list)
-    {
-        return list.Where(x => !string.IsNullOrWhiteSpace(x))!;
     }
 }
