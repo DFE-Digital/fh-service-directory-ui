@@ -49,7 +49,7 @@ public static class ServiceMapper
 
     private static bool IsFamilyHub(LocationDto location)
     {
-        return location.LocationType == LocationType.FamilyHub;
+        return location.LocationTypeCategory == LocationTypeCategory.FamilyHub;
     }
 
     private static string? GetWebsiteUrl(string? url)
