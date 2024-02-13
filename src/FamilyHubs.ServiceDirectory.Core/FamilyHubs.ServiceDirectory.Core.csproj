@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="6.1.1" />
+	  <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="6.1.2" />
 	  <PackageReference Include="FamilyHubs.SharedKernel" Version="2.2.1" />
 	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
 	    <PrivateAssets>all</PrivateAssets>
