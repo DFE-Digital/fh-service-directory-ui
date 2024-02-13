@@ -4,7 +4,7 @@
 
 @if (Model.Values.Any())
 {
-    var values = string.Join("<br/>", Model.Values);
+    var values = string.Join(", ", Model.Values);
     @if (!string.IsNullOrWhiteSpace(values))
     {
         <div class="govuk-summary-list__row">
