@@ -44,9 +44,16 @@ public class ChildrenAndYoungPeopleFilter : FilterOptionalSelect
     public override void AddFilterCriteria(IEnumerable<IFilterAspect> selectedAspects, ServicesParams servicesParams)
     {
         var childFilterAspect = selectedAspects.FirstOrDefault();
-        if (childFilterAspect != null && childFilterAspect.Id != ChildrenAndYoungPeopleAllId)
+        if (childFilterAspect != null)
         {
-            servicesParams.GivenAge = int.Parse(childFilterAspect.Id);
+            if (childFilterAspect.Id == ChildrenAndYoungPeopleAllId)
+            {
+                servicesParams.AllChildrenYoungPeople = true;
+            }
+            else
+            {
+                servicesParams.GivenAge = int.Parse(childFilterAspect.Id);
+            }
         }
     }
 }

@@ -4,10 +4,10 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Core.UrlHelpers;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using FamilyHubs.ServiceDirectory.Core.Exceptions;
-using FamilyHubs.ServiceDirectory.Core.HealthCheck;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Exceptions;
+using FamilyHubs.SharedKernel.HealthCheck;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -111,6 +111,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         // optional params
         queryParams
             .AddOptionalQueryParams("proximity", servicesParams.MaximumProximityMeters)
+            .AddOptionalQueryParams("allChildrenYoungPeople", servicesParams.AllChildrenYoungPeople)
             .AddOptionalQueryParams("givenAge", servicesParams.GivenAge)
             .AddOptionalQueryParams("isPaidFor", servicesParams.IsPaidFor)
             .AddOptionalQueryParams("pageNumber", servicesParams.PageNumber)

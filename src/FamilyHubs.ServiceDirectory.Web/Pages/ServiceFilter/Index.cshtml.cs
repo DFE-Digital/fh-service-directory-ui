@@ -1,6 +1,4 @@
 using System.Dynamic;
-using FamilyHubs.ServiceDirectory.Core.Postcode.Interfaces;
-using FamilyHubs.ServiceDirectory.Core.Postcode.Model;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
@@ -8,6 +6,8 @@ using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
+using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
