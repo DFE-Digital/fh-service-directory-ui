@@ -38,7 +38,7 @@ public static class ServiceDirectoryClientServiceCollectionExtension
                 .WaitAndRetryAsync(delay, (_, timeSpan, retryAttempt, _) =>
                 {
                     callbackServices.GetService<ILogger<ServiceDirectoryClient>>()?
-                        .LogWarning("Delaying for {timeSpan}, then making retry {RetryAttempt}.",
+                        .LogWarning("Delaying for {TimeSpan}, then making retry {RetryAttempt}.",
                             timeSpan, retryAttempt);
                 }))
             .AddPolicyHandler(timeoutPolicy);
