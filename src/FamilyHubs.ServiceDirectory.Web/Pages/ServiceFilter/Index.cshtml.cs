@@ -1,7 +1,9 @@
 using System.Dynamic;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Web.Content;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -40,16 +42,21 @@ public class ServiceFilterModel : PageModel
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private readonly IPostcodeLookup _postcodeLookup;
     private readonly IPageFilterFactory _pageFilterFactory;
+    // private readonly IHttpClientFactory _httpClientFactory;
     private const int PageSize = 10;
 
     public ServiceFilterModel(
         IServiceDirectoryClient serviceDirectoryClient,
         IPostcodeLookup postcodeLookup,
-        IPageFilterFactory pageFilterFactory)
+        IPageFilterFactory pageFilterFactory,
+        IHttpClientFactory httpClientFactory
+    )
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
         _pageFilterFactory = pageFilterFactory;
+        // _httpClientFactory = httpClientFactory;
+
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -219,8 +226,57 @@ public class ServiceFilterModel : PageModel
 
         (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
 
+        // if (Postcode is not null)
+        //     await PostServiceSearch(FromPostcodeSearch, Postcode!, Filters, Services);
+
         return Page();
     }
+
+//     private async Task PostServiceSearch(
+//         bool fromPostcodeSearch,
+//         string postcode,
+//         IEnumerable<IFilter> filters,
+//         IEnumerable<Service> services,
+//         DateTime requestTimestamp,
+//         DateTime? responseTimestamp
+        
+//     )
+//     {
+//         string? defaultSearchWithinValue
+//             = filters
+//                 .FirstOrDefault(f => f.Name == SearchWithinFilter.SEARCH_WITHIN_FILTER_NAME)?.Aspects
+//                 .FirstOrDefault(a => a.SelectedByDefault)?.Value ?? null;
+//         int? defaultSearchWithin = defaultSearchWithinValue is not null 
+//             ? int.Parse(defaultSearchWithinValue) : null;
+
+//         int? searchWithin = null;
+//         if (fromPostcodeSearch)
+//         {
+//             // If coming from postcode search, use the default value of 'search_within' filter
+//             // as the default value doesn't get appended to the query string in this scenario
+//             searchWithin = defaultSearchWithin;
+//         } else {
+//             searchWithin = 67; // TODO: Get selected filter
+//         }
+
+
+//         HttpClient httpClient = _httpClientFactory.CreateClient();
+
+//         // TODO: Send message
+
+//         var serviceSearch = new ServiceSearchDto
+//         {
+//             SearchPostcode = postcode,
+//             SearchRadiusMiles = (byte)(searchWithin ?? 0),
+//             ServiceSearchType = "postcode-search",
+//             RequestTimestamp = requestTimestamp,
+//             ResponseTimestamp = responseTimestamp,
+
+//         }
+
+//         await httpClient.PostAsync("/api/metrics/service-search", null);
+
+//     }
 
     private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {

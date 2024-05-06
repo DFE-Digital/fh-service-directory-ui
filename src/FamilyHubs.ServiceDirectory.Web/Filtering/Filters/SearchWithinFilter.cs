@@ -6,7 +6,9 @@ namespace FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 
 public class SearchWithinFilter : Filter
 {
-    public SearchWithinFilter() : base("search_within", "Search within", RadiosPartialName, new IFilterAspect[]
+    public const string SEARCH_WITHIN_FILTER_NAME = "search_within";
+
+    public SearchWithinFilter() : base(SEARCH_WITHIN_FILTER_NAME, "Search within", RadiosPartialName, new IFilterAspect[]
     {
         new FilterAspect("1", "1 mile"),
         new FilterAspect("2", "2 miles"),
