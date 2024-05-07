@@ -8,6 +8,9 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.SharedKernel.Exceptions;
 using FamilyHubs.SharedKernel.HealthCheck;
+using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
+using System.Net.Http.Json;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -28,7 +31,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
     public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(ServicesParams servicesParams, CancellationToken cancellationToken = default)
     {
-        var services = await GetServices(servicesParams, cancellationToken);
+        var (services, _) = await GetServices(servicesParams, cancellationToken);
 
         IEnumerable<ServiceWithOrganisation> servicesWithOrganisations = await Task.WhenAll(
             services.Items.Select(async s =>
@@ -96,7 +99,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return taxonomies;
     }
 
-    public async Task<PaginatedList<ServiceDto>> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default)
+    public async Task<Tuple<PaginatedList<ServiceDto>, HttpResponseMessage?>> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -143,7 +146,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             throw new ServiceDirectoryClientException(response, "null");
         }
 
-        return services;
+        return new Tuple<PaginatedList<ServiceDto>, HttpResponseMessage?>(services, response);
     }
 
     public Task<OrganisationDto> GetOrganisation(long id, CancellationToken cancellationToken = default)
@@ -223,5 +226,36 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     {
         //todo: add health check to API with DbContext probe
         return new Uri(new Uri(GetEndpoint(configuration)), "api/info");
+    }
+
+    public async Task RecordServiceSearch(
+        ServiceDirectorySearchEventType eventType,
+        string postcode,
+        byte? searchWithin,
+        IEnumerable<ServiceDto> services,
+        DateTime requestTimestamp,
+        DateTime? responseTimestamp,
+        HttpStatusCode? responseStatusCode
+    )
+    {
+        HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        var serviceSearch = new ServiceSearchDto
+        {
+            SearchPostcode = postcode,
+            SearchRadiusMiles = searchWithin ?? 0,
+            ServiceSearchType = "find",
+            RequestTimestamp = requestTimestamp,
+            ResponseTimestamp = responseTimestamp,
+            HttpResponseCode = (short?)responseStatusCode,
+            SearchTriggerEventId = eventType,
+            ServiceSearchResults = services.Select(s => new ServiceSearchResultDto
+            {
+                ServiceId = s.Id,
+            })
+        };
+
+        await httpClient.PostAsJsonAsync("/api/metrics/service-search", serviceSearch);
+
     }
 }
