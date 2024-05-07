@@ -43,6 +43,7 @@ public class ServiceFilterModel : PageModel
     public int CurrentPage { get; set; }
     public IPagination Pagination { get; set; }
     public int TotalResults { get; set; }
+    public Guid CorrelationId { get; set; }
 
     public byte? SelectedFilterDistance 
     {
@@ -206,7 +207,7 @@ public class ServiceFilterModel : PageModel
         return true;
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
+    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch, Guid? correlationId)
     {
         if (AnyParametersMissing(postcode, adminArea, latitude, longitude))
         {
@@ -217,7 +218,7 @@ public class ServiceFilterModel : PageModel
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
 
-        return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
+        return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch, correlationId ?? Guid.NewGuid());
     }
 
     private static bool AnyParametersMissing(string? postcode, string? adminArea, float? latitude, float? longitude)
@@ -228,7 +229,7 @@ public class ServiceFilterModel : PageModel
             || longitude == null;
     }
 
-    private async Task<IActionResult> HandleGet(string postcode, string adminArea, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch)
+    private async Task<IActionResult> HandleGet(string postcode, string adminArea, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch, Guid correlationId)
     {
         FromPostcodeSearch = fromPostcodeSearch == true;
         Postcode = postcode;
@@ -236,6 +237,7 @@ public class ServiceFilterModel : PageModel
         Latitude = latitude;
         Longitude = longitude;
         CurrentPage = pageNum ?? 1;
+        CorrelationId = correlationId;
 
         // before each page load we need to initialise default filter options
         Filters = await _pageFilterFactory.GetDefaultFilters();
@@ -252,10 +254,9 @@ public class ServiceFilterModel : PageModel
             
             (PaginatedList<ServiceDto> paginatedServices, Pagination, HttpResponseMessage? response) 
                 = await GetServicesAndPagination(adminArea, latitude, longitude);
+            UpdateServicesPagination(paginatedServices);
 
             DateTime? responseTimestamp = response is not null ? DateTime.UtcNow : null;
-
-            Services = ServiceMapper.ToViewModel(paginatedServices.Items);
 
             if (Postcode is not null)
             {
@@ -272,7 +273,8 @@ public class ServiceFilterModel : PageModel
                     paginatedServices.Items,
                     requestTimestamp,
                     responseTimestamp,
-                    response?.StatusCode
+                    response?.StatusCode,
+                    CorrelationId
                 );
 
             }
@@ -306,8 +308,12 @@ public class ServiceFilterModel : PageModel
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
 
-        TotalResults = services.TotalCount;
-
         return (services, pagination, response);
+    }
+
+    private void UpdateServicesPagination(PaginatedList<ServiceDto> paginatedServices) 
+    {
+        TotalResults = paginatedServices.TotalCount;
+        Services = ServiceMapper.ToViewModel(paginatedServices.Items);
     }
 }
