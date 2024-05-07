@@ -235,7 +235,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,
         DateTime? responseTimestamp,
-        HttpStatusCode? responseStatusCode
+        HttpStatusCode? responseStatusCode,
+        Guid correlationId
     )
     {
         HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
@@ -249,6 +250,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             ResponseTimestamp = responseTimestamp,
             HttpResponseCode = (short?)responseStatusCode,
             SearchTriggerEventId = eventType,
+            CorrelationId = correlationId.ToString(),
             ServiceSearchResults = services.Select(s => new ServiceSearchResultDto
             {
                 ServiceId = s.Id,

@@ -32,6 +32,7 @@ public interface IServiceDirectoryClient
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,
         DateTime? responseTimestamp,
-        HttpStatusCode? responseStatusCode
+        HttpStatusCode? responseStatusCode,
+        Guid correlationId
     );
 }
