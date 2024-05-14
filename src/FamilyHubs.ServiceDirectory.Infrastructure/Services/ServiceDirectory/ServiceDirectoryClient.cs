@@ -245,7 +245,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         {
             SearchPostcode = postcode,
             SearchRadiusMiles = searchWithin ?? 0,
-            ServiceSearchType = "find",
+            ServiceSearchTypeId = ServiceType.FamilyExperience,
             RequestTimestamp = requestTimestamp,
             ResponseTimestamp = responseTimestamp,
             HttpResponseCode = (short?)responseStatusCode,
