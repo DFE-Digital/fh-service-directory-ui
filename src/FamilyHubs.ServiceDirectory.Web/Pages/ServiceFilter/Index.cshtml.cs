@@ -289,7 +289,11 @@ public class ServiceFilterModel : PageModel
         return Page();
     }
 
-    private async Task<(PaginatedList<ServiceDto>, IPagination, HttpResponseMessage?)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
+    private async Task<(
+        PaginatedList<ServiceDto> services,
+        IPagination pagination,
+        HttpResponseMessage? response
+    )> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
         var serviceParams = new ServicesParams(adminArea, latitude, longitude)
         {

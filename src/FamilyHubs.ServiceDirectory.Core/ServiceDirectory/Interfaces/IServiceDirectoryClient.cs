@@ -11,7 +11,7 @@ public interface IServiceDirectoryClient
 {
     // leaky, not clean, but this is our service, as opposed to a generic service that we might want to swap
     Task<PaginatedList<TaxonomyDto>> GetTaxonomies(CancellationToken cancellationToken = default);
-    Task<Tuple<PaginatedList<ServiceDto>, HttpResponseMessage?>> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default);
+    Task<(PaginatedList<ServiceDto> services, HttpResponseMessage? response)> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Fetches an organisation from the service directory

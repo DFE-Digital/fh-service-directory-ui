@@ -99,7 +99,10 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         return taxonomies;
     }
 
-    public async Task<Tuple<PaginatedList<ServiceDto>, HttpResponseMessage?>> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default)
+    public async Task<(
+        PaginatedList<ServiceDto> services,
+        HttpResponseMessage? response
+    )> GetServices(ServicesParams servicesParams, CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -146,7 +149,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             throw new ServiceDirectoryClientException(response, "null");
         }
 
-        return new Tuple<PaginatedList<ServiceDto>, HttpResponseMessage?>(services, response);
+        return (services, response);
     }
 
     public Task<OrganisationDto> GetOrganisation(long id, CancellationToken cancellationToken = default)
