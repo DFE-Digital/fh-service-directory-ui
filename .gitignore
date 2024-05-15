@@ -352,3 +352,5 @@ MigrationBackup/
 
 # Gulp tasks temporary folder
 tmp/
+
+.DS_Store

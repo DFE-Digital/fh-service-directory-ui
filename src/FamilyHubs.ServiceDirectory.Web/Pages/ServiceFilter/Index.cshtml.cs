@@ -1,7 +1,14 @@
 using System.Dynamic;
+using System.Net;
+using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
+using FamilyHubs.ServiceDirectory.Web.Filtering.Filters;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
 using FamilyHubs.ServiceDirectory.Web.Models;
@@ -36,20 +43,43 @@ public class ServiceFilterModel : PageModel
     public int CurrentPage { get; set; }
     public IPagination Pagination { get; set; }
     public int TotalResults { get; set; }
+    public Guid CorrelationId { get; set; }
+
+    public byte? SelectedFilterDistance 
+    {
+        get
+        {
+            string? selectedFilterDistanceStr = Filters
+                .FirstOrDefault(f => f.Name == SearchWithinFilter.SEARCH_WITHIN_FILTER_NAME)?.SelectedAspects
+                .FirstOrDefault()?.Value;
+
+            if (selectedFilterDistanceStr is not null)
+            {
+                return byte.Parse(selectedFilterDistanceStr);
+            }
+
+            return null;
+        }
+    }
 
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private readonly IPostcodeLookup _postcodeLookup;
     private readonly IPageFilterFactory _pageFilterFactory;
+    private readonly ILogger<ServiceFilterModel> _logger;
     private const int PageSize = 10;
 
     public ServiceFilterModel(
         IServiceDirectoryClient serviceDirectoryClient,
         IPostcodeLookup postcodeLookup,
-        IPageFilterFactory pageFilterFactory)
+        IPageFilterFactory pageFilterFactory,
+        ILogger<ServiceFilterModel> logger
+    )
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
         _pageFilterFactory = pageFilterFactory;
+        _logger = logger;
+
         Services = Enumerable.Empty<Service>();
         OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
@@ -177,7 +207,7 @@ public class ServiceFilterModel : PageModel
         return true;
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
+    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch, Guid? correlationId)
     {
         if (AnyParametersMissing(postcode, adminArea, latitude, longitude))
         {
@@ -188,18 +218,18 @@ public class ServiceFilterModel : PageModel
             return Task.FromResult<IActionResult>(RedirectToPage("/PostcodeSearch/Index"));
         }
 
-        return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
+        return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch, correlationId ?? Guid.NewGuid());
     }
 
     private static bool AnyParametersMissing(string? postcode, string? adminArea, float? latitude, float? longitude)
     {
         return string.IsNullOrEmpty(postcode)
-               || string.IsNullOrEmpty(adminArea)
-               || latitude == null
-               || longitude == null;
+            || string.IsNullOrEmpty(adminArea)
+            || latitude == null
+            || longitude == null;
     }
 
-    private async Task<IActionResult> HandleGet(string postcode, string adminArea, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch)
+    private async Task<IActionResult> HandleGet(string postcode, string adminArea, float latitude, float longitude, int? pageNum, bool? fromPostcodeSearch, Guid correlationId)
     {
         FromPostcodeSearch = fromPostcodeSearch == true;
         Postcode = postcode;
@@ -207,6 +237,7 @@ public class ServiceFilterModel : PageModel
         Latitude = latitude;
         Longitude = longitude;
         CurrentPage = pageNum ?? 1;
+        CorrelationId = correlationId;
 
         // before each page load we need to initialise default filter options
         Filters = await _pageFilterFactory.GetDefaultFilters();
@@ -217,12 +248,52 @@ public class ServiceFilterModel : PageModel
             Filters = Filters.Select(fd => fd.Apply(Request.Query));
         }
 
-        (Services, Pagination) = await GetServicesAndPagination(adminArea, latitude, longitude);
+        try
+        {
+            DateTime requestTimestamp = DateTime.UtcNow;
+            
+            (PaginatedList<ServiceDto> paginatedServices, Pagination, HttpResponseMessage? response) 
+                = await GetServicesAndPagination(adminArea, latitude, longitude);
+            UpdateServicesPagination(paginatedServices);
+
+            DateTime? responseTimestamp = response is not null ? DateTime.UtcNow : null;
+
+            if (Postcode is not null)
+            {
+                // If the user is coming from the initial postcode search page,
+                // FromPostCodeSearch will be true, and we can use this to differentiate
+                // between initial searches, and subsequent search query changes.
+                var eventType = FromPostcodeSearch ? ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch
+                    : ServiceDirectorySearchEventType.ServiceDirectorySearchFilter;
+
+                await _serviceDirectoryClient.RecordServiceSearch(
+                    eventType,
+                    Postcode!,
+                    SelectedFilterDistance,
+                    paginatedServices.Items,
+                    requestTimestamp,
+                    responseTimestamp,
+                    response?.StatusCode,
+                    CorrelationId
+                );
+
+            }
+                
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred storing service search metric. {ExceptionMessage}",
+                ex.Message);
+        }
 
         return Page();
     }
 
-    private async Task<(IEnumerable<Service>, IPagination)> GetServicesAndPagination(string adminArea, float latitude, float longitude)
+    private async Task<(
+        PaginatedList<ServiceDto> services,
+        IPagination pagination,
+        HttpResponseMessage? response
+    )> GetServicesAndPagination(string adminArea, float latitude, float longitude)
     {
         var serviceParams = new ServicesParams(adminArea, latitude, longitude)
         {
@@ -237,12 +308,16 @@ public class ServiceFilterModel : PageModel
 
         OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
 
-        var services = await _serviceDirectoryClient.GetServices(serviceParams);
+        var (services, response) = await _serviceDirectoryClient.GetServices(serviceParams);
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
 
-        TotalResults = services.TotalCount;
+        return (services, pagination, response);
+    }
 
-        return (ServiceMapper.ToViewModel(services.Items), pagination);
+    private void UpdateServicesPagination(PaginatedList<ServiceDto> paginatedServices) 
+    {
+        TotalResults = paginatedServices.TotalCount;
+        Services = ServiceMapper.ToViewModel(paginatedServices.Items);
     }
 }
