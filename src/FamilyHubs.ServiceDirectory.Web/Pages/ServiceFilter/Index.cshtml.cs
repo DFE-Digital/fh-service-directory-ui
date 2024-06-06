@@ -1,6 +1,7 @@
 using System.Dynamic;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Web.Content;
 using FamilyHubs.ServiceDirectory.Web.Filtering.Interfaces;
 using FamilyHubs.ServiceDirectory.Web.Mappers;
@@ -177,8 +178,15 @@ public class ServiceFilterModel : PageModel
         return true;
     }
 
-    public Task<IActionResult> OnGet(string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch)
+    public Task<IActionResult> OnGet(
+        string? postcode, string? adminArea, float? latitude, float? longitude, int? pageNum, bool? fromPostcodeSearch,
+        long? serviceId)
     {
+        if (serviceId != null)
+        {
+            return ShowServiceForRenderValidation(serviceId.Value);
+        }
+
         if (AnyParametersMissing(postcode, adminArea, latitude, longitude))
         {
             // handle cases:
@@ -189,6 +197,21 @@ public class ServiceFilterModel : PageModel
         }
 
         return HandleGet(postcode!, adminArea!, latitude!.Value, longitude!.Value, pageNum, fromPostcodeSearch);
+    }
+
+    private async Task<IActionResult> ShowServiceForRenderValidation(long serviceId)
+    {
+        Filters = await _pageFilterFactory.GetDefaultFilters();
+
+        var service = await _serviceDirectoryClient.GetServiceById(serviceId);
+
+        Pagination = new LargeSetPagination(1, 1);
+
+        TotalResults = 1;
+
+        Services = ServiceMapper.ToViewModel(new[] {service});
+
+        return Page();
     }
 
     private static bool AnyParametersMissing(string? postcode, string? adminArea, float? latitude, float? longitude)
