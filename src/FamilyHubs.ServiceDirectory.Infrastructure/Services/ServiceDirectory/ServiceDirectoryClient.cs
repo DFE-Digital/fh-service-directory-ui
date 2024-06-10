@@ -26,6 +26,30 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         _memoryCache = memoryCache;
     }
 
+    public async Task<ServiceDto> GetServiceById(long serviceId, CancellationToken cancellationToken = default)
+    {
+        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        var response = await httpClient.GetAsync($"api/services-simple/{serviceId}", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+
+        var service = await JsonSerializer.DeserializeAsync<ServiceDto>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            cancellationToken);
+
+        if (service is null)
+        {
+            throw new ServiceDirectoryClientException(response, "null");
+        }
+
+        return service;
+    }
+
     public async Task<PaginatedList<ServiceWithOrganisation>> GetServicesWithOrganisation(ServicesParams servicesParams, CancellationToken cancellationToken = default)
     {
         var services = await GetServices(servicesParams, cancellationToken);
