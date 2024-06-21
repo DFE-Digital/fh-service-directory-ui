@@ -1,12 +1,10 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
+using FamilyHubs.SharedKernel.Razor.Health;
 using FamilyHubs.SharedKernel.Services.PostcodesIo;
 using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
 using FamilyHubs.SharedKernel.Telemetry;
-using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Events;
@@ -42,11 +40,6 @@ public static class StartupExtensions
         // Add services to the container.
         services.AddRazorPages();
 
-        // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
-        services.AddHealthChecks()
-            .AddUrlGroup(PostcodesIoLookup.HealthUrl(configuration), "PostcodesIo", HealthStatus.Degraded, new[] {"ExternalAPI"})
-            .AddUrlGroup(ServiceDirectoryClient.HealthUrl(configuration), "ServiceDirectoryAPI", HealthStatus.Degraded, new[] { "InternalAPI" });
-
         // enable strict-transport-security header on localhost
 #if hsts_localhost
         services.AddHsts(o => o.ExcludedHosts.Clear());
@@ -55,6 +48,8 @@ public static class StartupExtensions
         services.AddPostcodesIoClient(configuration);
         services.AddServiceDirectoryClient(configuration);
         services.AddFamilyHubs(configuration);
+        services.AddFamilyHubsHealthChecks(configuration)
+            .AddUrlGroup(PostcodesIoLookup.HealthUrl(configuration), "PostcodesIo", HealthStatus.Degraded, new[] {"ExternalAPI"});
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
@@ -81,11 +76,7 @@ public static class StartupExtensions
 
         app.MapRazorPages();
 
-        app.MapHealthChecks("/health", new HealthCheckOptions
-        {
-            Predicate = _ => true,
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        });
+        app.MapFamilyHubsHealthChecks(typeof(StartupExtensions).Assembly);
 
         return app.Services;
     }
