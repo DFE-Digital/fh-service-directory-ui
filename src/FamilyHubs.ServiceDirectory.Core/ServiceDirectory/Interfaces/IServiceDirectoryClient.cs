@@ -28,6 +28,7 @@ public interface IServiceDirectoryClient
     Task RecordServiceSearch(
         ServiceDirectorySearchEventType eventType,
         string postcode,
+        string districtCode,
         byte? searchWithin,
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,

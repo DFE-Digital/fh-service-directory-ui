@@ -269,6 +269,7 @@ public class ServiceFilterModel : PageModel
                 await _serviceDirectoryClient.RecordServiceSearch(
                     eventType,
                     Postcode!,
+                    AdminArea,
                     SelectedFilterDistance,
                     paginatedServices.Items,
                     requestTimestamp,

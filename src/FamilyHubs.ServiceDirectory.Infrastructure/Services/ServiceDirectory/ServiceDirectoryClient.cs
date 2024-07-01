@@ -11,6 +11,8 @@ using FamilyHubs.SharedKernel.HealthCheck;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using System.Net.Http.Json;
+using FamilyHubs.ServiceDirectory.Shared;
+using FamilyHubs.ServiceDirectory.Shared.Dto.BaseDto;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -234,6 +236,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     public async Task RecordServiceSearch(
         ServiceDirectorySearchEventType eventType,
         string postcode,
+        string districtCode,
         byte? searchWithin,
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,
@@ -248,6 +251,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         {
             SearchPostcode = postcode,
             SearchRadiusMiles = searchWithin ?? 0,
+            DistrictCode = districtCode,
             ServiceSearchTypeId = ServiceType.FamilyExperience,
             RequestTimestamp = requestTimestamp,
             ResponseTimestamp = responseTimestamp,
