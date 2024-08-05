@@ -17,7 +17,6 @@ public class ServicesParams
     public bool? AllChildrenYoungPeople { get; set; }
     public int? GivenAge { get; set; }
     public bool? IsPaidFor { get; set; }
-    public int? MaxFamilyHubs { get; set; }
     public bool? FamilyHub { get; set; }
     public IEnumerable<string>? TaxonomyIds { get; set; }
     public int? PageNumber { get; set; }

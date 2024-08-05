@@ -17,9 +17,6 @@ public class ShowFilter : Filter
     {
         switch (selectedAspects.Count())
         {
-            case 0:
-                servicesParams.MaxFamilyHubs = 1;
-                break;
             case 1:
                 servicesParams.FamilyHub = bool.Parse(selectedAspects.First().Id);
                 break;
