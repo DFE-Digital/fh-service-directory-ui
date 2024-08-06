@@ -38,7 +38,6 @@ public class ServiceFilterModel : PageModel
     public float? Latitude { get; set; }
     public float? Longitude { get; set; }
     public IEnumerable<Service> Services { get; set; }
-    public bool OnlyShowOneFamilyHubAndHighlightIt { get; set; }
     public bool FromPostcodeSearch { get; set; }
     public int CurrentPage { get; set; }
     public IPagination Pagination { get; set; }
@@ -81,7 +80,6 @@ public class ServiceFilterModel : PageModel
         _logger = logger;
 
         Services = Enumerable.Empty<Service>();
-        OnlyShowOneFamilyHubAndHighlightIt = false;
         Pagination = new DontShowPagination();
     }
 
@@ -306,8 +304,6 @@ public class ServiceFilterModel : PageModel
         {
             filter.AddFilterCriteria(serviceParams);
         }
-
-        OnlyShowOneFamilyHubAndHighlightIt = serviceParams.MaxFamilyHubs is 1;
 
         var (services, response) = await _serviceDirectoryClient.GetServices(serviceParams);
 

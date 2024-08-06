@@ -125,7 +125,6 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
             .AddOptionalQueryParams("pageNumber", servicesParams.PageNumber)
             .AddOptionalQueryParams("pageSize", servicesParams.PageSize)
             .AddOptionalQueryParams("isFamilyHub", servicesParams.FamilyHub)
-            .AddOptionalQueryParams("maxFamilyHubs", servicesParams.MaxFamilyHubs)
             .AddOptionalQueryParams("taxonomyIds", servicesParams.TaxonomyIds);
 
         var getServicesUri = queryParams.CreateUriWithQueryString(GetServicesBaseUri);
